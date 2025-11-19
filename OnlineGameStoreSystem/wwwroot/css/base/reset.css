@@ -14,26 +14,12 @@
     --transition-normal: 0.25s ease;
     --shadow: 0 6px 18px rgba(2,6,23,0.6);
     --max-list-height: 40vh;
-}
-
-/* -------------------------------- */
-/*             主题变量              */
-/* 使用 body class 来区分主题       */
-/* -------------------------------- */
-body.dark-theme {
+    
     --color-bg: #101414;
     --color-bg-2: #404044;
     --color-bg-3: #505054;
     --color-text: #ffffff;
     --color-muted: #cccccc;
-}
-
-body.light-theme {
-    --color-bg: #f4f4f4;
-    --color-bg-2: #e0e0e0;
-    --color-bg-3: #d0d0d0;
-    --color-text: #101010;
-    --color-muted: #555555;
 }
 
 /* -------------------------------- */

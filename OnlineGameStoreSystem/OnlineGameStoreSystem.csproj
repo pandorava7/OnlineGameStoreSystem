@@ -9,8 +9,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\pages\" />
     <Folder Include="wwwroot\css\layout\" />
-    <Folder Include="wwwroot\css\components\" />
-    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>
