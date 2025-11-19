@@ -17,46 +17,7 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header class="site-header">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a class="brand" href="/">
-                    <img src="@Url.Content("~/images/favicon.png")" alt="logo" class="brand-icon" />
-                </a>
-            </div>
-
-            <nav class="nav-center" aria-label="Main navigation">
-                <ul>
-                    <li><a href="/store">Store</a></li>
-                    <li><a href="/community">Community</a></li>
-                    <li><a href="/support">Support</a></li>
-                </ul>
-            </nav>
-
-            <div class="nav-right">
-                <button class="icon-btn" aria-label="Search">
-                    <i class="fa fa-search"></i>
-                </button>
-
-                <a class="icon-btn cart" href="/cart" aria-label="Shopping cart">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span class="cart-badge" aria-hidden="true">2</span>
-                </a>
-
-                <a class="icon-btn account" href="/account" aria-label="Account">
-                    <i class="fa fa-user-circle"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="search-bar-wrapper">
-            <div class="search-bar-container">
-                <input type="text" placeholder="Search games..." class="search-input" />
-            </div>
-        </div>
-    </header>
-
-
+    <partial name="_NavBar" />
 
     <div class="container">
         <main role="main">
