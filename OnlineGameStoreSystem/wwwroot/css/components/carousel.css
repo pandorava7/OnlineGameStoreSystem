@@ -1,0 +1,184 @@
+﻿.carousel {
+    width: 950px;
+    margin: 40px auto;
+    position: relative;
+    border-radius: 14px;
+    background: var(--color-bg);
+    zoom: 1;
+}
+
+/* 新增的视口容器：负责裁剪图片 */
+.carousel-viewport {
+    overflow: hidden; /* 裁剪发生在这里 */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 8px; /* 如果需要圆角，加在这里 */
+}
+
+/* Track */
+.carousel-track {
+    display: flex;
+    width: 500%;
+    height: 100%;
+}
+
+.carousel-item {
+    width: 1000px; /* 900（左侧） + 300（右侧） */
+    height: 350px;
+    position: relative;
+    flex-shrink: 0;
+    margin-right: 100px;
+    z-index: 20; /* 确保图片在按钮上方 */
+    display: flex;
+    justify-content: flex-start;
+}
+
+    /* Main image */
+
+    .carousel-item .main-img {
+        width: 600px; /* 固定宽度 */
+        height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        filter: brightness(75%);
+        flex-shrink: 0; /* 关键：不允许被压缩 */
+    }
+
+    .carousel-item .game-info {
+        color: #fff;
+        width: 300px;
+        margin-left: 20px;
+    }
+
+
+        .carousel-item .game-info .game-title {
+            font-size: 32px;
+            margin-bottom: 12px;
+            font-weight: normal;
+        }
+
+/* thumbnails */
+.thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 4宫格 */
+    gap: 8px;
+    margin-bottom: 12px;
+    max-height: 200px; /* 关键1：限定高度 */
+    overflow-y: auto; /* 关键2：垂直滚动条 */
+}
+
+    .thumbs img {
+        width: 100%;
+        object-fit: cover;
+        aspect-ratio: auto 16 / 9;
+        border-radius: 6px;
+        border: 2px solid #222;
+    }
+
+
+/* tags */
+.tags span {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #2e2e2e;
+    border-radius: 6px;
+    margin-right: 6px;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* Buttons */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(40, 40, 40, .8);
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 8px 13px;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 10;
+    transition: background .2s;
+}
+
+    .carousel-btn:hover {
+        background: rgba(255,255,255,0.25);
+    }
+
+.prev {
+    left: -75px;
+}
+
+.next {
+    right: -75px;
+}
+
+/* dots */
+.carousel-dots {
+    position: absolute;
+    bottom: -75px;
+    width: 100%;
+    text-align: center;
+}
+
+.dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #666;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+    .dot.active {
+        background: #fff;
+    }
+
+
+/* 进度条容器：放在点上方 */
+.carousel-footer {
+    position: absolute;
+    bottom: 14px;
+    width: 100%;
+    /* 使用 Flex 布局使进度条和点都居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.progress-bar-container {
+    background: rgba(255, 255, 255, 0.2); /* 进度条背景色 */
+    border-radius: 2px;
+    position: absolute;
+    bottom: -40px;
+    width: 50%;
+    height: 3px;
+    text-align: center;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0; /* 初始宽度为 0 */
+    background: #fff; /* 进度条填充颜色 */
+    border-radius: 2px;
+    transform-origin: left; /* 确保动画从左边开始 */
+}
+
+/* 进度条动画定义 */
+@keyframes fillProgress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* JavaScript 会添加这个 class 来触发动画 */
+.progress-bar.active {
+    animation: fillProgress 4s ease-in-out forwards; /* 4s 必须和 JS 中的 autoPlayInterval 一致 */
+}

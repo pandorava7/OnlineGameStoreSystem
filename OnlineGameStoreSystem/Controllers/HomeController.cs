@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using OnlineGameStoreSystem.Models;
+using System.Diagnostics;
 
 namespace OnlineGameStoreSystem.Controllers
 {
@@ -15,13 +15,54 @@ namespace OnlineGameStoreSystem.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var categories = new List<GameCategoryViewModel>()
+            {
+                new GameCategoryViewModel {
+                    Title = "Free to Play",
+                    Slug = "free-to-play",
+                    Games = new List<GameViewModel> {
+                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
+                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
+                    }
+                },
+
+                new GameCategoryViewModel {
+                    Title = "RPG Games",
+                    Slug = "rpg",
+                    Games = new List<GameViewModel> {
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    }
+                }
+            };
+
+
+            return View(categories);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

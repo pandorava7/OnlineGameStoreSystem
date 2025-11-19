@@ -1,0 +1,52 @@
+﻿@model List<GameCategoryViewModel>
+
+<div class="category-section">
+
+    <!-- ===== Example Category Block ===== -->
+    @foreach (var category in Model)
+    {
+        <div class="category-block">
+
+            <div class="category-header">
+                <h2>@category.Title</h2>
+                <a class="view-all" href="/Category/@category.Slug">View All</a>
+            </div>
+
+            <div class="category-slider">
+                <!-- 左右按钮 -->
+                <button class="cat-btn left-btn">&#10094;</button>
+                <button class="cat-btn right-btn">&#10095;</button>
+
+                <!-- 新增 wrapper，用于隐藏溢出 -->
+                <div class="game-list-wrapper">
+                    <div class="game-list">
+                        @foreach (var game in category.Games)
+                        {
+                            <div class="game-card">
+                                <img src="@game.CoverUrl" alt="@game.Title" />
+                                <div class="game-info">
+                                    <p class="game-title">@game.Title</p>
+                                    @if (game.Price == 0)
+                                    {
+                                        <p class="game-price free">Free</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="game-price">RM @game.Price</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="dots">
+                @* 动态生成 *@
+            </div>
+
+        </div>
+
+    }
+</div>
+

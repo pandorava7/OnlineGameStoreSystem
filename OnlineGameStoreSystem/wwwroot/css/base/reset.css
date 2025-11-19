@@ -29,6 +29,7 @@
 
 *, *::before, *::after {
     box-sizing: border-box;
+    scrollbar-color: #666 transparent; /* 滑块 = #666，背景透明 */
 }
 
 html, body {

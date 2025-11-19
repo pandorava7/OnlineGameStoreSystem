@@ -1,0 +1,169 @@
+﻿// JS说明：
+// carousel = 900px
+// carousel-item = 1200px + 100px margin-right
+// 因此每次移动的宽度是900px
+
+
+// 轮播图主要元素
+const track = document.querySelector('.carousel-track');
+const slides = Array.from(document.querySelectorAll('.carousel-item'));
+const prevBtn = document.querySelector('.prev');
+const nextBtn = document.querySelector('.next');
+const progressBar = document.querySelector('.progress-bar');
+const dots = Array.from(document.querySelectorAll('.dot'));
+
+let currentIndex = 0;
+// 为什么是1100px？见上方注释
+const slideWidth = 1100;
+// 自动播放计时器变量
+let autoPlayTimer = null;
+// 自动播放间隔时间（4000ms = 4秒）
+const autoPlayInterval = 4000;
+// 获取总幻灯片数
+const totalSlides = slides.length;
+
+// --- 核心功能：移动到某个 slide ---
+function moveToSlide(index) {
+    // 1. 限制 index 范围：确保 index 在 [0, totalSlides - 1] 之间
+    if (index < 0 || index >= totalSlides) {
+        return; // 如果超出范围，则不执行任何操作
+    }
+
+    currentIndex = index;
+
+    // 2. 移动 track
+    track.style.transition = "transform 0.5s ease";
+    const offset = -currentIndex * slideWidth;
+    track.style.transform = `translateX(${offset}px)`;
+
+    // 3. 更新指示点
+    updateDots();
+
+    // 4. 【新增功能】更新按钮状态
+    updateButtonVisibility();
+
+    // 5. 重置进度条动画
+    resetProgressBarAnimation();
+
+    // 6. 重置自动播放计时器 (注意: 既然是有限端点模式，通常会禁用自动播放)
+    // 如果需要保留自动播放，请保持 resetAutoPlay() 调用。
+    // 如果不需自动播放，请注释掉下面这行
+     resetAutoPlay(); 
+}
+
+// --- 更新下方小点 ---
+function updateDots() {
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
+    });
+}
+
+// --- 【新增功能】更新按钮显示/隐藏状态 ---
+function updateButtonVisibility() {
+    // 如果在第一张 (index = 0)，隐藏左按钮
+    if (currentIndex === 0) {
+        prevBtn.style.visibility = 'hidden';
+    } else {
+        prevBtn.style.visibility = 'visible';
+    }
+
+    // 如果在最后一张 (index = totalSlides - 1)，隐藏右按钮
+    if (currentIndex === totalSlides - 1) {
+        nextBtn.style.visibility = 'hidden';
+    } else {
+        nextBtn.style.visibility = 'visible';
+    }
+}
+
+// --- 自动轮播启动 ---
+function startAutoPlay() {
+    // 使用 setTimeout 递归调用，而非 setInterval，
+    // 以便在手动操作后能立即且干净地重置计时器。
+    autoPlayTimer = setTimeout(function tick() {
+        let index = currentIndex + 1;
+        // 循环到第一张
+        if (index >= slides.length) index = 0;
+
+        // 移动到下一个 slide，并在移动完成后再次启动计时器
+        // 移除 transition，防止在循环切换时出现“闪烁”
+        track.style.transition = "none";
+
+        // 立即切换到目标位置（实现无缝循环的障眼法）
+        const offset = -index * slideWidth;
+        track.style.transform = `translateX(${offset}px)`;
+
+        // 更新 index 和 dots
+        currentIndex = index;
+        updateDots();
+
+        // 重新设置计时器
+        autoPlayTimer = setTimeout(tick, autoPlayInterval);
+
+    }, autoPlayInterval);
+}
+
+
+// --- 进度条控制功能 ---
+function resetProgressBarAnimation() {
+    // 1. 移除 active class，停止动画并重置进度条到 0%
+    progressBar.classList.remove('active');
+
+    // 2. 强制浏览器进行重绘 (Reflow)
+    // 这是一个常见的技巧，用于强制 CSS 动画在短时间内重置
+    void progressBar.offsetWidth;
+
+    // 3. 重新添加 active class，触发从 0% 到 100% 的动画
+    progressBar.classList.add('active');
+
+    // 4. 重置自动播放计时器
+    resetAutoPlay();
+}
+
+
+// --- 自动轮播重置 ---
+function resetAutoPlay() {
+    clearTimeout(autoPlayTimer);
+    // 在手动操作后，确保新的自动播放是从当前 slide 开始
+    // 并且重新应用过渡效果，以便下一次自动播放是平滑的
+    track.style.transition = "transform 0.5s ease";
+
+    // 重启自动播放
+    // **注意:** 为了保持平滑，我们不应该调用 startAutoPlay()，而应该只清除并重新计时。
+    // 但是考虑到无缝循环的复杂性，我们简化处理，只依赖 moveToSlide。
+
+    // 重新启动一个延时的自动播放，让用户有时间查看
+    autoPlayTimer = setTimeout(() => {
+        let index = currentIndex + 1;
+        if (index >= slides.length) index = 0;
+        moveToSlide(index);
+    }, autoPlayInterval);
+}
+
+
+// --- 事件监听器 ---
+
+// 左键
+prevBtn.addEventListener('click', () => {
+    let index = currentIndex - 1;
+    if (index < 0) index = slides.length - 1;
+    moveToSlide(index);
+});
+
+// 右键
+nextBtn.addEventListener('click', () => {
+    let index = currentIndex + 1;
+    if (index >= slides.length) index = 0;
+    moveToSlide(index);
+});
+
+// dot 点击事件
+dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => moveToSlide(i));
+});
+
+
+// --- 初始启动 ---
+// 首次进入页面时，确保显示第一个 slide 并开始自动播放
+
+//moveToSlide(0);
+//resetAutoPlay(); // 使用 resetAutoPlay 启动初始计时器
