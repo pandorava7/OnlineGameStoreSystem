@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
@@ -15,6 +16,15 @@ namespace OnlineGameStoreSystem.Controllers
 
         public IActionResult Index()
         {
+
+            var hasher = new PasswordHasher<IdentityUser>();
+            var user = new IdentityUser();
+
+            // 这里填你想要的密码，例如 "Test123!"
+            var passwordHash = hasher.HashPassword(user, "123");
+
+            Console.WriteLine(passwordHash);
+
             var categories = new List<GameCategoryViewModel>()
             {
                 new GameCategoryViewModel {

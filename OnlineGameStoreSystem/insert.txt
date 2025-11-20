@@ -1,0 +1,94 @@
+User:
+1	TestUser1	test1@example.com	AQAAAAIAAYagAAAAELaiqajaHy726dKZdm9A5o5Aq862dK7M8/ID90wfGxn67UD7MBTCIO96bVTxqGfRMQ==	false	false	active	2025-11-20T12:00:00Z	2025-11-20T12:00:00Z
+2	TestUser2	test2@example.com	AQAAAAIAAYagAAAAELaiqajaHy726dKZdm9A5o5Aq862dK7M8/ID90wfGxn67UD7MBTCIO96bVTxqGfRMQ==	false	true	active	2025-11-20T12:00:00Z	2025-11-20T12:00:00Z
+3	TestUser3	test3@example.com	AQAAAAIAAYagAAAAELaiqajaHy726dKZdm9A5o5Aq862dK7M8/ID90wfGxn67UD7MBTCIO96bVTxqGfRMQ==	true	false	active	2025-11-20T12:00:00Z	2025-11-20T12:00:00Z
+
+Tag:
+1	Action
+2	Adventure
+3	Role-Playing
+4	Simulation
+5	Strategy
+6	Sports
+7	Racing
+8	Puzzle
+9	Horror
+10	Shooter
+11	Fighting
+12	MMORPG
+13	Sandbox
+14	Survival
+15	Platformer
+16	Music
+17	Party
+18	Stealth
+19	Open World
+20	Tactical
+21	Visual Novel
+22	Card Game
+23	Turn-Based
+24	Real-Time Strategy
+25	MOBA
+26	VR
+27	Co-op
+28	Multiplayer
+29	Single Player
+30	Indie
+31	Management
+32	Building
+33	Farming
+34	Horror Survival
+35	Shooter RPG
+36	Action-Adventure
+37	Puzzle Platformer
+38	Metroidvania
+39	Arcade
+40	Deck-Building
+
+Game:
+2	2	StarQuest	An epic space adventure with exploration and battles.	59.99	49.99	2023-06-15	0	2023-05-01
+3	2	FantasyKingdom	Build your own kingdom and rule the lands.	39.99	29.99	2024-01-20	1	2023-12-01
+4	2	RacingRush	High-speed racing game with customizable cars.	29.99	19.99	2023-11-10	0	2023-10-05
+5	2	HorrorNight	Survive terrifying nights in a haunted mansion.	24.99	19.99	2024-02-14	2	2024-01-01
+6	2	PuzzleMania	Solve challenging puzzles and brain teasers.	14.99	9.99	2023-08-25	0	2023-07-10
+
+GameMedia:
+1	2	/images/example/cyberpunk2077.png	thumb	0
+2	2	/images/example/cyberpunk2077 (1).jpg	image	1
+3	2	/images/example/cyberpunk2077 (2).jpg	image	2
+4	2	/images/example/cyberpunk2077 (3).jpg	image	3
+5	2	/images/example/cyberpunk2077 (4).jpg	image	4
+6	4	/images/example/Wuthering Waves.png	thumb	0
+7	4	/images/example/Wuthering Waves(1).jpg	image	1
+8	4	/images/example/Wuthering Waves(2).jpg	image	2
+9	4	/images/example/Wuthering Waves(3).jpg	image	3
+10	4	/images/example/Wuthering Waves(4).jpg	image	4
+11	6	/images/example/Expedition33.png	thumb	0
+12	6	/images/example/Expedition33 (1).jpg	image	1
+13	6	/images/example/Expedition33 (2).jpg	image	2
+14	6	/images/example/Expedition33 (3).jpg	image	3
+15	6	/images/example/Expedition33 (4).jpg	image	4
+
+FavouriteTags:
+1	7
+1	19
+1	3
+1	28
+1	12
+
+ShoppingCarts:
+1	1	2025-11-20
+
+CartItems:
+1	1	2	2025-11-20
+2	1	4	2025-11-19
+3	1	6	2025-11-18
+
+Wishlists:
+1	1	6	2025-11-20
+
+Reviews:
+1	1	2	Amazing graphics and immersive gameplay!	2025-11-20
+2	1	4	Really enjoyed the story and character development.	2025-11-19
+3	1	6	Fun mechanics but could use more content.	2025-11-18
+
