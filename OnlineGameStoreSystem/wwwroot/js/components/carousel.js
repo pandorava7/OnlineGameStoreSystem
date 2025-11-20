@@ -10,7 +10,8 @@ const slides = Array.from(document.querySelectorAll('.carousel-item'));
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
 const progressBar = document.querySelector('.progress-bar');
-const dots = Array.from(document.querySelectorAll('.dot'));
+const dotsContainer = document.querySelector('.carousel-dots');
+let dots = [];
 
 let currentIndex = 0;
 // 为什么是1100px？见上方注释
@@ -21,6 +22,35 @@ let autoPlayTimer = null;
 const autoPlayInterval = 4000;
 // 获取总幻灯片数
 const totalSlides = slides.length;
+
+// 新增：动态生成 Dots 的函数
+function generateDots() {
+    // 清空容器（防止重复生成）
+    dotsContainer.innerHTML = '';
+
+    // 根据 slide 数量循环生成
+    slides.forEach((_, index) => {
+        // 创建元素 (你可以根据 CSS 实际情况改成 button 或 span)
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+
+        // 如果是第一个，默认激活
+        if (index === 0) {
+            dot.classList.add('active');
+        }
+
+        // 【重要】直接在这里绑定点击事件，比在底部遍历更高效
+        dot.addEventListener('click', () => {
+            moveToSlide(index);
+        });
+
+        // 添加到容器
+        dotsContainer.appendChild(dot);
+    });
+
+    // 【重要】更新 dots 变量，让后续的 updateDots 函数能找到它们
+    dots = Array.from(document.querySelectorAll('.dot'));
+}
 
 // --- 核心功能：移动到某个 slide ---
 function moveToSlide(index) {
@@ -40,7 +70,7 @@ function moveToSlide(index) {
     updateDots();
 
     // 4. 【新增功能】更新按钮状态
-    updateButtonVisibility();
+    //updateButtonVisibility();
 
     // 5. 重置进度条动画
     resetProgressBarAnimation();
@@ -156,14 +186,9 @@ nextBtn.addEventListener('click', () => {
     moveToSlide(index);
 });
 
-// dot 点击事件
-dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => moveToSlide(i));
-});
-
 
 // --- 初始启动 ---
 // 首次进入页面时，确保显示第一个 slide 并开始自动播放
-
-//moveToSlide(0);
-//resetAutoPlay(); // 使用 resetAutoPlay 启动初始计时器
+generateDots();
+moveToSlide(0);
+resetAutoPlay(); // 使用 resetAutoPlay 启动初始计时器

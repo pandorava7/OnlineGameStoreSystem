@@ -25,6 +25,7 @@ public class DB : DbContext
     // Tag
     public DbSet<Tag> Tags { get; set; }
     public DbSet<FavouriteTags> FavouriteTags { get; set; }
+    public DbSet<GameTag> GameTags { get; set; }
 
     // Game
     public DbSet<Game> Games { get; set; }
@@ -65,6 +66,20 @@ public class DB : DbContext
             .HasOne(ft => ft.Tag)
             .WithMany(t => t.UserTags)
             .HasForeignKey(ft => ft.TagId);
+
+        // Many-to-Many: GameTag (游戏 - 标签)
+        modelBuilder.Entity<GameTag>()
+            .HasKey(gt => new { gt.GameId, gt.TagId });
+
+        modelBuilder.Entity<GameTag>()
+            .HasOne(gt => gt.Game)
+            .WithMany(g => g.Tags)
+            .HasForeignKey(gt => gt.GameId);
+
+        modelBuilder.Entity<GameTag>()
+            .HasOne(gt => gt.Tag)
+            .WithMany(t => t.Games)
+            .HasForeignKey(gt => gt.TagId);
 
         // ShoppingCart One-to-One
         modelBuilder.Entity<ShoppingCart>()
@@ -152,6 +167,24 @@ public class DB : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         // -------------------------
+        // GameTags (Many-to-Many)
+        // -------------------------
+        modelBuilder.Entity<GameTag>()
+            .HasKey(gt => new { gt.GameId, gt.TagId });
+
+        modelBuilder.Entity<GameTag>()
+            .HasOne(gt => gt.Game)
+            .WithMany(g => g.Tags)
+            .HasForeignKey(gt => gt.GameId)
+            .OnDelete(DeleteBehavior.Restrict); // 避免删 Game 时把关联 Tag 也删掉
+
+        modelBuilder.Entity<GameTag>()
+            .HasOne(gt => gt.Tag)
+            .WithMany(t => t.Games)
+            .HasForeignKey(gt => gt.TagId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // -------------------------
         // Game
         // -------------------------
         modelBuilder.Entity<Game>()
@@ -204,16 +237,22 @@ public class DB : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Like>()
+            .HasOne(l => l.User)
+            .WithMany(u => u.Likes)
+            .HasForeignKey(l => l.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Like>()
             .HasOne(l => l.Post)
             .WithMany(p => p.Likes)
             .HasForeignKey(l => l.PostId)
             .OnDelete(DeleteBehavior.Cascade); // 删除帖子 → 删除点赞
 
         modelBuilder.Entity<Like>()
-            .HasOne(l => l.User)
-            .WithMany(u => u.Likes)
-            .HasForeignKey(l => l.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(l => l.Review)
+            .WithMany(c => c.Likes)
+            .HasForeignKey(l => l.ReviewId) // 删除评论 → 删除点赞
+            .OnDelete(DeleteBehavior.Cascade);
 
         // -------------------------
         // Notification
@@ -379,6 +418,7 @@ public class Tag
     public string Name { get; set; } = null!;
 
     public List<FavouriteTags> UserTags { get; set; } = new();
+    public List<GameTag> Games { get; set; } = new();
 }
 
 public class FavouriteTags
@@ -389,7 +429,16 @@ public class FavouriteTags
     public int TagId { get; set; }
     public Tag Tag { get; set; } = null!;
 }
-public class Review
+
+public class GameTag
+{
+    public int GameId { get; set; }
+    public Game Game { get; set; } = null!;
+    public int TagId { get; set; }
+    public Tag Tag { get; set; } = null!;
+}
+
+public class Review : ILikeable
 {
     public int Id { get; set; }
 
@@ -399,9 +448,12 @@ public class Review
     public int GameId { get; set; }
     public Game Game { get; set; } = null!;
 
+    public int Rating { get; set; } // 1 to 5
     public string? Content { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public ICollection<Like> Likes { get; set; } = new List<Like>();
 }
 
 public class Notification
@@ -421,7 +473,7 @@ public class Notification
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
-public class Post
+public class Post : ILikeable
 {
     public int Id { get; set; }
 
@@ -440,22 +492,26 @@ public class Post
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public List<Like> Likes { get; set; } = new();
+    public ICollection<Like> Likes { get; set; } = new List<Like>();
     public List<Comment> Comments { get; set; } = new();
 }
 
 public class Like
 {
     public int Id { get; set; }
-
     public int UserId { get; set; }
     public User User { get; set; } = null!;
 
-    public int PostId { get; set; }
-    public Post Post { get; set; } = null!;
+    // 多态引用
+    public int? PostId { get; set; }
+    public Post? Post { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int? ReviewId { get; set; }
+    public Review? Review { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 }
+
 
 public class Comment
 {
@@ -534,6 +590,7 @@ public class Game
     public List<GameMedia> Media { get; set; } = new();
     public List<Review> Reviews { get; set; } = new();
     public List<Purchase> Purchases { get; set; } = new();
+    public List<GameTag> Tags { get; set; } = new();
 }
 
 public class GameMedia

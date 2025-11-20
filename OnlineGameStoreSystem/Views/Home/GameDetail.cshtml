@@ -1,0 +1,75 @@
+﻿@model GameDetailViewModel
+
+<div class="container">
+    <div class="game-header">
+        <div class="game-media">
+            <div class="carousel" id="mediaCarousel">
+                <div class="carousel-inner">
+                    @foreach (var url in Model.VideoUrls)
+                    {
+                        <div class="carousel-item">
+                            <video controls src="@url"></video>
+                        </div>
+
+                    }
+                    @foreach (var url in Model.ImageUrls)
+                    {
+                        <div class="carousel-item">
+                            <img src="@url" alt="Game Image">
+                        </div>
+                    }
+                </div>
+                <button class="carousel-btn left" onclick="prevSlide()">‹</button>
+                <button class="carousel-btn right" onclick="nextSlide()">›</button>
+            </div>
+        </div>
+        <div class="game-info">
+            <div class="game-title">@Model.Title</div>
+            <div class="game-price">
+                @if (Model.DiscountPrice != null)
+                {
+                    <del>$@(Model.Price)</del>
+                    <span>$@Model.DiscountPrice</span>
+                }
+                else
+                {
+                    <span>$@(Model.Price)</span>
+                }
+            </div>
+            <a class="btn" asp-controller="Cart" asp-action="Add" asp-route-gameId="@Model.Id">Add to Cart</a>
+            <a class="btn" asp-controller="Home" asp-action="ShoppingCart">Add to Wishlist</a>
+            <div class="game-tags">
+                @foreach (var tag in Model.Genres)
+                {
+                    <span>@tag</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="game-description">
+        <h2>游戏简介</h2>
+        <p>@Model.Description</p>
+    </div>
+
+    <div class="game-reviews">
+        <h2>玩家评论</h2>
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="review">
+                <div class="username">@review.User.Username</div>
+                <div class="content">@review.Content</div>
+                <button class="like-btn">👍 123</button>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/components/game_detail.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/components/game-detail.css" asp-append-version="true" />
+}

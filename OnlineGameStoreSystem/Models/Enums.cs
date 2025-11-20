@@ -1,5 +1,11 @@
 namespace OnlineGameStoreSystem.Models
 {
+    public enum LikeableType
+    {
+        Review,
+        Comment
+    }
+
     public enum PaymentMethod
     {
         Paypal,

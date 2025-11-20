@@ -14,9 +14,8 @@
     --transition-normal: 0.25s ease;
     --shadow: 0 6px 18px rgba(2,6,23,0.6);
     --max-list-height: 40vh;
-    
     --color-bg: #101414;
-    --color-bg-2: #404044;
+    --color-bg-2: #1F1F1F;
     --color-bg-3: #505054;
     --color-pink: pink;
     --color-purple: purple;
@@ -47,7 +46,7 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    margin: 0 0 var(--space-sm) 0;
+    margin: 0 0 0 0;
     font-weight: 600;
     line-height: 1.25;
     color: var(--color-text);

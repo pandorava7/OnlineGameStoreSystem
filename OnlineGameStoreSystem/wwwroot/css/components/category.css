@@ -1,5 +1,5 @@
 ﻿.category-section {
-    max-width: 900px;
+    max-width: 950px;
     margin: 100px auto;
     color: white;
     font-family: Arial, sans-serif;
@@ -49,8 +49,8 @@
 
 /* Game Card */
 .game-card {
-    width: 200px;
-    margin: 0 12.5px;
+    width: 207.5px;
+    margin: 0 15px;
     background: #1a1c1f;
     border-radius: 10px;
     overflow: hidden;
@@ -106,6 +106,11 @@
 
     .cat-btn:hover {
         background: rgba(80, 80, 80, .9);
+    }
+
+    .cat-btn:active {
+        transform: translateY(-50%) scale(0.9);
+        background: rgba(40,40,40,0.9);
     }
 
 .left-btn {

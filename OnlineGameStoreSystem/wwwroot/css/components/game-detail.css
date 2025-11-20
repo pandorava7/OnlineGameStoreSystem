@@ -1,0 +1,142 @@
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--color-bg);
+    color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.game-header {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.game-media {
+    flex: 1 1 400px;
+}
+
+    .game-media img, .game-media video {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+.game-info {
+    flex: 1 1 400px;
+}
+
+.game-title {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.game-price {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+    .game-price del {
+        color: #888;
+        margin-right: 10px;
+    }
+
+.btn {
+    background-color: #BA2D50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+    .btn:hover {
+        background-color: #850883;
+        transform: translateY(-5px);
+    }
+
+.game-tags {
+    margin-top: 10px;
+}
+
+    .game-tags span {
+        background-color: #333;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 5px;
+        font-size: 14px;
+    }
+
+.game-description, .game-reviews {
+    margin-top: 30px;
+}
+
+.review {
+    background-color: var(--color-bg-2);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+    .review .username {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .review .content {
+        margin-bottom: 5px;
+    }
+
+    .review .like-btn {
+        background: none;
+        border: none;
+        color: #BA2D50;
+        cursor: pointer;
+    }
+
+        .review .like-btn:hover {
+            color: #850883;
+        }
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.carousel-inner {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.carousel-item {
+    min-width: 100%;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(40,40,40,0.8);
+    border: none;
+    color: white;
+    font-size: 24px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+    .carousel-btn.left {
+        left: 10px;
+    }
+
+    .carousel-btn.right {
+        right: 10px;
+    }

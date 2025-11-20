@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace OnlineGameStoreSystem.Migrations
 {
     [DbContext(typeof(DB))]
-    partial class DBModelSnapshot : ModelSnapshot
+    [Migration("20251120092122_CreateTable_GameTag")]
+    partial class CreateTable_GameTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,10 +231,7 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReviewId")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -240,8 +240,6 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("ReviewId");
 
                     b.HasIndex("UserId");
 
@@ -401,9 +399,6 @@ namespace OnlineGameStoreSystem.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -687,12 +682,8 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasOne("Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Review", "Review")
-                        .WithMany("Likes")
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("User", "User")
                         .WithMany("Likes")
@@ -701,8 +692,6 @@ namespace OnlineGameStoreSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
-
-                    b.Navigation("Review");
 
                     b.Navigation("User");
                 });
@@ -847,11 +836,6 @@ namespace OnlineGameStoreSystem.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Likes");
-                });
-
-            modelBuilder.Entity("Review", b =>
-                {
                     b.Navigation("Likes");
                 });
 

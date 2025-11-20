@@ -64,7 +64,7 @@
     grid-template-columns: repeat(2, 1fr); /* 4宫格 */
     gap: 8px;
     margin-bottom: 12px;
-    max-height: 200px; /* 关键1：限定高度 */
+    max-height: 250px; /* 关键1：限定高度 */
     overflow-y: auto; /* 关键2：垂直滚动条 */
 }
 
@@ -108,9 +108,14 @@
         background: rgba(255,255,255,0.25);
     }
 
-.prev {
-    left: -75px;
-}
+    .carousel-btn:active {
+        transform: translateY(-50%) scale(0.9); 
+        background: rgba(40,40,40,0.9); 
+    }
+
+    .prev {
+        left: -75px;
+    }
 
 .next {
     right: -75px;

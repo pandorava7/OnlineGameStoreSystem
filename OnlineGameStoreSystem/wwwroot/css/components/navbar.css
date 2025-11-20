@@ -35,6 +35,10 @@
     filter: none;
 }
 
+.brand-name {
+    font-size: 20px;
+}
+
 /* 中间（水平居中） */
 .nav-center {
     position: absolute;
