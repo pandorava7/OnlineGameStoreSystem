@@ -48,7 +48,7 @@
     </div>
 
     <div class="game-description">
-        <h2>游戏简介</h2>
+        <h2>Game Description</h2>
         <p>@Model.Description</p>
     </div>
 
@@ -61,13 +61,13 @@
             <span data-star="5" class="star">&#9733;</span>
         </div>
 
-        <textarea id="reviewInput" class="review-input" placeholder="写下你的评论..."></textarea>
+        <textarea id="reviewInput" class="review-input" placeholder="Write your review..."></textarea>
 
-        <button id="submitReview" class="review-submit-btn">发布</button>
+        <button id="submitReview" class="review-submit-btn">Upload</button>
     </div>
 
     <div class="game-reviews">
-        <h2>玩家评论</h2>
+        <h2>Player Review</h2>
         @foreach (var review in Model.Reviews)
         {
             <div class="review">

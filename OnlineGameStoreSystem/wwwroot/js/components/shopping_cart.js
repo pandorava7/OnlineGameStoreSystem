@@ -1,115 +1,98 @@
-﻿let cart = [];
-const userId = 1;
-const shoppingCartId = 1;
-const isLoggedIn = true;
+﻿const shoppingCartId = 1;
 
 
 var cartItemsContainer = document.getElementById('cart-items-container');
 var cartTotalElement = document.getElementById('cart-total');
 var cartTotalFinalElement = document.getElementById('cart-total-final');
-var cartBadge = document.getElementById('cart-badge');
 
-// =====================
-// 读取数据库购物车
-// =====================
-async function loadCartFromServer() {
-    const res = await fetch(`/Cart/GetItems?userId=${userId}`);
-    const data = await res.json();
-    cart = data.items || [];
-    renderCartItems();
-    updateCartBadge();
-    updateAddToCartButtonStates();
-}
-
-// =====================
-// 删除商品（服务器）
-// =====================
-async function removeCartItem(cartId) {
-    const res = await fetch(`/Cart/RemoveItem?cartId=${cartId}`, {
-        method: 'POST'
-    });
-
-    const result = await res.json();
-    if (!result.success) {
-        console.error("Failed to remove item from cart:", result.message);
-        showTemporaryMessage("移除失败，请稍后重试", "error");
-        return;
-    }
-
-    await loadCartFromServer();
-    showTemporaryMessage("已移除", "info");
-}
-
-// =====================
-// 以下函数保持原样（渲染 UI）
-// =====================
-
-function updateCartBadge() {
-    if (cartBadge) {
-        cartBadge.textContent = cart.length;
-        cartBadge.style.display = cart.length > 0 ? 'block' : 'none';
-    }
-}
-
-function updateAddToCartButtonStates() {
-    document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
-        const gameId = btn.dataset.gameId;
-
-        if (cart.some(i => i.id == gameId)) {
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-check"></i> 已在购物车';
-        } else {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-plus"></i> 加入购物车';
-        }
-    });
-}
-
-function updateCartTotal() {
+function updateCartTotal(cart) {
     let sum = cart.reduce((t, i) => t + i.price, 0);
     cartTotalElement.textContent = sum.toFixed(2);
     cartTotalFinalElement.textContent = sum.toFixed(2);
 }
 
-function renderCartItems() {
+function renderCartItems(cart) {
+    console.log("Rendering cart items:", cart);
     cartItemsContainer.innerHTML = "";
     if (cart.length === 0) {
-        cartItemsContainer.innerHTML = `<p class="empty-cart-message">购物车是空的</p>`;
-        updateCartTotal();
+        cartItemsContainer.innerHTML = `<p class="empty-cart-message">Your cart is empty</p>`;
+        updateCartTotal(cart);
         return;
     }
 
     cart.forEach(item => {
         const el = document.createElement('div');
         el.classList.add("cart-item");
+
+        // 价格显示逻辑
+        let priceHtml = '';
+        let discountPercent = '';
+        if (item.discount_price == null) {
+            // 无折扣
+            priceHtml = `
+            <div class="price-left"></div>
+            <div class="price-right">
+                <div class="item-price">RM ${item.price.toFixed(2)}</div>
+            </div>`;
+        } else if (item.discount_price === 0) {
+            // 免费
+            priceHtml = `
+            <div class="price-left"></div>
+            <div class="price-right">
+                <div class="item-original-price">RM ${item.price.toFixed(2)}</div>
+                <div class="item-price">Free</div>
+            </div>`;
+        } else {
+            // 有折扣
+            discountPercent = Math.round((1 - item.discount_price / item.price) * 100);
+            priceHtml = `
+            <div class="price-left">
+                <span class="item-discount">-${discountPercent}%</span>
+            </div>
+            <div class="price-right">
+                <div class="item-original-price">RM ${item.price.toFixed(2)}</div>
+                <div class="item-price">RM ${item.discount_price.toFixed(2)}</div>
+            </div>`;
+        }
+
         el.innerHTML = `
-            <div class="item-details">
-                <img src="${item.image}">
-                <div class="item-info">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-price">RM ${item.price.toFixed(2)}</span>
+            <div class="item-left">
+                <img src="${item.image}" alt="${item.name}" class="item-img">
+            </div>
+            <div class="item-right">
+                <div class="item-name">${item.name}</div>
+                <div class="item-price-container">
+                    ${priceHtml}
+                </div>
+                <div class="item-actions">
+                    <button class="secondary-btn remove-item-btn" data-id="${item.id}">Remove</button>
                 </div>
             </div>
-            <span class="item-subtotal">RM ${item.price.toFixed(2)}</span>
-            <button class="remove-item-btn" data-id="${item.id}">
-                <i class="fas fa-trash-alt"></i>
-            </button>
         `;
+
+        // 渲染完成后添加事件
+        el.querySelectorAll('.remove-item-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const cartItemId = btn.dataset.id;
+
+                await CartAPI.removeCartItem(cartItemId);  // 等后端删除 + reload 执行完
+                await CartAPI.loadCartFromServer(userId); // 重新加载购物车数据
+
+                renderCartItems(CartAPI.cart);             // 用新的 cart 渲染
+            });
+        });
+
         cartItemsContainer.appendChild(el);
     });
 
-    document.querySelectorAll('.remove-item-btn').forEach(btn => {
-        btn.addEventListener("click", () => {
-            removeCartItem(btn.dataset.id);
-        });
-    });
-
-    updateCartTotal();
+    updateCartTotal(cart);
 }
 
+
 // 初始加载购物车
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     if (isLoggedIn) {
-        loadCartFromServer();
+        await CartAPI.loadCartFromServer(userId); // 确保购物车数据最新
+        renderCartItems(CartAPI.cart);            // 渲染UI
     }
 });

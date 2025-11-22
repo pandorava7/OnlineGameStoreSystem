@@ -113,10 +113,8 @@
     position: absolute;
     top: -4px; /* 向上移动 */
     right: -4px; /* 向右移动 */
-    min-width: 16px;
-    height: 16px;
-    padding: 0 4px;
-    display: inline-flex;
+    padding: 2px 4px;
+    display: none;
     align-items: center;
     justify-content: center;
     background: #2ecc71;

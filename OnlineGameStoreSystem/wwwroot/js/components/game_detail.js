@@ -29,6 +29,9 @@ async function addToCart(gameId) {
 
     const result = await res.json();
     if (result.success) {
-        showTemporaryMessage("已加入购物车", "success");
+        showTemporaryMessage("Added to your cart", "success");
+
+        // 更新购物车徽章
+        await CartAPI.loadCartFromServer(userId);
     }
 }

@@ -33,6 +33,7 @@ public class CartController : Controller
                                id = ci.Id,
                                name = g.Title,
                                price = g.Price,
+                               discount_price = g.DiscountPrice,
                                image = g.Media
                                    .Where(m => m.MediaType == "thumb")
                                    .Select(m => m.MediaUrl)
@@ -41,68 +42,6 @@ public class CartController : Controller
 
         return Json(new { items });
     }
-
-    //// 添加商品
-    //[HttpPost]
-    //public async Task<IActionResult> AddItem(int userId, int gameId)
-    //{
-    //    var cart = await db.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == userId);
-    //    if (cart == null)
-    //    {
-    //        cart = new ShoppingCart
-    //        {
-    //            UserId = userId,
-    //            CreatedAt = DateTime.Now
-    //        };
-    //        db.ShoppingCarts.Add(cart);
-    //        await db.SaveChangesAsync();
-    //    }
-
-    //    // 已存在就不再插入
-    //    if (!await db.CartItems.AnyAsync(ci => ci.CartId == cart.Id && ci.GameId == gameId))
-    //    {
-    //        db.CartItems.Add(new CartItem
-    //        {
-    //            CartId = cart.Id,
-    //            GameId = gameId,
-    //            AddedAt = DateTime.Now
-    //        });
-    //        await db.SaveChangesAsync();
-    //    }
-
-    //    return Json(new { success = true });
-    //}
-
-    // 删除商品
-    //[HttpPost]
-    //public async Task<IActionResult> RemoveItem(int userId, int gameId)
-    //{
-    //    var cart = await db.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == userId);
-    //    if (cart == null)
-    //        return Json(new { success = false });
-
-    //    var item = await db.CartItems
-    //        .FirstOrDefaultAsync(ci => ci.CartId == cart.Id && ci.GameId == gameId);
-
-    //    if (item != null)
-    //    {
-    //        db.CartItems.Remove(item);
-    //        await db.SaveChangesAsync();
-    //    }
-
-    //    return Json(new { success = true });
-    //}
-
-
-
-
-
-
-
-
-
-
-
 
     [Route("cart")]
     public IActionResult Index(string id)
@@ -186,7 +125,6 @@ public class CartController : Controller
         return Json(new { success = true });
 
     }
-    // CartController.cs
 
     [HttpPost] // 只能通过 POST 请求调用（安全做法）
     public async Task<IActionResult> RemoveItem(int cartId)

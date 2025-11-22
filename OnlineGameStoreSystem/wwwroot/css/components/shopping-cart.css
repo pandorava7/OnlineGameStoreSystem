@@ -1,4 +1,220 @@
-﻿.cart-container {
+﻿/* =========================================
+   Cart Page Styles (类似 Food Ordering System 布局)
+   ========================================= */
+
+.cart-page-container {
+    max-width: 1200px margin: 100px auto 50px auto; /* 顶部留出导航栏空间，底部留出页脚空间 */
+    padding: var(--spacing-md);
+    min-height: calc(100vh - 150px); /* 确保内容区不会太短 */
+}
+
+.cart-page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: var(--spacing-sm);
+    display: inline-block; /* 让边框只在文本下方 */
+    margin: 0 auto var(--spacing-lg) auto;
+}
+
+.cart-content {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap; /* 允许在小屏幕上换行 */
+    justify-content: center; /* 居中内容 */
+}
+
+.cart-items-list {
+    flex: 2; /* 占用更多空间 */
+    min-width: 300px; /* 最小宽度 */
+    background-color: var(--bg-surface);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+.empty-cart-message {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    padding: var(--spacing-xl);
+}
+
+.cart-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    color: #f0f0f0;
+    position: relative;
+}
+
+.item-left {
+    flex: 0 0 auto;
+}
+
+.item-img {
+    height: 130px;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.item-right {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 20px;
+    /*height: 120px;*/ /* 与图片高度一致 */
+}
+
+.item-name {
+    font-size: 20px;
+}
+
+.item-price-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 8px;
+    gap: 12px; /* 左右间距 */
+}
+
+.price-left {
+    flex: 0 0 auto;
+}
+
+.price-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px; /* 上下间距 */
+    text-align: right;
+}
+
+.item-price {
+    font-weight: 600;
+    color: #fff;
+    font-size: 18px;
+}
+
+.item-original-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 12px;
+}
+
+.item-discount {
+    background: var(--accent-color2);
+    color: #00755A;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 5px 5px;
+    border-radius: 3px;
+}
+
+.item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+}
+
+    .primary-btn:hover {
+        background-color: var(--accent-color);
+    }
+
+.secondary-btn {
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+}
+
+.secondary-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+
+
+.cart-summary {
+    flex: 1; /* 总结区域占据较少空间 */
+    min-width: 280px;
+    background-color: var(--bg-surface);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: fit-content; /* 让高度适应内容 */
+}
+
+.summary-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.summary-row:last-of-type {
+    border-bottom: none;
+    margin-bottom: var(--spacing-md);
+}
+
+.summary-row.total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    border-top: 2px solid var(--primary-color);
+    padding-top: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.checkout-btn {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: 1rem;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+}
+
+    .checkout-btn:hover {
+        background-color: var(--accent-color);
+    }
+
+.continue-shopping {
+    width: 100%;
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    padding: 0.8rem;
+    font-size: 1rem;
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+}
+
+    .continue-shopping:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+
+/*.cart-container {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
@@ -84,3 +300,4 @@
     flex: 1;
     text-align: right;
 }
+*/

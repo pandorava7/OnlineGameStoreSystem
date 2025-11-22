@@ -1,10 +1,7 @@
 ﻿// 显示临时消息
 function showTemporaryMessage(message, type = "info") {
-    console.log("Showing flash message:", message, "Type:", type);
     const container = document.getElementById("flash-message-container");
     if (!container) return;
-
-    console.log("Flash message container found.");
 
     const msg = document.createElement("div");
     msg.classList.add("flash-message");
