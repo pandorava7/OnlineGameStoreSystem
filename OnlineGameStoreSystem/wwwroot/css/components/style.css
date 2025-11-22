@@ -1,0 +1,181 @@
+﻿/* =========================================
+   Cart Page Styles (类似 Food Ordering System 布局)
+   ========================================= */
+
+.cart-page-container {
+    max-width: 1200px
+    margin: 100px auto 50px auto; /* 顶部留出导航栏空间，底部留出页脚空间 */
+    padding: var(--spacing-md);
+    min-height: calc(100vh - 150px); /* 确保内容区不会太短 */
+}
+
+.cart-page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: var(--spacing-sm);
+    display: inline-block; /* 让边框只在文本下方 */
+    margin: 0 auto var(--spacing-lg) auto;
+}
+
+.cart-content {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap; /* 允许在小屏幕上换行 */
+    justify-content: center; /* 居中内容 */
+}
+
+.cart-items-list {
+    flex: 2; /* 占用更多空间 */
+    min-width: 300px; /* 最小宽度 */
+    background-color: var(--bg-surface);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+.empty-cart-message {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    padding: var(--spacing-xl);
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 调整为更合理的间距 */
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--border-color-light);
+    gap: var(--spacing-md);
+    color: var(--text-light);
+    position: relative; /* 允许内部元素绝对定位 */
+}
+
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+
+.item-details {
+    display: flex;
+    align-items: center;
+    flex: 3; /* 允许细节区域占据更多空间 */
+    gap: var(--spacing-sm);
+}
+
+.item-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color-light);
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.item-price {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.item-subtotal {
+    font-weight: 600;
+    min-width: 90px; /* 留出小计的显示空间 */
+    text-align: right;
+    flex: 1; /* 小计占据一部分空间 */
+    padding-right: 40px; /* 为删除按钮留出空间 */
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color var(--transition-speed);
+    padding: 5px; /* 增加点击区域 */
+    position: absolute; /* 绝对定位到右侧 */
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+    .remove-item-btn:hover {
+        color: var(--error-color); /* 红色 */
+    }
+
+.cart-summary {
+    flex: 1; /* 总结区域占据较少空间 */
+    min-width: 280px;
+    background-color: var(--bg-surface);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: fit-content; /* 让高度适应内容 */
+}
+
+.summary-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.summary-row:last-of-type {
+    border-bottom: none;
+    margin-bottom: var(--spacing-md);
+}
+
+.summary-row.total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    border-top: 2px solid var(--primary-color);
+    padding-top: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.checkout-btn {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: 1rem;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+}
+
+    .checkout-btn:hover {
+        background-color: var(--accent-color);
+    }
+
+.continue-shopping {
+    width: 100%;
+    text-align: center;
+    margin-top: var(--spacing-sm);
+    padding: 0.8rem;
+    font-size: 1rem;
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+}
+
+    .continue-shopping:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }

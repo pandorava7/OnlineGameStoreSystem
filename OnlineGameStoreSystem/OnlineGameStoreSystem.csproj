@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\css\pages\" />
     <Folder Include="wwwroot\css\layout\" />
   </ItemGroup>
 

@@ -1,29 +1,43 @@
-:root {
-    /* Brand Colors */
-    --color-primary: #4A6CF7;
-    --color-secondary: #1EC6B7;
-    --color-danger: #FF5A5A;
-    /* Neutral Colors */
-    --color-bg: #F8F9FC;
-    --color-text: #1A1A1A;
-    --color-border: #E1E1E1;
-    /* Typography */
-    --font-main: "Inter", sans-serif;
-    --text-sm: 0.875rem;
-    --text-md: 1rem;
-    --text-lg: 1.25rem;
-    --text-xl: 1.5rem;
-    /* Border Radius */
+﻿:root {
+    /* 颜色 */
+    --primary-color: #ff4081; /* 亮粉色 - 强调色 */
+    --accent-color: #8257e5; /* 紫色 - 次要强调色 */
+    --accent-color2: #64ffda; /* 青绿色 - 额外强调色 */
+    --bg-dark: #121214; /* 深色背景 */
+    --bg-surface: #1a1a1e; /* 稍亮的背景，用于卡片等 */
+    --text-light: #e1e1e6; /* 浅色文本 */
+    --text-muted: #8d8d99; /* 柔和文本 */
+    --border-color: #2c2c31; /* 边框颜色 */
+    --shadow-color: rgba(0, 0, 0, 0.4); /* 阴影颜色 */
+    /* 字体 */
+    --font-primary: 'Poppins', sans-serif;
+    --font-size-base: 1rem; /* 16px */
+    /* 间距 */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+    /* 其他 */
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+    --font-main: Arial, Helvetica, sans-serif;
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 16px;
-    /* Spacing */
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
     --space-lg: 24px;
     --space-xl: 32px;
-    /* Transition */
-    --transition-fast: .15s;
-    --transition-normal: .3s;
+    --transition-normal: 0.25s ease;
+    --shadow: 0 6px 18px rgba(2,6,23,0.6);
+    --max-list-height: 40vh;
+    --color-bg: #101414;
+    --color-bg-2: #1F1F1F;
+    --color-bg-3: #505054;
+    --color-pink: pink;
+    --color-purple: purple;
+    --color-green: green;
+    --color-text: #ffffff;
+    --color-muted: #cccccc;
 }
