@@ -7,6 +7,9 @@
     position: relative;
     z-index: 100;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    position: sticky;
+    top: 0; /* 粘住的参考位置 */
+    margin-bottom: 60px;
 }
 
 .nav-container {
@@ -151,37 +154,85 @@
 
 
 /* 父容器 wrapper，用于裁剪 */
-.search-bar-wrapper {
-    height: 50%; /* 只显示一半 */
-    overflow: hidden; /* 超出的部分隐藏 */
-    position: relative;
+/*.search-bar-wrapper {
+    height: 50%;*/ /* 只显示一半 */
+    /*overflow: hidden;*/ /* 超出的部分隐藏 */
+    /*position: relative;
     margin: 0 auto;
     max-width: 1200px;
-}
+}*/
 
 /* 搜索栏本体 */
-.search-bar-container {
+/*.search-bar-container {
     display: flex;
     justify-content: flex-end;
     width: 100%;
     padding: 10px 20px;
     box-sizing: border-box;
-    background-color: var(--color-bg);
-    transform: translateY(-100%); /* 默认隐藏 */
-    transition: transform 0.3s ease; /* 平滑动画 */
-}
+    background-color: rgba(0, 0, 0, 0.5);*/ /* 50% 透明黑色 */
+    /*transform: translateY(-100%);*/ /* 默认隐藏 */
+    /*transition: transform 0.3s ease;*/ /* 平滑动画 */
+/*}*/
 
     /* 激活状态：显示搜索栏 */
-    .search-bar-container.active {
+    /*.search-bar-container.active {
         transform: translateY(0);
-    }
+    }*/
 
 
 .search-input {
-    width: 40%;
+    width: 100%;
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px 0 0 4px;
     outline: none;
     font-size: 14px;
 }
+
+
+/* 搜索栏默认隐藏 */
+.search-bar-container {
+    position: absolute;
+    top: 100%; /* 从 nav-right 底部开始下移 */
+    right: 0; /* 右对齐 */
+    transform: translateY(-10px); /* 初始稍微向上隐藏 */
+    opacity: 0; /* 初始透明 */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    display: flex;
+    justify-content: flex-end; /* 内部元素右对齐 */
+    align-items: center;
+    gap: 4px;
+    min-width: 200px;
+    width: 500px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0); /* 背景透明，可换成白色或半透明 */
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 200;
+}
+
+
+/*    .search-bar-container input {
+        flex: 1;
+        padding: 6px 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+    }*/
+
+    .search-bar-container button.search-submit {
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 9999px;
+        padding: 8px 8px;
+        cursor: pointer;
+    }
+
+    /* 激活显示状态 */
+    .search-bar-container.active {
+        transform: translateY(0); /* 下移到正常位置 */
+        opacity: 1;
+        visibility: visible;
+    }

@@ -9,7 +9,6 @@ const track = document.querySelector('.carousel-track');
 const slides = Array.from(document.querySelectorAll('.carousel-item'));
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
-const progressBar = document.querySelector('.progress-bar');
 const dotsContainer = document.querySelector('.carousel-dots');
 let dots = [];
 
@@ -19,7 +18,7 @@ const slideWidth = 1100;
 // 自动播放计时器变量
 let autoPlayTimer = null;
 // 自动播放间隔时间（4000ms = 4秒）
-const autoPlayInterval = 4000;
+const autoPlayInterval = 5000;
 // 获取总幻灯片数
 const totalSlides = slides.length;
 
@@ -73,7 +72,7 @@ function moveToSlide(index) {
     //updateButtonVisibility();
 
     // 5. 重置进度条动画
-    resetProgressBarAnimation();
+    resetProgressBarAnimation(slides[currentIndex]);
 
     // 6. 重置自动播放计时器 (注意: 既然是有限端点模式，通常会禁用自动播放)
     // 如果需要保留自动播放，请保持 resetAutoPlay() 调用。
@@ -134,19 +133,18 @@ function startAutoPlay() {
 
 
 // --- 进度条控制功能 ---
-function resetProgressBarAnimation() {
-    // 1. 移除 active class，停止动画并重置进度条到 0%
+function resetProgressBarAnimation(slide) {
+    const progressBar = slide.querySelector('.progress-bar');
+    if (!progressBar) return;
+
+    // 停止动画并重置
     progressBar.classList.remove('active');
 
-    // 2. 强制浏览器进行重绘 (Reflow)
-    // 这是一个常见的技巧，用于强制 CSS 动画在短时间内重置
+    // 强制浏览器重绘
     void progressBar.offsetWidth;
 
-    // 3. 重新添加 active class，触发从 0% 到 100% 的动画
+    // 触发动画
     progressBar.classList.add('active');
-
-    // 4. 重置自动播放计时器
-    resetAutoPlay();
 }
 
 

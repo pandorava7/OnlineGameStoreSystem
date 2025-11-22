@@ -6,7 +6,7 @@
             <a class="brand" href="/">
                 <img src="@Url.Content("~/images/favicon.png")" alt="logo" class="brand-icon" />
             </a>
-            <h1 class="brand-name" >ROXY'S'</h1>
+            <h1 class="brand-name">ROXY'S'</h1>
         </div>
 
         <nav class="nav-center" aria-label="Main navigation">
@@ -22,20 +22,19 @@
                 <i class="fa fa-search"></i>
             </button>
 
-            <a class="icon-btn cart" asp-controller="Home" asp-action="ShoppingCart" aria-label="Shopping cart" >
-                <i class="fa fa-shopping-cart" ></i>
+            <div class="search-bar-container">
+                <input type="text" placeholder="Search..." class="search-input" />
+                <button class="search-submit"><i class="fa fa-search"></i></button>
+            </div>
+
+            <a class="icon-btn cart" asp-controller="Cart" asp-action="Index" aria-label="Shopping cart">
+                <i class="fa fa-shopping-cart"></i>
                 <span class="cart-badge" aria-hidden="true">11</span>
             </a>
 
             <a class="icon-btn account" href="/account" aria-label="Account">
                 <i class="fa fa-user-circle"></i>
             </a>
-        </div>
-    </div>
-
-    <div class="search-bar-wrapper">
-        <div class="search-bar-container">
-            <input type="text" placeholder="Search games..." class="search-input" />
         </div>
     </div>
 </header>

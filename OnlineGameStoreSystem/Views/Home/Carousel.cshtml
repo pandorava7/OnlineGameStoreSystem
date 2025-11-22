@@ -10,9 +10,13 @@
             @for (int i = 0; i < Model.Count; i++)
             {
                 <div class="carousel-item">
-                    <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@Model[i].Title.Replace(' ', '_')">
+                    <a class="thumbnail" asp-controller="Home" asp-action="GameDetail" asp-route-name="@Model[i].Title.Replace(' ', '_')">
                         <img class="main-img main-img-top" src="@Model[i].ThumbnailUrl" alt="@Model[i].Title">
                         <img class="main-img main-img-bottom" src="@Model[i].ThumbnailUrl" alt="@Model[i].Title">
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar"></div>
+                        </div>
                     </a>
 
                     <div class="game-info">
@@ -37,9 +41,6 @@
     </div>
 
     <div class="carousel-footer">
-        <div class="progress-bar-container">
-            <div class="progress-bar"></div>
-        </div>
 
         <div class="carousel-dots">
 

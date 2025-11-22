@@ -1,0 +1,91 @@
+﻿/* 容器，右上角固定 */
+#flash-message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 每个消息 */
+.flash-message {
+    min-width: 200px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeIn 0.3s forwards, fadeOut 0.3s ease 2.5s forwards;
+}
+
+/* 颜色类型 */
+.flash-success {
+    background-color: #28a745; /* 绿色 */
+}
+
+.flash-error {
+    background-color: #dc3545; /* 红色 */
+}
+
+.flash-info {
+    background-color: #17a2b8; /* 蓝色 */
+}
+
+.flash-warning {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+
+/* 容器固定在页面顶部中央，可根据需要调整 */
+/*#temp-alert-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    width: auto;
+    max-width: 400px;
+}*/
+
+/* 基础 alert 样式（可以覆盖 Bootstrap 默认样式） */
+/*#temp-alert-container .alert {
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }*/
+
+/* 显示动画 */
+/*#temp-alert-container .show-alert {
+        opacity: 1;
+        transform: translateY(0);
+    }*/
+
+/* 隐藏动画 */
+/*#temp-alert-container .hide-alert {
+        opacity: 0;
+        transform: translateY(-20px);
+    }*/
+

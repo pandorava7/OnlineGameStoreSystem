@@ -40,6 +40,7 @@
 .game-list-wrapper {
     overflow: hidden; /* 只隐藏游戏卡片超出的部分 */
     width: 100%;
+    padding: 10px 0px;
 }
 
 .game-list {

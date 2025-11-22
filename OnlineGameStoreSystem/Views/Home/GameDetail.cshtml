@@ -36,7 +36,7 @@
                     <span>$@(Model.Price)</span>
                 }
             </div>
-            <a class="btn" asp-controller="Home" asp-action="Add" asp-route-gameId="@Model.Id">Add to Cart</a>
+            <a class="btn btn-add-to-cart" data-gameid="@Model.Id">Add to Cart</a>
             <a class="btn" asp-controller="Home" asp-action="ShoppingCart">Add to Wishlist</a>
             <div class="game-tags">
                 @foreach (var tag in Model.Genres)
