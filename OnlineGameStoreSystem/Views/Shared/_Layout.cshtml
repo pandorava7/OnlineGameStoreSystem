@@ -16,6 +16,17 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
+    @if (TempData["Info"] is string infoMessage)
+    {
+        <div id="temp-alert-container">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @infoMessage
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        </div>
+    }
     <partial name="_NavBar" />
 
     <div class="container">
