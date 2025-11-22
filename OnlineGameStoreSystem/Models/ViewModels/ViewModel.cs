@@ -55,3 +55,27 @@ public class CartItemViewModel
 }
 
 #endregion
+
+#region 社区VM
+
+public class CommunityPostViewModel
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = null!;
+    public string ThumbnailUrl { get; set; } = null!;
+    public string ContentSnippet { get; set; } = null!; // 截取的内容预览
+    public string AuthorName { get; set; } = null!;
+    public string AuthorAvatarUrl { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
+    public int ViewCount { get; set; }
+    public int LikeCount { get; set; }
+    public int CommentCount { get; set; }
+}
+
+public class CommunityViewModel
+{
+    public List<CommunityPostViewModel> Posts { get; set; } = null!;
+}
+
+
+#endregion
