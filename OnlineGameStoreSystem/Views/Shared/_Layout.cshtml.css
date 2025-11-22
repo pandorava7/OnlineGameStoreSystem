@@ -46,3 +46,23 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+temp-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+   /* z-index: 1050;*/
+    padding: 0px;
+    height: auto;
+}
+
+    /* 可选：为内部的 alert 添加一些样式，比如让其内容居中或有内边距 */
+#temp-alert-container .alert {
+    margin-bottom: 10px; /* 移除 alert 默认的底部边距 */
+    margin-top : 10px;
+    border-radius: 0; /* 让提示框边缘与屏幕边缘对齐 */
+    text-align: center; /* 文本居中 */
+    font-size: 1.2rem; 
+}

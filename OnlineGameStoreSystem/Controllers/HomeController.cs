@@ -163,27 +163,109 @@ public class HomeController : Controller
     [Route("cart")]
     public IActionResult ShoppingCart(string id)
     {
-        var exampleGame = db.Games.FirstOrDefault();
+        // 1. 获取当前用户的 ID (假设是 1)
+        int userId = 1;
 
-        var shoppingCartViewModel = new ShoppingCartViewModel
+        // 2. 从数据库获取该用户的购物车
+        var cart = db.ShoppingCarts.FirstOrDefault(c => c.UserId == userId);
+
+        // 如果还没有购物车，给个空的
+        if (cart == null)
         {
-            Items = new List<CartItemViewModel>
+            return View(new ShoppingCartViewModel
             {
-                new  CartItemViewModel
-                {
-                    Item = new CartItem { GameId = 1, CartId = 1, AddedAt = DateTime.Now, Game = exampleGame },
-                    ThumbnailUrl = "/images/example/silksong.png"
-                },
-                new  CartItemViewModel
-                {
-                    Item = new CartItem { GameId = 2, CartId = 1, AddedAt = DateTime.Now, Game = exampleGame },
-                    ThumbnailUrl = "/images/example/cyberpunk2077.png"
-                }
-            },
-            TotalPrice = 199.99m
+                Items = new List<CartItemViewModel>(),
+                TotalPrice = 0
+            });
+        }
+
+        // 3. ✅ 关键修改：从数据库查询真实的 CartItems (不要用 new List<CartItem>...)
+        // 必须加上 .Include(c => c.Game) 否则游戏信息是空的
+        var dbItems = db.CartItems
+            .Where(c => c.CartId == cart.Id)
+            .Include(c => c.Game)
+            .ToList();
+
+        // 4. 转换数据格式给页面用
+        var viewModelItems = dbItems.Select(item => new CartItemViewModel
+        {
+            Item = item, // 这里把真实的 ID (比如 5, 6) 传给页面
+            ThumbnailUrl = $"/images/example/silksong.png"
+        }).ToList();
+
+        var viewModel = new ShoppingCartViewModel
+        {
+            Items = viewModelItems,
+            TotalPrice = viewModelItems.Sum(x => x.Item.Game.Price) // 简单计算总价
         };
-        return View(shoppingCartViewModel);
+
+        return View(viewModel);
+        //var exampleGame = db.Games.FirstOrDefault();
+
+      //  var shoppingCartViewModel = new ShoppingCartViewModel
+        //{
+          //  Items = new List<CartItemViewModel>
+            //{
+              //  new  CartItemViewModel
+                //{
+                  //  Item = new CartItem { GameId = 1, CartId = 1, AddedAt = DateTime.Now, Game = exampleGame },
+                    //ThumbnailUrl = "/images/example/silksong.png"
+                //},
+     //           new  CartItemViewModel
+     //           {
+     //               Item = new CartItem { GameId = 2, CartId = 1, AddedAt = DateTime.Now, Game = exampleGame },
+     //               ThumbnailUrl = "/images/example/cyberpunk2077.png"
+     //           }
+     //       },
+     //       TotalPrice = 199.99m
+     //   };
+        //return View(shoppingCartViewModel);
     }
+    [HttpGet]
+    public IActionResult Add(int gameId)
+    {
+        // ... 找到 cartId 的逻辑 ...
+        int cartId = 1 ; // 示例值
+
+        // 实际添加操作
+        var newCartItem = new CartItem
+        {
+            CartId = cartId,
+            GameId = gameId,
+            AddedAt = DateTime.Now
+        };
+
+        db.CartItems.Add(newCartItem); // 使用 CartItems DbSet
+        db.SaveChanges();
+
+        TempData["Info"] = "Game added to cart successfully!";
+        return RedirectToAction("Index");
+        
+    }
+    // CartController.cs
+
+    [HttpPost] // 只能通过 POST 请求调用（安全做法）
+    public IActionResult Remove(int id)
+    {
+        // 1. 在数据库中查找该 CartItem
+        var cartItem = db.CartItems.Find(id);
+
+        // 2. 如果找到了，就删除
+        if (cartItem != null)
+        {
+            db.CartItems.Remove(cartItem);
+            db.SaveChanges(); // 保存更改到数据库
+
+            TempData["Info"] = "Item removed successfully!"; // 可选：显示提示消息
+        }
+
+        // 3. 重定向回购物车页面
+        // 注意：如果您的购物车 Action 叫 "ShoppingCart"，这里就写 "ShoppingCart"
+        // 如果叫 "Index"，就写 "Index"
+        return RedirectToAction("ShoppingCart");
+    }
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

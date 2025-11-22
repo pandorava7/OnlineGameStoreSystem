@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <form method="post" action="/Cart/Remove/@item.Item.Id">
+                <form method="post" asp-controller="Home" asp-action="Remove" asp-route-id="@item.Item.Id">
                     <button class="btn remove-btn">Remove</button>
                 </form>
             </div>
