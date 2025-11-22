@@ -1,0 +1,62 @@
+﻿.review-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background: #1c1c1c;
+    border-radius: 18px;
+    color: white;
+    box-sizing: border-box;
+}
+
+.rating-stars {
+    margin-bottom: 12px;
+    user-select: none;
+}
+
+    .rating-stars .star {
+        font-size: 30px;
+        cursor: pointer;
+        color: #555;
+        transition: color .2s;
+        margin-right: 5px;
+    }
+
+        .rating-stars .star.highlight {
+            color: #ffb400; /* 高亮色 */
+        }
+
+.review-input {
+    width: 100%;
+    min-height: 100px;
+    resize: none;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 14px;
+    background: #2a2a2a;
+    color: #f0f0f0;
+    border: 1px solid #444;
+    box-sizing: border-box;
+    line-height: 1.4;
+    transition: height .15s ease;
+}
+
+    .review-input:focus {
+        outline: none;
+        border-color: #777;
+    }
+
+.review-submit-btn {
+    margin-top: 12px;
+    padding: 10px 20px;
+    border: none;
+    background: #7b2ff7;
+    color: white;
+    font-size: 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+    .review-submit-btn:hover {
+        background: #9b4dff;
+    }

@@ -192,3 +192,48 @@ nextBtn.addEventListener('click', () => {
 generateDots();
 moveToSlide(0);
 resetAutoPlay(); // 使用 resetAutoPlay 启动初始计时器
+
+// --- 新增功能：缩略图悬浮淡入淡出切换主图 ---
+function enableThumbnailHover() {
+
+    const items = document.querySelectorAll('.carousel-item');
+
+    items.forEach(item => {
+        const topImg = item.querySelector('.main-img-top');
+        const bottomImg = item.querySelector('.main-img-bottom');
+        const thumbs = item.querySelectorAll('.thumbs img');
+
+        if (!topImg || !bottomImg || thumbs.length === 0) return;
+
+        const originalSrc = topImg.getAttribute('src');
+
+        thumbs.forEach(thumb => {
+
+            // 进入：hover 图淡入、原图淡出
+            thumb.addEventListener('mouseenter', () => {
+                const hoverSrc = thumb.getAttribute('src');
+
+                // 底层准备显示 hover 图
+                bottomImg.setAttribute('src', hoverSrc);
+
+                // 交叉淡化
+                topImg.style.opacity = 0;
+                bottomImg.style.opacity = 1;
+            });
+
+
+            // 离开：原图淡入、hover 图淡出
+            thumb.addEventListener('mouseleave', () => {
+
+                // 将原图放到底层（准备淡入）
+                //bottomImg.setAttribute('src', originalSrc);
+
+                // 交叉淡化（反向）
+                topImg.style.opacity = 1;     // 原图淡入
+                bottomImg.style.opacity = 0;  // hover 图淡出
+            });
+        });
+    });
+}
+
+enableThumbnailHover();
