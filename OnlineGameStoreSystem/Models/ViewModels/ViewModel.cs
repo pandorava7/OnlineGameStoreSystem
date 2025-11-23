@@ -77,5 +77,27 @@ public class CommunityViewModel
     public List<CommunityPostViewModel> Posts { get; set; } = null!;
 }
 
+public class PostDetailsViewModel
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public string AuthorName { get; set; } = null!;
+    public string AuthorAvatarUrl { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
+    public int ViewCount { get; set; }
+    public int LikeCount { get; set; }
+    public List<CommentViewModel> Comments { get; set; } = null!;
+}
+
+public class CommentViewModel
+{
+    public int Id { get; set; }
+    public string AuthorName { get; set; } = null!;
+    public string AuthorAvatarUrl { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
+}
+
 
 #endregion

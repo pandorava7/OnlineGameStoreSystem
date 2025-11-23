@@ -1,0 +1,18 @@
+.primary-btn {
+    background-color: var(--primary-color);
+}
+
+    .primary-btn:hover {
+        background-color: var(--accent-color);
+    }
+
+.secondary-btn {
+    background-color: transparent;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+}
+
+    .secondary-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }

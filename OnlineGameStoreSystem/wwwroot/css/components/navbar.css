@@ -30,6 +30,13 @@
     gap: 12px;
 }
 
+.brand {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    align-items: center;
+}
+
 .brand-icon {
     width: 36px;
     height: 36px;
@@ -40,6 +47,9 @@
 
 .brand-name {
     font-size: 20px;
+    color: #f3f3f3;
+    letter-spacing: 1px;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.7), 0 0 12px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 /* 中间（水平居中） */
@@ -73,7 +83,7 @@
     }
 
         .nav-center a:hover {
-            opacity: 0.85;
+            color: var(--primary-color) !important;
         }
 
 /* 右侧图标 */
@@ -97,6 +107,12 @@
     justify-content: center;
     text-decoration: none;
 }
+
+    .icon-btn:hover {
+        background: rgba(255,255,255,0.05);
+        color: var(--primary-color) !important;
+        border-radius: 6px;
+    }
 
     .icon-btn:focus {
         outline: 2px solid rgba(255,255,255,0.12);

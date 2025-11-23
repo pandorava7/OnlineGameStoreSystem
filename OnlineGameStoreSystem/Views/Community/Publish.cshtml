@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Write post";
+}
+
+<div class="page-container">
+    @* 标题 *@
+    <h1 class="page-title"><a href="/Community">Community</a> &gt;&gt; Write Your Own Post</h1>
+
+    <div class="post-form-container">
+        <form id="postForm" enctype="multipart/form-data" method="post" asp-action="Create" asp-controller="Post">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="Title" placeholder="Enter title of post" required />
+            </div>
+            <div class="form-group">
+                <label for="thumbnail">Thumbnail</label>
+                <div class="thumbnail-upload" onclick="document.getElementById('thumbnail').click();">
+                    <input type="file" id="thumbnail" name="Thumbnail" accept="image/*" />
+                    <p>Click or drag your image</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="content">Your Content</label>
+                <textarea id="content" name="Content" placeholder="Enter content of this post" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn primary-btn">Upload</button>
+        </form>
+
+        <!-- 实时预览容器 -->
+        <div class="post-preview-container">
+            <h1 class="preview-title">Post Preview</h1>
+
+            <div id="postPreview" class="masonry-item">
+                <div class="thumbnail-wrapper">
+                    <img src="/images/placeholder.png" alt="Preview" class="post-thumbnail" />
+                    <div class="view-badge">
+                        <i class="fa fa-eye eye-icon"></i>
+                        <span>0</span>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <div class="avatar-area">
+                        <img src="/images/avatar_default.png" class="avatar" />
+                    </div>
+                    <div class="user-info-right">
+                        <div class="username">Your Name</div>
+                        <div class="user-line"></div>
+                    </div>
+                </div>
+
+                <h3 class="post-title"></h3>
+                <p class="post-snippet"></p>
+
+                <div class="post-interactions">
+                    <div class="likes">
+                        <i class="fa fa-heart like-icon"></i>
+                        <span>0</span>
+                    </div>
+                    <div class="comments">
+                        <i class="fa fa-comment comment-icon"></i>
+                        <span>0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/publish-post.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/community.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/components/post_preview.js" asp-append-version="true"></script>
+
+}

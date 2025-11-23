@@ -40,7 +40,50 @@ public class CommunityController : Controller
                 .ToList()
         };
 
-
         return View(communityViewModel);
+    }
+
+    [Route("community/post/{id}")]
+    public IActionResult PostDetails(int id)
+    {
+        var post = db.Posts
+            .Include(p => p.User)
+            .Include(p => p.Likes)
+            .FirstOrDefault(p => p.Id == id);
+        if (post == null)
+        {
+            return NotFound();
+        }
+        post.ViewCount++;
+        db.SaveChanges();
+        var postDetailsViewModel = new PostDetailsViewModel
+        {
+            Id = post.Id,
+            Title = post.Title,
+            Content = post.Content,
+            AuthorName = post.User.Username,
+            AuthorAvatarUrl = post.User.AvatarUrl ?? "",
+            CreatedAt = post.CreatedAt,
+            ViewCount = post.ViewCount,
+            LikeCount = post.Likes.Count,
+            Comments = db.Comments
+                .Where(c => c.PostId == post.Id)
+                .Include(c => c.User)
+                .Select(c => new CommentViewModel
+                {
+                    Id = c.Id,
+                    Content = c.Content,
+                    AuthorName = c.User.Username,
+                    AuthorAvatarUrl = c.User.AvatarUrl ?? "",
+                    CreatedAt = c.CreatedAt
+                })
+                .ToList()
+        };
+        return View(postDetailsViewModel);
+    }
+
+    public IActionResult Publish()
+    {
+        return View();
     }
 }

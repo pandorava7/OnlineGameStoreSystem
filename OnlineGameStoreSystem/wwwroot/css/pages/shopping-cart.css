@@ -3,7 +3,8 @@
    ========================================= */
 
 .cart-page-container {
-    max-width: 1200px margin: 100px auto 50px auto; /* 顶部留出导航栏空间，底部留出页脚空间 */
+    max-width: 1200px; /* 顶部留出导航栏空间，底部留出页脚空间 */
+    margin: 100px auto 50px auto;
     padding: var(--spacing-md);
     min-height: calc(100vh - 150px); /* 确保内容区不会太短 */
 }
@@ -127,25 +128,6 @@
     justify-content: flex-end;
     gap: 8px;
     margin-top: 8px;
-}
-
-.primary-btn {
-    background-color: var(--primary-color);
-}
-
-    .primary-btn:hover {
-        background-color: var(--accent-color);
-    }
-
-.secondary-btn {
-    background-color: transparent;
-    border: 1px solid var(--text-muted);
-    color: var(--text-muted);
-}
-
-.secondary-btn:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
 }
 
 

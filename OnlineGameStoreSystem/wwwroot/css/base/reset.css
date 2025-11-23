@@ -63,6 +63,20 @@ textarea {
     font-family: var(--font-main);
     font-size: 1rem;
     border-radius: var(--radius-sm);
+    border: 1px solid var(--text-light);
+    background: var(--color-bg-2);
+    color: var(--color-text);
+    padding: var(--space-sm) var(--space-md);
+    transition: background var(--transition-normal), border-color var(--transition-normal);
+}
+textarea {
+    overflow-y: hidden; /* 隐藏滚动条 */
+    resize: none; /* 禁止手动拉伸（可选） */
+}
+.button {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-bg-2);
     background: var(--color-bg-2);
     color: var(--color-text);
@@ -76,6 +90,9 @@ textarea {
     textarea:hover {
         border-color: var(--color-text);
     }
+.button:hover {
+    border-color: var(--color-text);
+}
 
     button:focus,
     input:focus,
@@ -84,9 +101,21 @@ textarea {
         outline: none;
         border-color: var(--color-text);
     }
+input:focus,
+textarea:focus {
+    border: solid 1px var(--accent-color2) !important;
+}
+.button:focus {
+    outline: none;
+    border-color: var(--color-text);
+}
 
     button:disabled,
     input:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
     }
@@ -95,9 +124,19 @@ button {
     cursor: pointer;
     border-radius: 9999px;
 }
+.button {
+    cursor: pointer;
+    border-radius: 9999px;
+}
 
 input[type="text"] {
     border-radius: 9999px;
+    padding: var(--space-sm) var(--space-lg);
+}
+
+textarea {
+    border-radius: 20px;
+    padding: var(--space-md) var(--space-lg);
 }
 
 hr {

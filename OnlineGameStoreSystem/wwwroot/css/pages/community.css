@@ -1,64 +1,187 @@
-﻿.community-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-auto-rows: 10px; /* Masonry 的基础单位，关键！ */
-    gap: 20px;
-    padding: 20px;
+﻿.page-container {
+    width: 1000px;
+    margin: 40px auto;
 }
 
-.grid {
-    column-count: 3;
+.page-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: normal;
 }
 
-    .grid .item {
-        width: 100%;
-        background-color: #f5f5f5;
-        border-radius: 8px;
-        padding: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        color: #333;
+    .page-title a:hover {
+        color: var(--primary-color);
+        text-decoration: none;
     }
 
-.post-card {
-    display: inline-block;
-    background-color: #2a2a2a;
-    color: #f0f0f0;
-    margin: 0 0 20px;
-    width: 100%;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.2s;
+.publish-button-wrapper {
+    margin-bottom: 20px;
 }
 
-    .post-card:hover {
+.masonry-container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.masonry-item {
+    position: absolute;
+    transition: transform 0.2s ease;
+    background: #222222;
+    border-radius: 15px 15px 15px 0px;
+    padding-bottom: 15px;
+    max-width: 300px;
+}
+
+    /* 悬停 */
+    .masonry-item:hover {
         transform: translateY(-5px);
+        outline: solid 2px var(--primary-color);
     }
 
-.post-thumbnail {
+
+
+/* === 封面图区域 === */
+.thumbnail-wrapper {
+    position: relative;
+}
+
+    .thumbnail-wrapper img {
+        width: 100%;
+        display: block;
+        border-radius: 15px 15px 0 0;
+    }
+
+/* 浏览数小 Badge */
+.view-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.55);
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    color: var(--primary-color) !important;
+    font-weight: bold;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+/* 眼睛图标（简易 CSS 版，你也可以换成 fontawesome） */
+.eye-icon {
+    background-size: cover;
+    display: inline-block;
+    color: var(--primary-color) !important;
+}
+
+
+/* === 用户信息区 === */
+.user-info {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px 0 12px;
+    position: relative;
+    top: -30px;
+}
+
+/* 左侧头像 */
+.avatar-area {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .avatar-area .avatar {
+        width: 90%;
+        height: 90%;
+        object-fit: cover;
+    }
+
+/* 用户名和线 */
+.user-info-right {
+    position: relative;
+    top: 15px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.username {
+    color: #8d8d99;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.user-line {
     width: 100%;
-    display: block;
-    object-fit: cover;
+    height: 1px;
+    background: #444;
+    margin-top: 3px;
 }
 
-.post-info {
-    padding: 10px 15px;
-}
 
+/* === 标题与内容 === */
 .post-title {
+    position: relative;
+    top: -30px;
     font-size: 18px;
-    margin: 5px 0;
+    margin: 10px 12px 5px 12px;
+    color: #fff;
+    white-space: normal; /* 默认换行方式 */
+    word-wrap: break-word;
 }
 
 .post-snippet {
+    position: relative;
+    top: -30px;
+    margin: 0 12px;
     font-size: 14px;
-    color: #ccc;
-    margin: 5px 0;
+    color: #cccccc;
+    line-height: 1.4;
+    white-space: normal; /* 默认换行方式 */
+    word-wrap: break-word;
+    -webkit-line-clamp: 3; /* 最多显示3行 */
+    display: -webkit-box;
+    -webkit-line-clamp: 6; /* 最多显示3行 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.post-meta {
-    font-size: 12px;
-    color: #999;
+.post-interactions {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    justify-content: flex-end;
+    position: relative;
+    width: 100%;
+    position: absolute;
+    bottom: 15px;
+    padding-right: 12px;
+    gap: 15px;
+}
+
+.likes span {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
+.comment-icon span {
+    color: var(--accent-color2) !important;
+    font-weight: bold;
+}
+
+.like-icon {
+    color: var(--primary-color) !important;
+    background-image: url('/images/like.png'); /* 你自己的路径 */
+}
+
+.comment-icon {
+    color: var(--accent-color2) !important;
+    background-image: url('/images/comment.png'); /* 你自己的路径 */
 }

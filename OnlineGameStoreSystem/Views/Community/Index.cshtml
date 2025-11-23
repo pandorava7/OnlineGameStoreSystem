@@ -4,38 +4,67 @@
 
 @model CommunityViewModel
 
-<div class="grid">
-    <div class="item">1</div>
-    <div class="item">2</div>
-    <div class="item">3</div>
-    <div class="item">4</div>
-    <div class="item">5</div>
-    <div class="item">6</div>
-    <div class="item">7</div>
-    <div class="item">8</div>
-    <div class="item">9</div>
-    <div class="item">10</div>
-</div>
 
-<div class="community-container">
-    @foreach (var post in Model.Posts)
-    {
-        <div class="post-card">
-            <img src="@post.ThumbnailUrl" alt="@post.Title" class="post-thumbnail" />
-            <div class="post-info">
+<div class="page-container">
+    @* 标题 *@
+    <h1 class="page-title">Community</h1>
+
+    @* 发布按钮 *@
+    <div class="publish-button-wrapper">
+
+        <a href="/Community/Publish" class="button primary-btn">
+            Create your own</a>
+    </div>
+
+    <div class="masonry-container">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="masonry-item">
+                <!-- 封面图 -->
+                <div class="thumbnail-wrapper">
+                    <img src="@post.ThumbnailUrl" alt="@post.Title" class="post-thumbnail" />
+
+                    <!-- 左上角浏览数 -->
+                    <div class="view-badge">
+                        <i class="fa fa-eye eye-icon"></i>
+                        <span>@post.ViewCount</span>
+                    </div>
+                </div>
+
+                <!-- 用户区域 -->
+                <div class="user-info">
+                    <div class="avatar-area">
+                        <img src="@(string.IsNullOrEmpty(post.AuthorAvatarUrl) ? "/images/avatar_default.png" : post.AuthorAvatarUrl)" class="avatar" />
+                    </div>
+
+                    <div class="user-info-right">
+                        <div class="username">@post.AuthorName</div>
+                        <div class="user-line"></div>
+                    </div>
+                </div>
+
+                <!-- 标题 -->
                 <h3 class="post-title">@post.Title</h3>
+
+                <!-- 内容摘要 -->
                 <p class="post-snippet">@post.ContentSnippet</p>
-                <div class="post-meta">
-                    <span>@post.CreatedAt.ToString("yyyy-MM-dd")</span>
-                    <span>Views: @post.ViewCount</span>
-                    <span>Comments: @post.CommentCount</span>
-                    <span>Likes: @post.LikeCount</span>
+
+                <!-- 点赞和留言数 -->
+                <div class="post-interactions">
+                    <div class="likes">
+                        <i class="fa fa-heart like-icon"></i>
+                        <span>@post.LikeCount</span>
+                    </div>
+                    <div class="comments">
+                        <i class="fa fa-comment comment-icon"></i>
+                        <span>@post.CommentCount</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
 
+        }
+    </div>
+</div>
 
 
 @section Styles {
@@ -44,6 +73,6 @@
 }
 
 @section Scripts {
-    <script src="~/js/test.js" asp-append-version="true"></script>
+    <script src="~/js/pages/community_mansory.js" asp-append-version="true"></script>
 
 }
