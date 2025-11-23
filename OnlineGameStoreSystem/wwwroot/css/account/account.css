@@ -1,0 +1,115 @@
+﻿.login-container {
+    background-color: #1a1c1f;
+    padding: 40px;
+    border-radius: 20px;
+    margin-left: 20vw;
+    margin-right: 20vw;
+    border: 1px solid #555; /* 外框白线 */
+    margin-bottom:30px;
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 30px;
+}
+
+.sec-box {
+    background-color: #2a2d30;
+    border-radius: 20px;
+    padding: 40px;
+    margin: 0 auto;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3); /* 内框阴影 */
+    border: 1px solid #555; /* 外框白线 */
+    margin-bottom:5px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    color: #c5c5c5;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 12px;
+    border-radius: 8px;
+    border: 2px solid #444; /* 默认深灰边线 */
+    background-color: #1f2024; /* 深色背景 */
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.25s ease-in-out; /* 平滑过渡 */
+}
+
+/* 聚焦效果 */
+.form-group input:focus {
+    outline: none;
+    border-color: #ffffff; /* 明亮蓝边 */
+    transform: scale(1.02); /* 微微放大 */
+    background-color: #26282c; /* 背景轻微变亮 */
+}
+
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #5c7dff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background-color: #8aaeff;
+}
+
+.forgot {
+    margin-top: 30px; /* 调高往下移 */
+    margin-bottom:0;
+    text-align: center;
+}
+
+.forgot a {
+    cursor: pointer;
+    color: rgb(38, 187, 255);
+    text-decoration: underline;
+}
+
+.create {
+    background-color: #2a2d30;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 0 auto;
+    width: 60%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3); /* 內框陰影 */
+    border: 1px solid #555; /* 外框灰線 */
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center; /* 垂直置中 */
+    gap: 10px; /* 文字與連結間距 */
+    font-family: Arial, sans-serif;
+    color: #ffffff; /* 預設文字顏色 */
+    margin-top:20px;
+
+}
+
+.create22 {
+    pointer-events: auto;
+    cursor: pointer;
+    text-decoration: underline rgb(38, 187, 255);
+    opacity: 1;
+    color: rgb(38, 187, 255);
+}
+
+.create22:hover {
+    color: rgb(38, 187, 255); /* 保持顏色不變 */
+    text-decoration: underline rgb(38, 187, 255);
+}
