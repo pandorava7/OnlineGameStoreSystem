@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Community";
+}
+
+@model CommunityViewModel
+
+<div class="grid">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+    <div class="item">7</div>
+    <div class="item">8</div>
+    <div class="item">9</div>
+    <div class="item">10</div>
+</div>
+
+<div class="community-container">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="post-card">
+            <img src="@post.ThumbnailUrl" alt="@post.Title" class="post-thumbnail" />
+            <div class="post-info">
+                <h3 class="post-title">@post.Title</h3>
+                <p class="post-snippet">@post.ContentSnippet</p>
+                <div class="post-meta">
+                    <span>@post.CreatedAt.ToString("yyyy-MM-dd")</span>
+                    <span>Views: @post.ViewCount</span>
+                    <span>Comments: @post.CommentCount</span>
+                    <span>Likes: @post.LikeCount</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/community.css" asp-append-version="true" />
+
+}
+
+@section Scripts {
+    <script src="~/js/test.js" asp-append-version="true"></script>
+
+}

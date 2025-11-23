@@ -7,9 +7,13 @@ builder.Services.AddControllersWithViews();
 
 //builder.Services.AddDbContext<MyDbContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<DB>(options =>
-    options.UseSqlServer($@"Server=(LocalDB)\MSSQLLocalDB;AttachDbFilename={builder.Environment.ContentRootPath}\DB.mdf;Database=OnlineGameStoreDB;Trusted_Connection=True;MultipleActiveResultSets=true")
-);
+//builder.Services.AddDbContext<DB>(options =>
+//    options.UseSqlServer($@"Server=(LocalDB)\MSSQLLocalDB;AttachDbFilename={builder.Environment.ContentRootPath}\DB.mdf;Database=OnlineGameStoreDB;Trusted_Connection=True;MultipleActiveResultSets=true")
+//);
+builder.Services.AddSqlServer<DB>($@"
+    Data Source=(LocalDB)\MSSQLLocalDB;
+    AttachDbFilename={builder.Environment.ContentRootPath}\DB.mdf;
+");
 
 var app = builder.Build();
 

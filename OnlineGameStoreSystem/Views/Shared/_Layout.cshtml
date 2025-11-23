@@ -12,10 +12,25 @@
     <link rel="stylesheet" href="~/OnlineGameStoreSystem.styles.css" asp-append-version="true" />
     @* components css *@
     <link rel="stylesheet" href="~/css/components/navbar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/components/alert.css" asp-append-version="true" />
 
     @RenderSection("Styles", required: false)
 </head>
 <body>
+
+    @* 这里我们不使用TempInfo（被我注释掉的部分），推荐使用Ajax（flash message）显示临时信息，具体代码在alert.js里，使用showTemporaryMessage调用。 *@
+    <div id="flash-message-container"></div>
+    @* @if (TempData["Info"] is string infoMessage)
+    {
+        <div id="temp-alert-container">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @infoMessage
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="closeAlert()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        </div>
+    } *@
     <partial name="_NavBar" />
 
     <div class="container">
@@ -29,7 +44,12 @@
     </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* API *@
+    <script src="~/js/api/cart-api.js" asp-append-version="true"></script>
+    @* Initial *@
+    <script src="~/js/app.js" asp-append-version="true"></script>
     <script src="~/js/components/navbar.js" asp-append-version="true"></script>
+    <script src="~/js/components/alert.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

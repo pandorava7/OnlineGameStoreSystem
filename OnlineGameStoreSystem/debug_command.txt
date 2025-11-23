@@ -1,0 +1,9 @@
+﻿// 使用此代码生成 ASP.NET Core Identity 密码哈希
+
+var hasher = new PasswordHasher<IdentityUser>();
+var user = new IdentityUser();
+
+// 这里填你想要的密码，例如 "123"
+var passwordHash = hasher.HashPassword(user, "123");
+
+Console.WriteLine(passwordHash);

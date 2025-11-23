@@ -1,31 +1,4 @@
 ﻿/* -------------------------------- */
-/*         公共变量（所有主题）      */
-/* -------------------------------- */
-:root {
-    --font-main: Arial, Helvetica, sans-serif;
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 16px;
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px;
-    --transition-normal: 0.25s ease;
-    --shadow: 0 6px 18px rgba(2,6,23,0.6);
-    --max-list-height: 40vh;
-    
-    --color-bg: #101414;
-    --color-bg-2: #404044;
-    --color-bg-3: #505054;
-    --color-pink: pink;
-    --color-purple: purple;
-    --color-green: green;
-    --color-text: #ffffff;
-    --color-muted: #cccccc;
-}
-
-/* -------------------------------- */
 /*       全局通用样式（不重复）     */
 /* -------------------------------- */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css");
@@ -47,7 +20,7 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    margin: 0 0 var(--space-sm) 0;
+    margin: 0 0 0 0;
     font-weight: 600;
     line-height: 1.25;
     color: var(--color-text);

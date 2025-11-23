@@ -1,83 +1,173 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
 
-namespace OnlineGameStoreSystem.Controllers
+namespace OnlineGameStoreSystem.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly ILogger<HomeController> _logger;
+    private readonly DB db;
+
+    public HomeController(ILogger<HomeController> logger, DB context)
     {
-        private readonly ILogger<HomeController> _logger;
+        _logger = logger;
+        db = context;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
+    public IActionResult Index()
+    {
+        var categories = new List<GameCategoryViewModel>()
         {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-
-            var hasher = new PasswordHasher<IdentityUser>();
-            var user = new IdentityUser();
-
-            // 这里填你想要的密码，例如 "Test123!"
-            var passwordHash = hasher.HashPassword(user, "123");
-
-            Console.WriteLine(passwordHash);
-
-            var categories = new List<GameCategoryViewModel>()
-            {
-                new GameCategoryViewModel {
-                    Title = "Free to Play",
-                    Slug = "free-to-play",
-                    Games = new List<GameViewModel> {
-                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game A", CoverUrl="/images/example/silksong.png", Price=0 },
-                        new GameViewModel { Title = "Game B", CoverUrl="/images/example/silksong.png", Price=0 },
-                    }
-                },
-
-                new GameCategoryViewModel {
-                    Title = "RPG Games",
-                    Slug = "rpg",
-                    Games = new List<GameViewModel> {
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                        new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-                        new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-                    }
+            new GameCategoryViewModel {
+                Title = "Free to Play",
+                Slug = "free-to-play",
+                Games = new List<GameViewModel> {
+                    new GameViewModel { Title = "Cyberpunk2077", CoverUrl="/images/example/cyberpunk2077.png", Price=0 },
+                    new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Wuthering Waves", CoverUrl="/images/example/WutheringWaves.png", Price=0 },
+                    new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/hollow knight.png", Price=0 },
+                    new GameViewModel { Title = "Clair Obscur: Expedition 33", CoverUrl="/images/example/Expedition33.png", Price=0 },
+                    new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
+                    new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
                 }
-            };
+            },
+
+            new GameCategoryViewModel {
+                Title = "RPG Games",
+                Slug = "rpg",
+                Games = new List<GameViewModel> {
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                    new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
+                    new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
+                }
+            }
+        };
 
 
-            return View(categories);
-        }
+        var topGamesBySales = db.Games
+            .Include(g => g.Media)
+            .Select(g => new
+            {
+                Game = g,
+                SalesCount = g.Purchases.Count(p => p.Status == PurchaseStatus.Completed)
+            })
+            .OrderByDescending(x => x.SalesCount)
+            .Take(10)
+            .ToList();
 
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        var homeViewModel = new HomeViewModel
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            topGamesBySales = topGamesBySales.Select(x => new TopGameViewModel
+            {
+                Title = x.Game.Title,
+                ThumbnailUrl = x.Game.Media
+                    .Where(m => m.MediaType == "thumb")
+                    .Select(m => m.MediaUrl)
+                    .FirstOrDefault() ?? string.Empty,
+                ImageUrls = x.Game.Media
+                    .Where(m => m.MediaType == "image")
+                    .Select(m => m.MediaUrl)
+                    .ToList(),
+            }).ToList(),
+
+            Categories = categories
+        };
+
+        Console.WriteLine("Top 10 Games by Sales:" + topGamesBySales.Count);
+        foreach (var item in topGamesBySales)
+        {
+            Console.WriteLine($"Game: {item.Game.Title}, Sales: {item.SalesCount}");
         }
+        foreach (var item in homeViewModel.topGamesBySales)
+        {
+            foreach (var image in item.ImageUrls)
+            {
+                Console.WriteLine($"Game: {item.Title}, Image URL: {image}");
+            }
+        }
+
+        return View(homeViewModel);
+    }
+
+    [Route("game/{name}")]
+    public IActionResult GameDetail(string name)
+    {
+        // 将 '_' 转回 ' '
+        string realName = name.Replace("_", " ");
+
+        // Search game by name from database
+        var game = db.Games
+            .Include(g => g.Media)
+            .Include(g => g.Tags)
+            .Include(g => g.Reviews)
+            .ThenInclude(r => r.User)
+            .FirstOrDefault(g => g.Title.ToLower() == realName.ToLower());
+
+        Console.WriteLine("Searching for game: " + name);
+
+        if (game == null)
+        {
+            // Game not found, return 404
+            return NotFound();
+        }
+
+        var gameDetailViewModel = new GameDetailViewModel
+        {
+            Id = game.Id,
+            Title = game.Title,
+            Price = game.Price,
+            DiscountPrice = game.DiscountPrice,
+            Description = game.Description,
+            VideoUrls = game.Media
+            .Where(g => g.MediaType == "video")
+            .Select(m => m.MediaUrl)
+            .ToList(),
+            ImageUrls = game.Media
+            .Where(g => g.MediaType == "image")
+            .Select(m => m.MediaUrl)
+            .ToList(),
+            Genres = game.Tags.Count > 0 ? game.Tags.Select(t => t.Tag.Name).ToList() : new List<string> { "No Genre" },
+            Reviews = game.Reviews
+                .Select(r => new Review
+                {
+                    User = r.User,
+                    Rating = r.Rating,
+                    Content = r.Content,
+                    Likes = r.Likes,
+                    CreatedAt = r.CreatedAt
+                })
+                .ToList()
+        };
+        return View(gameDetailViewModel);
+    }
+
+    
+
+
+
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

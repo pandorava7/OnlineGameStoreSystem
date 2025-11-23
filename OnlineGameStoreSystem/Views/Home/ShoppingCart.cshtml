@@ -1,0 +1,87 @@
+﻿@* @model ShoppingCartViewModel
+
+<div class="cart-container">
+    <h1 class="cart-title">Shopping Cart</h1>
+
+    <div class="cart-list">
+        @foreach (var item in Model.Items)
+        {
+            <div class="cart-item">
+                <img class="cart-game-image" src="@item.ThumbnailUrl" alt="Game">
+
+                <div class="cart-info">
+                    <div class="cart-game-title">@item.Item.Game.Title</div>
+
+                    <div class="cart-price">
+                        @if (item.Item.Game.DiscountPrice != null)
+                        {
+                            <del>$@item.Item.Game.Price</del>
+                            <span class="discount-price">$@item.Item.Game.DiscountPrice</span>
+                        }
+                        else
+                        {
+                            <span>$@item.Item.Game.Price</span>
+                        }
+                    </div>
+                </div>
+
+                <form method="post" asp-controller="Home" asp-action="Remove" asp-route-id="@item.Item.Id">
+                    <button class="btn remove-btn">Remove</button>
+                </form>
+            </div>
+        }
+    </div>
+
+    <div class="cart-summary">
+        <div class="total-text">Total Price：</div>
+        <div class="total-value">$@Model.TotalPrice</div>
+
+        <form method="post" action="/Order/Checkout">
+            <button class="btn checkout-btn">Checkout</button>
+        </form>
+    </div>
+
+</div> *@
+
+@{
+    ViewData["Title"] = "My Cart";
+}
+
+<div class="cart-page-container">
+    <h1 class="cart-page-title">My Shopping Cart</h1>
+
+    <div class="cart-content">
+        <div class="cart-items-list" id="cart-items-container">
+            @* 购物车商品将由 JavaScript 渲染到这里 *@
+            <p class="empty-cart-message">Loading...</p>
+        </div>
+
+        <div class="cart-summary">
+            <h3 class="summary-title">Order Summary</h3>
+            <div class="summary-row">
+                <span>Item Subtotal</span>
+                <span id="summary-subtotal">RM <span id="cart-total">0.00</span></span>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>RM <span id="cart-total-final">0.00</span></span> @* 购物车总价与此绑定 *@
+            </div>
+            <button class="checkout-btn">
+                <i class="fas fa-credit-card"></i> Checkout
+            </button>
+            <a href="/" class="continue-shopping">
+                <i class="fas fa-arrow-left"></i> Continue Shopping
+            </a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/components/shopping_cart.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/components/shopping-cart.css" asp-append-version="true" />
+
+}

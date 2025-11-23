@@ -9,8 +9,8 @@ const track = document.querySelector('.carousel-track');
 const slides = Array.from(document.querySelectorAll('.carousel-item'));
 const prevBtn = document.querySelector('.prev');
 const nextBtn = document.querySelector('.next');
-const progressBar = document.querySelector('.progress-bar');
-const dots = Array.from(document.querySelectorAll('.dot'));
+const dotsContainer = document.querySelector('.carousel-dots');
+let dots = [];
 
 let currentIndex = 0;
 // 为什么是1100px？见上方注释
@@ -18,9 +18,38 @@ const slideWidth = 1100;
 // 自动播放计时器变量
 let autoPlayTimer = null;
 // 自动播放间隔时间（4000ms = 4秒）
-const autoPlayInterval = 4000;
+const autoPlayInterval = 5000;
 // 获取总幻灯片数
 const totalSlides = slides.length;
+
+// 新增：动态生成 Dots 的函数
+function generateDots() {
+    // 清空容器（防止重复生成）
+    dotsContainer.innerHTML = '';
+
+    // 根据 slide 数量循环生成
+    slides.forEach((_, index) => {
+        // 创建元素 (你可以根据 CSS 实际情况改成 button 或 span)
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+
+        // 如果是第一个，默认激活
+        if (index === 0) {
+            dot.classList.add('active');
+        }
+
+        // 【重要】直接在这里绑定点击事件，比在底部遍历更高效
+        dot.addEventListener('click', () => {
+            moveToSlide(index);
+        });
+
+        // 添加到容器
+        dotsContainer.appendChild(dot);
+    });
+
+    // 【重要】更新 dots 变量，让后续的 updateDots 函数能找到它们
+    dots = Array.from(document.querySelectorAll('.dot'));
+}
 
 // --- 核心功能：移动到某个 slide ---
 function moveToSlide(index) {
@@ -40,10 +69,10 @@ function moveToSlide(index) {
     updateDots();
 
     // 4. 【新增功能】更新按钮状态
-    updateButtonVisibility();
+    //updateButtonVisibility();
 
     // 5. 重置进度条动画
-    resetProgressBarAnimation();
+    resetProgressBarAnimation(slides[currentIndex]);
 
     // 6. 重置自动播放计时器 (注意: 既然是有限端点模式，通常会禁用自动播放)
     // 如果需要保留自动播放，请保持 resetAutoPlay() 调用。
@@ -104,19 +133,18 @@ function startAutoPlay() {
 
 
 // --- 进度条控制功能 ---
-function resetProgressBarAnimation() {
-    // 1. 移除 active class，停止动画并重置进度条到 0%
+function resetProgressBarAnimation(slide) {
+    const progressBar = slide.querySelector('.progress-bar');
+    if (!progressBar) return;
+
+    // 停止动画并重置
     progressBar.classList.remove('active');
 
-    // 2. 强制浏览器进行重绘 (Reflow)
-    // 这是一个常见的技巧，用于强制 CSS 动画在短时间内重置
+    // 强制浏览器重绘
     void progressBar.offsetWidth;
 
-    // 3. 重新添加 active class，触发从 0% 到 100% 的动画
+    // 触发动画
     progressBar.classList.add('active');
-
-    // 4. 重置自动播放计时器
-    resetAutoPlay();
 }
 
 
@@ -156,14 +184,54 @@ nextBtn.addEventListener('click', () => {
     moveToSlide(index);
 });
 
-// dot 点击事件
-dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => moveToSlide(i));
-});
-
 
 // --- 初始启动 ---
 // 首次进入页面时，确保显示第一个 slide 并开始自动播放
+generateDots();
+moveToSlide(0);
+resetAutoPlay(); // 使用 resetAutoPlay 启动初始计时器
 
-//moveToSlide(0);
-//resetAutoPlay(); // 使用 resetAutoPlay 启动初始计时器
+// --- 新增功能：缩略图悬浮淡入淡出切换主图 ---
+function enableThumbnailHover() {
+
+    const items = document.querySelectorAll('.carousel-item');
+
+    items.forEach(item => {
+        const topImg = item.querySelector('.main-img-top');
+        const bottomImg = item.querySelector('.main-img-bottom');
+        const thumbs = item.querySelectorAll('.thumbs img');
+
+        if (!topImg || !bottomImg || thumbs.length === 0) return;
+
+        const originalSrc = topImg.getAttribute('src');
+
+        thumbs.forEach(thumb => {
+
+            // 进入：hover 图淡入、原图淡出
+            thumb.addEventListener('mouseenter', () => {
+                const hoverSrc = thumb.getAttribute('src');
+
+                // 底层准备显示 hover 图
+                bottomImg.setAttribute('src', hoverSrc);
+
+                // 交叉淡化
+                topImg.style.opacity = 0;
+                bottomImg.style.opacity = 1;
+            });
+
+
+            // 离开：原图淡入、hover 图淡出
+            thumb.addEventListener('mouseleave', () => {
+
+                // 将原图放到底层（准备淡入）
+                //bottomImg.setAttribute('src', originalSrc);
+
+                // 交叉淡化（反向）
+                topImg.style.opacity = 1;     // 原图淡入
+                bottomImg.style.opacity = 0;  // hover 图淡出
+            });
+        });
+    });
+}
+
+enableThumbnailHover();

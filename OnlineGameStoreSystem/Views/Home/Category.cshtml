@@ -22,20 +22,22 @@
                     <div class="game-list">
                         @foreach (var game in category.Games)
                         {
-                            <div class="game-card">
-                                <img src="@game.CoverUrl" alt="@game.Title" />
-                                <div class="game-info">
-                                    <p class="game-title">@game.Title</p>
-                                    @if (game.Price == 0)
-                                    {
-                                        <p class="game-price free">Free</p>
-                                    }
-                                    else
-                                    {
-                                        <p class="game-price">RM @game.Price</p>
-                                    }
+                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@game.Title.Replace(' ', '_')">
+                                <div class="game-card">
+                                    <img src="@game.CoverUrl" alt="@game.Title" />
+                                    <div class="game-info">
+                                        <p class="game-title">@game.Title</p>
+                                        @if (game.Price == 0)
+                                        {
+                                            <p class="game-price free">Free</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="game-price">RM @game.Price</p>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         }
                     </div>
                 </div>

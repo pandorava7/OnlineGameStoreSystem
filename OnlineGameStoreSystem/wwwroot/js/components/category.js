@@ -1,6 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     const categories = document.querySelectorAll(".category-block");
-    const gap = 25; // 假设 CSS 中的 gap 是 25px
+    const gap = 30; // 假设 CSS 中的 gap 是 30px
 
     categories.forEach(block => {
         // 1. 获取 DOM 元素
