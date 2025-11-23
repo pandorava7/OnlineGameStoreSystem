@@ -25,7 +25,7 @@
             reader.onload = function (e) {
                 previewThumbnail.src = e.target.result;
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file);     
         } else {
             previewThumbnail.src = "/images/placeholder.png";
         }

@@ -44,7 +44,7 @@ public class CommunityController : Controller
     }
 
     [Route("community/post/{id}")]
-    public IActionResult PostDetails(int id)
+    public IActionResult PostDetail(int id)
     {
         var post = db.Posts
             .Include(p => p.User)
@@ -52,6 +52,7 @@ public class CommunityController : Controller
             .FirstOrDefault(p => p.Id == id);
         if (post == null)
         {
+            Console.WriteLine("Post not found with ID: " + id);
             return NotFound();
         }
         post.ViewCount++;
@@ -60,6 +61,7 @@ public class CommunityController : Controller
         {
             Id = post.Id,
             Title = post.Title,
+            ThumbnailUrl = post.Thumbnail ?? "",
             Content = post.Content,
             AuthorName = post.User.Username,
             AuthorAvatarUrl = post.User.AvatarUrl ?? "",
