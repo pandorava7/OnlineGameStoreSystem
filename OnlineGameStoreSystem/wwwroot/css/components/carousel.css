@@ -44,7 +44,6 @@
         height: auto;
         aspect-ratio: 16 / 9;
         object-fit: cover;
-        filter: brightness(75%);
         flex-shrink: 0; /* 关键：不允许被压缩 */
         transition: opacity .35s ease; /* 交叉渐变速度 */
     }
@@ -105,6 +104,9 @@
         border: 2px solid #222;
     }
 
+        .thumbs img:hover {
+            filter: brightness(0.5);
+        }
 
 /* tags */
 .tags span {

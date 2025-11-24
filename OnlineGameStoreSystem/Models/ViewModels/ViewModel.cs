@@ -100,5 +100,33 @@ public class CommentViewModel
     public DateTime CreatedAt { get; set; }
 }
 
+// 自己的帖子列表VM
+public class UserPostsViewModel
+{
+    public List<UserPostViewModel> Posts { get; set; } = null!;
+}
+
+public class UserPostViewModel
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = null!;
+    public string ThumbnailUrl { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public DateTime UpdatedAt { get; set; }
+    public int ViewCount { get; set; }
+    public int LikeCount { get; set; }
+    public int CommentCount { get; set; }
+}
+
+// 发布Post时使用的VM
+public class CreatePostViewModel
+{
+    public int? Id { get; set; }          // 新帖 Id 为 null，编辑帖有值
+    public string Title { get; set; } = null!;
+    public string Content { get; set; } = null!;
+    public IFormFile? Thumbnail { get; set; }
+    public string? ThumbnailUrl { get; set; } = null!; // 编辑时显示已有缩略图
+}
+
 
 #endregion

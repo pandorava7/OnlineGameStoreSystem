@@ -1,31 +1,53 @@
-﻿@{
+﻿@model CreatePostViewModel
+@{
     ViewData["Title"] = "Write post";
 }
 
 <div class="page-container">
     @* 标题 *@
-    <h1 class="page-title"><a href="/Community">Community</a> &gt;&gt; Write Your Own Post</h1>
+    <h1 class="page-title"><a href="/Community">Community</a> &gt;&gt; <a href="/community/posts">Post</a> &gt;&gt; Write Your Own Post</h1>
 
     <div class="post-form-container">
-        <form id="postForm" enctype="multipart/form-data" method="post" asp-action="Create" asp-controller="Post">
+        @* Form() *@
+        <form id="postForm" enctype="multipart/form-data" method="post" asp-controller="Community" asp-action="CreatePost">
+            @* 隐藏 Id 字段 *@
+            <input type="hidden" asp-for="Id" />
+
             <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="Title" placeholder="Enter title of post" required />
+                <label asp-for="Title"></label>
+                <input id="title" asp-for="Title" class="form-control" placeholder="Enter title of post" required />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label for="thumbnail">Thumbnail</label>
+                <label asp-for="Thumbnail"></label>
                 <div class="thumbnail-upload" onclick="document.getElementById('thumbnail').click();">
-                    <input type="file" id="thumbnail" name="Thumbnail" accept="image/*" />
+                    <input asp-for="Thumbnail" type="file" accept="image/*" id="thumbnail" class="form-control-file" />
                     <p>Click or drag your image</p>
                 </div>
+                <span asp-validation-for="Thumbnail" class="text-danger"></span>
+
+                @* 隐藏已有缩略图 URL *@
+                <input type="hidden" id="thumbnailUrl" asp-for="ThumbnailUrl" />
             </div>
+
 
             <div class="form-group">
-                <label for="content">Your Content</label>
-                <textarea id="content" name="Content" placeholder="Enter content of this post" required></textarea>
+                <label asp-for="Content"></label>
+                <textarea id="content" asp-for="Content" class="form-control" placeholder="Enter content of this post" required></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="submit-btn primary-btn">Upload</button>
+            <div class="button-group">
+                <button type="submit" class="primary-btn">
+                    @(Model.Id == null ? "Upload" : "Save Changes")
+                </button>
+
+                @if (Model.Id != null)
+                {
+                    <button type="submit" class="secondary-btn" onclick="confirmDeletePost()">Delete</button>
+                }
+            </div>
         </form>
 
         <!-- 实时预览容器 -->
@@ -55,14 +77,8 @@
                 <p class="post-snippet"></p>
 
                 <div class="post-interactions">
-                    <div class="likes">
-                        <i class="fa fa-heart like-icon"></i>
-                        <span>0</span>
-                    </div>
-                    <div class="comments">
-                        <i class="fa fa-comment comment-icon"></i>
-                        <span>0</span>
-                    </div>
+                    <span class="like-icon"><i class="fa fa-heart"></i> 0</span>
+                    <span class="comment-icon"><i class="fa fa-comment"></i> 0</span>
                 </div>
             </div>
         </div>
@@ -76,6 +92,7 @@
 }
 
 @section Scripts {
+
     <script src="~/js/components/post_preview.js" asp-append-version="true"></script>
 
 }

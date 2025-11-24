@@ -11,9 +11,9 @@
 
     @* 发布按钮 *@
     <div class="publish-button-wrapper">
-
-        <a href="/Community/Publish" class="button primary-btn">
-            Create your own</a>
+        <a asp-controller="Community" asp-action="PostManage" class="button primary-btn">
+            Manage Your Post
+        </a>
     </div>
 
     <div class="masonry-container">
@@ -23,7 +23,10 @@
                 <div class="masonry-item">
                     <!-- 封面图 -->
                     <div class="thumbnail-wrapper">
-                        <img src="@post.ThumbnailUrl" alt="@post.Title" class="post-thumbnail" />
+                        @if (!string.IsNullOrEmpty(post.ThumbnailUrl))
+                        {
+                            <img src="@post.ThumbnailUrl" alt="@post.Title" class="post-thumbnail" />
+                        }
 
                         <!-- 左上角浏览数 -->
                         <div class="view-badge">
@@ -52,14 +55,8 @@
 
                     <!-- 点赞和留言数 -->
                     <div class="post-interactions">
-                        <div class="likes">
-                            <i class="fa fa-heart like-icon"></i>
-                            <span>@post.LikeCount</span>
-                        </div>
-                        <div class="comments">
-                            <i class="fa fa-comment comment-icon"></i>
-                            <span>@post.CommentCount</span>
-                        </div>
+                        <span class="like-icon"><i class="fa fa-heart"></i> @post.LikeCount</span>
+                        <span class="comment-icon"><i class="fa fa-comment"></i> @post.CommentCount</span>
                     </div>
                 </div>
             </a>

@@ -31,6 +31,16 @@
         </div>
         </div>
     } *@
+
+    <!-- 全局弹窗容器 -->
+    <div id="customModal" class="custom-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-message" id="modalMessage"></div>
+            <div class="modal-buttons" id="modalButtons"></div>
+        </div>
+    </div>
+
     <partial name="_NavBar" />
 
     <div class="container">
@@ -49,7 +59,10 @@
     @* Initial *@
     <script src="~/js/app.js" asp-append-version="true"></script>
     <script src="~/js/components/navbar.js" asp-append-version="true"></script>
+    <script src="~/js/components/search_bar.js" asp-append-version="true"></script>
     <script src="~/js/components/alert.js" asp-append-version="true"></script>
+    <script src="~/js/components/modal.js" asp-append-version="true"></script>
+    <script src="~/js/functions/modal-funtions.js" asp-append-version="true"></script>
     <script src="~/js/components/textarea_autosize.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

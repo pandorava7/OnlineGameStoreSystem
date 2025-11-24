@@ -84,6 +84,9 @@
 
 .post-author-section .right .bottom {
     font-size: 14px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
     color: #777;
 }
 

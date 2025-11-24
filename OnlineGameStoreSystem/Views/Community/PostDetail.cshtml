@@ -10,7 +10,7 @@
         @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
         {
             <div class="thumbnail">
-                <img src="~/@Model.ThumbnailUrl" alt="@Model.Title" />
+                <img src="@Model.ThumbnailUrl" alt="@Model.Title" />
             </div>
         }
 
@@ -40,9 +40,10 @@
                     </div>
                     <div class="bottom">
                         <span class="post-date">@Model.CreatedAt.ToString("yyyy-MM-dd")</span>
-                        <span><i class="fa fa-eye"></i> @Model.ViewCount</span>
-                        <span class="dot">•</span>
-                        <span><i class="fa fa-heart"></i> @Model.LikeCount</span>
+                        <div class="post-stats">
+                            <span class="eye-icon"><i class="fa fa-eye"></i> @Model.ViewCount</span>
+                            <span class="like-icon"><i class="fa fa-heart"></i> @Model.LikeCount</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,5 +73,6 @@
 </div>
 
 @section Styles {
+    <link rel="stylesheet" href="~/css/pages/community.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/pages/post-detail.css" asp-append-version="true" />
 }

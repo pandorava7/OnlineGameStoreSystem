@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
+using OnlineGameStoreSystem.Helpers;
 
 namespace OnlineGameStoreSystem.Controllers;
 
@@ -17,6 +18,7 @@ public class CommunityController : Controller
         db = context;
     }
 
+    // 获取社区首页帖子列表
     public IActionResult Index()
     {
         var communityViewModel = new CommunityViewModel
@@ -43,6 +45,7 @@ public class CommunityController : Controller
         return View(communityViewModel);
     }
 
+    // 获取帖子详情
     [Route("community/post/{id}")]
     public IActionResult PostDetail(int id)
     {
@@ -84,8 +87,123 @@ public class CommunityController : Controller
         return View(postDetailsViewModel);
     }
 
-    public IActionResult Publish()
+    // 管理自己的帖子页面
+    [Route("community/posts")]
+    public IActionResult PostManage()
     {
-        return View();
+        // 获取自己的帖子列表
+        var userId = 1;
+        var userPosts = db.Posts
+            .Where(p => p.UserId == userId)
+            .Select(p => new UserPostViewModel
+            {
+                Id = p.Id,
+                Content = p.Content,
+                Title = p.Title,
+                ThumbnailUrl = p.Thumbnail ?? "",
+                UpdatedAt = p.UpdatedAt,
+                ViewCount = p.ViewCount,
+                LikeCount = p.Likes.Count,
+                CommentCount = db.Comments.Count(c => c.PostId == p.Id)
+            })
+            .OrderByDescending(p => p.UpdatedAt)
+            .ToList();
+
+        var vm = new UserPostsViewModel
+        {
+            Posts = userPosts
+        };
+
+        return View(vm);
     }
+
+    // 发布或编辑帖子页面
+    [Route("community/publish")]
+    [HttpGet]
+    public IActionResult PublishPage(int? id)
+    {
+        if (id.HasValue)
+        {
+            // 编辑逻辑
+            var post = db.Posts.Find(id.Value);
+            if (post == null) return NotFound();
+
+            var model = new CreatePostViewModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                ThumbnailUrl = post.Thumbnail ?? ""
+            };
+
+            return View(model);
+        }
+
+        // 新帖逻辑
+        return View(new CreatePostViewModel());
+    }
+
+
+    // 发布新帖子上传逻辑
+    [HttpPost]
+    public async Task<IActionResult> CreatePost(CreatePostViewModel model)
+    {
+        // 简单验证
+        if (!ModelState.IsValid)
+        {
+            ModelStateHelper.LogErrors(ModelState);
+            return RedirectToAction("PublishPage", model);
+        }
+
+        // 处理缩略图上传
+        string thumbnailUrl = model.Thumbnail != null
+            ? await TrySaveThumbnailAsync(model.Thumbnail)
+            : "";
+
+        // 保存帖子
+        if (model.Id == null)
+        {
+            // 新帖
+            var post = new Post
+            {
+                UserId = 1, // TODO: 替换为当前用户ID
+                Title = model.Title,
+                Content = model.Content,
+                Thumbnail = thumbnailUrl
+            };
+            db.Posts.Add(post);
+        }
+        else
+        {
+            // 编辑
+            var post = db.Posts.Find(model.Id.Value);
+            if (post == null)
+                return NotFound();
+
+            post.Title = model.Title;
+            post.Content = model.Content;
+            if (thumbnailUrl != null)
+                post.Thumbnail = thumbnailUrl;
+        }
+
+        db.SaveChanges();
+        return RedirectToAction("PostManage");
+    }
+
+    // 封装安全上传，返回 null 或 URL
+    private async Task<string> TrySaveThumbnailAsync(IFormFile file)
+    {
+        try
+        {
+            return await FileHelper.SaveImageAsync(file);
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return "";
+        }
+    }
+
+    // 编辑帖子页面
+
 }

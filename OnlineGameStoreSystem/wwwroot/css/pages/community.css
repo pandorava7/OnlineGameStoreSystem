@@ -15,7 +15,7 @@
     }
 
 .publish-button-wrapper {
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .masonry-container {
@@ -74,8 +74,17 @@
     background-size: cover;
     display: inline-block;
     color: var(--primary-color) !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
 }
 
+.post-stats {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+}
 
 /* === 用户信息区 === */
 .user-info {
@@ -179,9 +188,17 @@
 .like-icon {
     color: var(--primary-color) !important;
     background-image: url('/images/like.png'); /* 你自己的路径 */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
 }
 
 .comment-icon {
     color: var(--accent-color2) !important;
     background-image: url('/images/comment.png'); /* 你自己的路径 */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
 }
