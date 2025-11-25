@@ -361,7 +361,18 @@ public class User
     public List<Game> GamesDeveloped { get; set; } = new();
     public List<FavouriteTags> FavouriteTags { get; set; } = new();
     public List<DeveloperRevenue> Revenues { get; set; } = new();
-    public OtpEntry OtpEntry { get; set; }
+    public OtpEntry? OtpEntry { get; set; }
+}
+
+public class OtpEntry
+{
+    public int Id { get; set; }
+    [Required]
+    public int UserId { get; set; }  // Foreign key to User table
+    [Required]
+    public string OtpCode { get; set; } = null!;
+    public DateTime Expiry { get; set; }
+    public User User { get; set; } = new();   // Navigation property
 }
 
 public class UserPreferences
@@ -632,13 +643,3 @@ public class DeveloperRevenue
     public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
 }
 
-public class OtpEntry
-{
-    public int Id { get; set; }
-    [Required]
-    public int UserId { get; set; }  // Foreign key to User table
-    [Required]
-    public string OtpCode { get; set; }
-    public DateTime Expiry { get; set; }
-    public User User { get; set; }   // Navigation property
-}

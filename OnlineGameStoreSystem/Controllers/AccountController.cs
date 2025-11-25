@@ -32,7 +32,6 @@ namespace OnlineGameStoreSystem.Controllers
             return View();
         }
 
-
         [HttpPost]
         public IActionResult Register(RegisterVM model)
         {

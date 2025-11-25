@@ -160,6 +160,12 @@ public class CommunityController : Controller
             ? await TrySaveThumbnailAsync(model.Thumbnail)
             : "";
 
+        // 如果已有原本的图片，且没有上传新图片，则用原本图片
+        if (model.ThumbnailUrl != null && thumbnailUrl == "")
+        {
+            thumbnailUrl = model.ThumbnailUrl;
+        }
+
         // 保存帖子
         if (model.Id == null)
         {

@@ -59,7 +59,7 @@ function masonryLayout(containerSelector, itemSelector, columnCount) {
 
 // ⬇ 初始化（自动响应式列数）
 function initMasonry() {
-    let cols = 4;
+    let cols = 3;
     if (window.innerWidth < 900) cols = 2;
     if (window.innerWidth < 600) cols = 1;
 
