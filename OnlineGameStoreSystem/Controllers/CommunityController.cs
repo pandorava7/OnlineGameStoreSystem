@@ -160,6 +160,12 @@ public class CommunityController : Controller
             ? await TrySaveThumbnailAsync(model.Thumbnail)
             : "";
 
+        // 如果已有原本的图片，且没有上传新图片，则用原本图片
+        if (model.ThumbnailUrl != null && thumbnailUrl == "")
+        {
+            thumbnailUrl = model.ThumbnailUrl;
+        }
+
         // 保存帖子
         if (model.Id == null)
         {
@@ -204,6 +210,18 @@ public class CommunityController : Controller
         }
     }
 
-    // 编辑帖子页面
+    [HttpPost]
+    public IActionResult DeletePost(int id)
+    {
+        var post = db.Posts.FirstOrDefault(p => p.Id == id);
+        if (post == null)
+        {
+            return NotFound();
+        }
 
+        db.Posts.Remove(post);
+        db.SaveChanges();
+
+        return RedirectToAction("PostManage"); // 或者你要跳的页面
+    }
 }

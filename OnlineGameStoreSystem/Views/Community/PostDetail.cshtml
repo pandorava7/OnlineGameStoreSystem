@@ -1,6 +1,7 @@
 ﻿@model PostDetailsViewModel
 @{
     ViewData["Title"] = Model.Title;
+    var content = System.Text.RegularExpressions.Regex.Replace(Model.Content, @"^[ \t]+", "", System.Text.RegularExpressions.RegexOptions.Multiline);
 }
 
 <div class="post-detail-container">
@@ -23,9 +24,7 @@
         </div>
 
         @* 文章內容 *@
-        <div class="post-content">
-            @Html.Raw(Model.Content)
-        </div>
+        <div class="post-content">@Html.Raw(content)</div>
     </div>
     <div class="container-right">
         <div class="post-info">

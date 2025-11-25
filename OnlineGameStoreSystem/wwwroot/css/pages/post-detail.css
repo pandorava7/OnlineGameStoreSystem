@@ -52,10 +52,11 @@
         margin: 0;
     }
 
-    .post-detail-container .container-left .post-content {
-        margin-top: 0px;
-        padding: 15px;
-    }
+.post-detail-container .container-left .post-content {
+    margin-top: 0px;
+    padding: 15px;
+    white-space: pre-wrap;
+}
 
 .post-detail-container .container-right .post-info {
     display: flex;

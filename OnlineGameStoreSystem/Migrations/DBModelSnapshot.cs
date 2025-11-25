@@ -916,8 +916,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("OtpEntry")
-                        .IsRequired();
+                    b.Navigation("OtpEntry");
 
                     b.Navigation("Payments");
 
