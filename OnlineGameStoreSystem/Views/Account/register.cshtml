@@ -1,32 +1,75 @@
-﻿@{
+﻿@model OnlineGameStoreSystem.Models.ViewModels.RegisterVM;
+
+@{
     ViewData["Title"] = "Register";
 }
 
-<div class="register-container">
-    <h2>Create Your Account</h2>
+<link rel="stylesheet" href="~/css/Account/account.css" asp-append-version="true" />
 
+<div class="login-container">
+
+    <div class="back-text" onclick="history.back()">
+        <span class="arrow"><</span>
+        <span class="back-word">Back</span>
+    </div>
+
+
+    <h2>Create Your Account</h2>
     <form asp-controller="Account" asp-action="Register" method="post">
 
+         <div class="form-group">
+            <label>Email address</label>
+            <input asp-for="Email" class="form-control" required />
+            <span asp-validation-for="Email" style="color:red"></span>
+        </div>
+
+
         <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="Username" class="form-control" required />
+            <label>Add a display name</label>
+            <input asp-for="Username" class="form-control" required />
+            <span asp-validation-for="Username" style="color:red"></span>
         </div>
 
         <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="Email" class="form-control" required />
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="Password" class="form-control" required />
+            <label>Create Password</label>
+            <div class="password-input-container">
+                <input asp-for="Password" class="form-control" id="passwordInput" required />
+                <span class="password-toggle" onclick="togglePassword('passwordInput', this)">
+                    <!-- 默认闭眼，带斜杠表示隐藏密码 -->
+                    <svg class="eye-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.06 10.06 0 0 1 12 19c-5 0-9-7-9-7a19.45 19.45 0 0 1 5.06-6.06" />
+                        <line x1="1" y1="1" x2="23" y2="23" /> <!-- 斜杠 -->
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </span>
+            </div>
+            <span asp-validation-for="Password" style="color:red"></span>
         </div>
 
         <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" name="ConfirmPassword" class="form-control" required />
+            <div class="password-input-container">
+                <input asp-for="ConfirmPassword" class="form-control" id="confirmPasswordInput" required />
+                <span class="password-toggle" onclick="togglePassword('confirmPasswordInput', this)">
+                    <!-- 默认闭眼，带斜杠 -->
+                    <svg class="eye-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.06 10.06 0 0 1 12 19c-5 0-9-7-9-7a19.45 19.45 0 0 1 5.06-6.06" />
+                        <line x1="1" y1="1" x2="23" y2="23" /> <!-- 斜杠 -->
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                </span>
+            </div>
+            <span asp-validation-for="ConfirmPassword" style="color:red"></span>
         </div>
 
-        <button type="submit" class="btn-register">Register</button>
+        <button type="submit" class="login-btn">Register</button>
     </form>
 </div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/functions/Account.js"></script>
+}

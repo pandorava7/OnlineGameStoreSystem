@@ -37,3 +37,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// OTP
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+

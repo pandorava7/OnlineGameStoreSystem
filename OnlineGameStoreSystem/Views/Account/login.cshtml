@@ -5,11 +5,25 @@
 @* login Style *@
 <link rel="stylesheet" href="~/css/Account/account.css" asp-append-version="true" />
 
+@section Scripts {
+    <script>
+        // Check if TempData has a flash message
+        @if (TempData["FlashMessage"] != null)
+        {
+                <text>
+                    showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+                </text>
+        }
+    </script>
+}
+
 
 <div class="login-container">
     <h2>Sign in</h2>
+
   
-    <form>
+
+    <form asp-controller="Account" asp-action="login" method="post">
         <div class="sec-box">
 
             <div class="form-group">
@@ -24,7 +38,7 @@
 
             <button class="login-btn" type="button">Sign In</button>
 
-            <p class="forgot"><a href="#">Forgot your password?</a></p>
+            <p class="forgot"><a href="@Url.Action("ResetPassword", "Account")">Forgot your password?</a></p>
         </div>
           
     </form>

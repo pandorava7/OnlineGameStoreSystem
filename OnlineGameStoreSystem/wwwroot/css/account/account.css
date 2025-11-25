@@ -15,7 +15,6 @@
 }
 
 .sec-box {
-    background-color: #2a2d30;
     border-radius: 20px;
     padding: 40px;
     margin: 0 auto;
@@ -58,7 +57,7 @@
 .login-btn {
     width: 100%;
     padding: 15px;
-    background-color: #5c7dff;
+    background-color: var(--primary-color);
     border: none;
     border-radius: 12px;
     font-size: 16px;
@@ -68,7 +67,8 @@
 }
 
 .login-btn:hover {
-    background-color: #8aaeff;
+    background-color: var(--primary-color);
+    filter: brightness(1.2); /* 亮度增加 10% */
 }
 
 .forgot {
@@ -84,7 +84,6 @@
 }
 
 .create {
-    background-color: #2a2d30;
     border-radius: 15px;
     padding: 15px;
     margin: 0 auto;
@@ -113,3 +112,63 @@
     color: rgb(38, 187, 255); /* 保持顏色不變 */
     text-decoration: underline rgb(38, 187, 255);
 }
+
+/*back button*/
+.back-text {
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white; /* adjust to your theme */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.back-word {
+    display: inline-block;
+    transition: transform 0.15s ease-in-out;
+}
+
+.back-text:hover .back-word {
+    transform: translateX(4px); /* Back slides to the right */
+}
+
+.back-text:hover {
+    opacity: 0.55;
+}
+
+/* error msg */
+.password-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-validation-error {
+    border: 2px solid red !important;
+    box-shadow: 0 0 1px red;
+}
+
+
+/* 聚焦时让 eye icon 跟随动画 */
+.password-input-container input:focus + .password-toggle {
+    transform: translateY(-50%) scale(1.1); /* 放大眼睛 */
+    color: #00aaff; /* 改变眼睛颜色 */
+    transition: all 0.2s ease-in-out;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.eye-icon {
+    width: 22px;
+    height: 22px;
+    color: #666; /* 可自定义颜色 */
+}
+
+
+
