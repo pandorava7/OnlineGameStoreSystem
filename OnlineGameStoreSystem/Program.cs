@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,7 +16,13 @@ builder.Services.AddSqlServer<DB>($@"
     AttachDbFilename={builder.Environment.ContentRootPath}\DB.mdf;
 ");
 
+
+// OTP
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 var app = builder.Build();
+// inside
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -38,6 +45,4 @@ app.MapControllerRoute(
 
 app.Run();
 
-// OTP
-builder.Services.AddTransient<IEmailSender, EmailSender>();
 
