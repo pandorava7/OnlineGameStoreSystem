@@ -204,6 +204,18 @@ public class CommunityController : Controller
         }
     }
 
-    // 编辑帖子页面
+    [HttpPost]
+    public IActionResult DeletePost(int id)
+    {
+        var post = db.Posts.FirstOrDefault(p => p.Id == id);
+        if (post == null)
+        {
+            return NotFound();
+        }
 
+        db.Posts.Remove(post);
+        db.SaveChanges();
+
+        return RedirectToAction("PostManage"); // 或者你要跳的页面
+    }
 }

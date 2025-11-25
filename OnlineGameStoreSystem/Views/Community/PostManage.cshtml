@@ -17,58 +17,68 @@
     <div class="combine-container">
         @* 自己的帖子列表（垂直列表） *@
         <div class="user-posts-container">
-            @foreach (var post in Model.Posts)
+            @if (!Model.Posts.Any())
             {
-                <div class="user-post-item-container">
-                    <span class="post-date">@post.UpdatedAt.ToString("yyyy-MM-dd")</span>
+                <p class="no-posts-message">No posts available. Be the first to <a asp-controller="Community" asp-action="PublishPage">write a post</a>!</p>
+            }
+            else
+            {
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="user-post-item-container">
+                        <span class="post-date">@post.UpdatedAt.ToString("yyyy-MM-dd")</span>
 
-                    <div class="user-post-item">
+                        <div class="user-post-item">
 
-                        <!-- 封面图 -->
-                        @if (!string.IsNullOrEmpty(post.ThumbnailUrl))
-                        {
-                            <img class="thumbnail" src="@post.ThumbnailUrl" alt="@post.Title" />
-                        }
+                            <!-- 封面图 -->
+                            @if (!string.IsNullOrEmpty(post.ThumbnailUrl))
+                            {
+                                <img class="thumbnail" src="@post.ThumbnailUrl" alt="@post.Title" />
+                            }
 
-                        <!-- 内容信息 -->
-                        <div class="information">
-                            <div class="top">
-                                <h1 class="title">@post.Title</h1>
-                                <div class="post-stats">
-                                    <span class="eye-icon"><i class="fa fa-eye"></i> @post.ViewCount</span>
-                                    <span class="like-icon"><i class="fa fa-heart"></i> @post.LikeCount</span>
-                                    <span class="comment-icon"><i class="fa fa-comment"></i> @post.CommentCount</span>
+                            <!-- 内容信息 -->
+                            <div class="information">
+                                <div class="top">
+                                    <h1 class="title">@post.Title</h1>
+                                    <div class="post-stats">
+                                        <span class="eye-icon"><i class="fa fa-eye"></i> @post.ViewCount</span>
+                                        <span class="like-icon"><i class="fa fa-heart"></i> @post.LikeCount</span>
+                                        <span class="comment-icon"><i class="fa fa-comment"></i> @post.CommentCount</span>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    @Html.Raw(post.Content)
                                 </div>
                             </div>
-                            <div class="content">
-                                @Html.Raw(post.Content)
+
+                            <!-- 遮罩层 -->
+                            <div class="hover-overlay"></div>
+
+                            <!-- 悬浮按钮覆盖层 -->
+                            <div class="hover-actions">
+                                <a class="hover-btn view-btn primary-btn button"
+                                   asp-controller="Community"
+                                   asp-action="PostDetail"
+                                   asp-route-id="@post.Id">View</a>
+
+                                <a class="hover-btn edit-btn secondary-btn button"
+                                   asp-controller="Community"
+                                   asp-action="PublishPage"
+                                   asp-route-id="@post.Id">Edit</a>
                             </div>
+
                         </div>
-
-                        <!-- 遮罩层 -->
-                        <div class="hover-overlay"></div>
-
-                        <!-- 悬浮按钮覆盖层 -->
-                        <div class="hover-actions">
-                            <a class="hover-btn view-btn primary-btn button"
-                               asp-controller="Community"
-                               asp-action="PostDetail"
-                               asp-route-id="@post.Id">View</a>
-
-                            <a class="hover-btn edit-btn secondary-btn button"
-                               asp-controller="Community"
-                               asp-action="PublishPage"
-                               asp-route-id="@post.Id">Edit</a>
-                        </div>
-
                     </div>
-                </div>
 
+                }
             }
         </div>
 
-        <div class="filter-container">
-        </div>
+        @if (Model.Posts.Any())
+        {
+            <div class="filter-container">
+            </div>
+        }
     </div>
 </div>
 
