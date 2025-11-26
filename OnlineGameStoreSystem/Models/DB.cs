@@ -51,7 +51,7 @@ public class DB : DbContext
     public DbSet<DeveloperRevenue> DeveloperRevenues { get; set; }
 
     // OTP
-    public DbSet<DeveloperRevenue> OtpEntry { get; set; }
+    public DbSet<OtpEntry> OtpEntries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
