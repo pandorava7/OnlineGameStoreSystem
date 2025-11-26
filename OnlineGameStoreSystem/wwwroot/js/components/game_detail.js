@@ -27,6 +27,8 @@ async function addToCart(gameId) {
         method: 'POST'
     });
 
+    console.log(res.success);
+
     const result = await res.json();
     if (result.success) {
         showTemporaryMessage("Added to your cart", "success");

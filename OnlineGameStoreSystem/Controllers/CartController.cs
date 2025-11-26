@@ -110,6 +110,21 @@ public class CartController : Controller
     {
         // ... 找到 cartId 的逻辑 ...
         int cartId = 1; // 示例值
+        var user = db.Users.Find(1);
+
+        // 测试代码（避免Shopping Cart为空)
+        if (db.ShoppingCarts.Find(cartId) == null && user != null)
+        {
+            db.ShoppingCarts.Add(new ShoppingCart
+            {
+                Id = cartId,
+                UserId = 1,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                User = user
+            });
+            db.SaveChanges();
+        }
 
         // 实际添加操作
         var newCartItem = new CartItem
