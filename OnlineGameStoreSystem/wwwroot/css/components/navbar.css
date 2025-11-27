@@ -164,6 +164,8 @@
         font-size: 17px;
         padding: 6px;
     }
+
+
 }
 
 
@@ -249,4 +251,70 @@
         transform: translateY(0); /* 下移到正常位置 */
         opacity: 1;
         visibility: visible;
+    }
+
+
+/* 用户下拉菜单容器 */
+.user-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+    padding: 6px;
+    transition: background 0.2s, transform 0.1s; /* 平滑过渡 */
+}
+
+    /* hover 效果 */
+    .user-menu:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+    }
+
+
+
+    .user-menu .username {
+        font-weight: bold; /* 设置粗体 */
+    }
+    
+    .user-menu:hover span {
+        color: var(--primary-color) !important;
+    }
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.username {
+    font-size: 14px;
+    color: #fff; /* 根据你的主题可调整 */
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 40px;
+    width: 160px;
+    background-color: #1a1c1f;
+    border-radius: 15px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    padding: 8px 0;
+    z-index: 999;
+    border: 1px solid #555; /* 外框白线 */
+}
+
+.dropdown-item {
+    padding: 10px 15px;
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: bold; /* 设置粗体 */
+}
+
+    .dropdown-item:hover {
+        background: #42474e;
     }

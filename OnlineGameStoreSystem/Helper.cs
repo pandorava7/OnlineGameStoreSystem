@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
+
+
 
 namespace OnlineGameStoreSystem.Helpers;
 
@@ -92,3 +99,62 @@ public static class ModelStateHelper
         }
     }
 }
+
+#region Login Authentication function 
+public class SecurityHelper
+{
+    private readonly PasswordHasher<User> ph = new();
+    private readonly IHttpContextAccessor ct;
+    private readonly DB db;
+
+    private const string Scheme = "MyCookieAuth";
+
+    public SecurityHelper(IHttpContextAccessor httpContextAccessor, DB context)
+    {
+        ct = httpContextAccessor;
+        db = context;
+    }
+
+    public bool VerifyPassword(User user, string password)
+    {
+        return ph.VerifyHashedPassword(user, user.PasswordHash, password)
+               == PasswordVerificationResult.Success;
+    }
+
+    public string DetermineRole(User user)
+    {
+        if (user.IsAdmin) return "Admin";
+        if (user.IsDeveloper) return "Developer";
+        return "User";
+    }
+
+    public async Task SignIn(User user, bool rememberMe)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimTypes.Role, DetermineRole(user)),
+            new Claim("UserId", user.Id.ToString())
+        };
+
+        var identity = new ClaimsIdentity(claims, Scheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        var props = new AuthenticationProperties
+        {
+            IsPersistent = rememberMe
+        };
+
+        await ct.HttpContext!.SignInAsync(Scheme, principal, props);
+    }
+
+    public async Task SignOut()
+    {
+        await ct.HttpContext!.SignOutAsync(Scheme);
+    }
+}
+
+#endregion
+
+
+

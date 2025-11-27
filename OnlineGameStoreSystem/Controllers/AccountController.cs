@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Models;
 using OnlineGameStoreSystem.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace OnlineGameStoreSystem.Controllers
 {
@@ -12,20 +14,60 @@ namespace OnlineGameStoreSystem.Controllers
         private readonly DB db;
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly IEmailSender _emailSender;
+        private readonly SecurityHelper hp;
 
         #region bridge
-        public AccountController(DB _db, IEmailSender EmailSender)
+        public AccountController(DB _db, IEmailSender EmailSender, SecurityHelper helper)
         {
             db = _db;
             _passwordHasher = new PasswordHasher<User>();
             _emailSender =  EmailSender;
+            hp = helper;
         }
         #endregion 
+
 
         #region log in
         public IActionResult Login()
         {
             return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginVM model, string? returnURL)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = db.Users.FirstOrDefault(u => u.Email == model.Email);
+
+            if (user == null || !hp.VerifyPassword(user, model.Password))
+            {
+                ModelState.AddModelError("Password", "Incorrect username or password.");
+                return View(model);
+            }
+
+            await hp.SignIn(user, model.RememberMe);
+
+            TempData["FlashMessage"] = "Login successfully.";
+            TempData["FlashMessageType"] = "success";
+
+            if (!string.IsNullOrEmpty(returnURL))
+                return Redirect(returnURL);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await hp.SignOut();
+
+            TempData["FlashMessage"] = "Logout successfully.";
+            TempData["FlashMessageType"] = "success";
+
+            return RedirectToAction("Index", "Home");
         }
         #endregion 
 
@@ -84,8 +126,9 @@ namespace OnlineGameStoreSystem.Controllers
             if (user == null)
             {
                 ModelState.AddModelError("Email", "Email does not exist");
-                return View();
-            }
+                return View(model);
+            }        
+
             TempData["UserId"] = user.Id;
             // generate 6 digits OTP
             var otp = new Random().Next(100000, 999999).ToString();
@@ -94,8 +137,7 @@ namespace OnlineGameStoreSystem.Controllers
             if (otpEntry != null)
             {
                 otpEntry.OtpCode = otp;
-                otpEntry.Expiry = DateTime.Now.AddMinutes(5);
-                db.SaveChanges();
+                otpEntry.Expiry = DateTime.Now.AddMinutes(5);             
             }
             else
             {
@@ -105,10 +147,18 @@ namespace OnlineGameStoreSystem.Controllers
                     OtpCode = otp,
                     Expiry = DateTime.Now.AddMinutes(5)
                 });
-                db.SaveChanges();
+                
             }
 
-     
+            // 4️⃣ 调试：查看所有实体的 EF Core 状态
+            foreach (var entry in db.ChangeTracker.Entries())
+            {
+                Console.WriteLine($"{entry.Entity.GetType().Name} - {entry.State}");
+            }
+
+            db.SaveChanges();
+
+
             // send OTP to email
             await _emailSender.SendEmailAsync(model.Email, "Your OTP Code", $"Your OTP is：{otp}");
             return RedirectToAction("OTP");
@@ -216,19 +266,33 @@ namespace OnlineGameStoreSystem.Controllers
         public IActionResult ResetPassword2(ResetPasswordVM model)
         {
             // 从 TempData 获取 UserId（OTP 验证后存入的）
-            if (TempData["UserId"] == null)
+           if (TempData["UserId"] == null)
             {
                 // 没有 UserId，说明流程不正确，返回输入邮箱页面
                 return RedirectToAction("ResetPassword");
             }
 
             int userId = (int)TempData["UserId"];
+            TempData.Keep("UserId");
             // 找到用户
             var user = db.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
                 return RedirectToAction("ResetPassword");
             }
+            // 比较旧密码与新密码（使用 PasswordHasher）
+            var passwordHasher = new PasswordHasher<User>();
+
+            // 将新密码与旧密码 Hash 比较
+            var compare = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.NewPassword);
+
+            // 如果新密码与旧密码一样
+            if (compare == PasswordVerificationResult.Success)
+            {
+                ModelState.AddModelError("NewPassword", "New password cannot be the same as the old password.");
+                return View(model);
+            }
+
             // 验证新密码和确认密码是否一致（如果有 ConfirmPassword 字段）
             if (model.NewPassword != model.ConfirmPassword)
             {

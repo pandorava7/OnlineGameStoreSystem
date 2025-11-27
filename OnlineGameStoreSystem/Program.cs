@@ -1,4 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineGameStoreSystem.Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,22 @@ builder.Services.AddSqlServer<DB>($@"
 // OTP
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+// ?? HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+// ?? SecurityHelper
+builder.Services.AddScoped<SecurityHelper>();
+// Authentication - 必须加
+builder.Services.AddAuthentication("MyCookieAuth")
+    .AddCookie("MyCookieAuth", options =>
+    {
+        options.LoginPath = "/Account/Login";   // 未登录自动跳转
+        options.LogoutPath = "/Account/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    });
+
+// Authorization
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 // inside
 
@@ -37,6 +54,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

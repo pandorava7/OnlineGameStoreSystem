@@ -2,9 +2,9 @@
     background-color: var(--primary-color);
 }
 
-    .primary-btn:hover {
-        background-color: var(--accent-color);
-    }
+.primary-btn:hover {
+    background-color: var(--accent-color);
+}
 
 .secondary-btn {
     background-color: transparent;
@@ -12,10 +12,10 @@
     color: var(--text-muted);
 }
 
-    .secondary-btn:hover {
-        border-color: var(--primary-color);
-        color: var(--primary-color);
-    }
+.secondary-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
 
 .button-group {
     display: flex;
@@ -32,3 +32,4 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     padding: 20px;
 }
+
