@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace OnlineGameStoreSystem.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20251120135957_UpdateTable_Like_Review_GameTag")]
-    partial class UpdateTable_Like_Review_GameTag
+    [Migration("20251125132834_UpdateTable_OtpFixWarning")]
+    partial class UpdateTable_OtpFixWarning
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,7 +117,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("DeveloperRevenues");
+                    b.ToTable("DeveloperRevenue");
                 });
 
             modelBuilder.Entity("FavouriteTags", b =>
@@ -281,6 +281,32 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("OtpEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OtpCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("OtpEntry");
                 });
 
             modelBuilder.Entity("Payment", b =>
@@ -721,6 +747,17 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OtpEntry", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithOne("OtpEntry")
+                        .HasForeignKey("OtpEntry", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Payment", b =>
                 {
                     b.HasOne("User", "User")
@@ -881,6 +918,8 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Notifications");
+
+                    b.Navigation("OtpEntry");
 
                     b.Navigation("Payments");
 

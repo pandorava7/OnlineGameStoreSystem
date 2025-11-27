@@ -45,10 +45,17 @@
 
                 @if (Model.Id != null)
                 {
-                    <button type="submit" class="secondary-btn" onclick="confirmDeletePost()">Delete</button>
+                    <button type="button" class="secondary-btn" onclick="confirmDeletePost()">Delete</button>
                 }
             </div>
         </form>
+
+        @if (Model.Id != null)
+        {
+            <form id="deleteForm" asp-controller="Community" asp-action="DeletePost" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+            </form>
+        }
 
         <!-- 实时预览容器 -->
         <div class="post-preview-container">

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace OnlineGameStoreSystem.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20251120042637_InitialAllTable")]
-    partial class InitialAllTable
+    [Migration("20251125124201_CreateDB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,7 +117,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("DeveloperRevenues");
+                    b.ToTable("DeveloperRevenue");
                 });
 
             modelBuilder.Entity("FavouriteTags", b =>
@@ -205,6 +205,21 @@ namespace OnlineGameStoreSystem.Migrations
                     b.ToTable("GameMedia");
                 });
 
+            modelBuilder.Entity("GameTag", b =>
+                {
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GameId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("GameTags");
+                });
+
             modelBuilder.Entity("Like", b =>
                 {
                     b.Property<int>("Id")
@@ -216,7 +231,10 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReviewId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -225,6 +243,8 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
+
+                    b.HasIndex("ReviewId");
 
                     b.HasIndex("UserId");
 
@@ -261,6 +281,32 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("OtpEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OtpCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("OtpEntry");
                 });
 
             modelBuilder.Entity("Payment", b =>
@@ -384,6 +430,9 @@ namespace OnlineGameStoreSystem.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -643,13 +692,36 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Navigation("Game");
                 });
 
+            modelBuilder.Entity("GameTag", b =>
+                {
+                    b.HasOne("Game", "Game")
+                        .WithMany("Tags")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Tag", "Tag")
+                        .WithMany("Games")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("Like", b =>
                 {
                     b.HasOne("Post", "Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Review", "Review")
+                        .WithMany("Likes")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("User", "User")
                         .WithMany("Likes")
@@ -658,6 +730,8 @@ namespace OnlineGameStoreSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+
+                    b.Navigation("Review");
 
                     b.Navigation("User");
                 });
@@ -668,6 +742,17 @@ namespace OnlineGameStoreSystem.Migrations
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OtpEntry", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithOne("OtpEntry")
+                        .HasForeignKey("OtpEntry", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -789,6 +874,8 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Navigation("Purchases");
 
                     b.Navigation("Reviews");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("Payment", b =>
@@ -803,6 +890,11 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Navigation("Likes");
                 });
 
+            modelBuilder.Entity("Review", b =>
+                {
+                    b.Navigation("Likes");
+                });
+
             modelBuilder.Entity("ShoppingCart", b =>
                 {
                     b.Navigation("Items");
@@ -810,6 +902,8 @@ namespace OnlineGameStoreSystem.Migrations
 
             modelBuilder.Entity("Tag", b =>
                 {
+                    b.Navigation("Games");
+
                     b.Navigation("UserTags");
                 });
 
@@ -824,6 +918,9 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Notifications");
+
+                    b.Navigation("OtpEntry")
+                        .IsRequired();
 
                     b.Navigation("Payments");
 

@@ -69,6 +69,7 @@ textarea {
     padding: var(--space-sm) var(--space-md);
     transition: background var(--transition-normal), border-color var(--transition-normal);
 }
+button{}
 textarea {
     overflow-y: hidden; /* 隐藏滚动条 */
     resize: none; /* 禁止手动拉伸（可选） */

@@ -6,50 +6,69 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace OnlineGameStoreSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialAllTable : Migration
+    public partial class CreateDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "Updated_At",
-                table: "Users",
-                newName: "UpdatedAt");
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                });
 
-            migrationBuilder.RenameColumn(
-                name: "Password_Hash",
-                table: "Users",
-                newName: "PasswordHash");
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeveloper = table.Column<bool>(type: "bit", nullable: false),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
 
-            migrationBuilder.RenameColumn(
-                name: "Is_Developer",
-                table: "Users",
-                newName: "IsDeveloper");
-
-            migrationBuilder.RenameColumn(
-                name: "Is_Admin",
-                table: "Users",
-                newName: "IsAdmin");
-
-            migrationBuilder.RenameColumn(
-                name: "Created_At",
-                table: "Users",
-                newName: "CreatedAt");
-
-            migrationBuilder.RenameColumn(
-                name: "Avatar_Url",
-                table: "Users",
-                newName: "AvatarUrl");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Summary",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(300)",
-                oldMaxLength: 300,
-                oldNullable: true);
+            migrationBuilder.CreateTable(
+                name: "FavouriteTags",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteTags", x => new { x.UserId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_FavouriteTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FavouriteTags_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Games",
@@ -98,6 +117,27 @@ namespace OnlineGameStoreSystem.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OtpEntry",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    OtpCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expiry = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OtpEntry", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OtpEntry_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,19 +211,6 @@ namespace OnlineGameStoreSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserPreferences",
                 columns: table => new
                 {
@@ -226,6 +253,30 @@ namespace OnlineGameStoreSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GameTags",
+                columns: table => new
+                {
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameTags", x => new { x.GameId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_GameTags_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GameTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -233,6 +284,7 @@ namespace OnlineGameStoreSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -344,33 +396,6 @@ namespace OnlineGameStoreSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Likes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    PostId = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Likes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Likes_Posts_PostId",
-                        column: x => x.PostId,
-                        principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Likes_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CartItems",
                 columns: table => new
                 {
@@ -398,23 +423,33 @@ namespace OnlineGameStoreSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FavouriteTags",
+                name: "Likes",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    TagId = table.Column<int>(type: "int", nullable: false)
+                    PostId = table.Column<int>(type: "int", nullable: true),
+                    ReviewId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FavouriteTags", x => new { x.UserId, x.TagId });
+                    table.PrimaryKey("PK_Likes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FavouriteTags_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
+                        name: "FK_Likes_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FavouriteTags_Users_UserId",
+                        name: "FK_Likes_Reviews_ReviewId",
+                        column: x => x.ReviewId,
+                        principalTable: "Reviews",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Likes_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -422,7 +457,7 @@ namespace OnlineGameStoreSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeveloperRevenues",
+                name: "DeveloperRevenue",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -437,21 +472,21 @@ namespace OnlineGameStoreSystem.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeveloperRevenues", x => x.Id);
+                    table.PrimaryKey("PK_DeveloperRevenue", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DeveloperRevenues_Games_GameId",
+                        name: "FK_DeveloperRevenue_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DeveloperRevenues_Purchases_PurchaseId",
+                        name: "FK_DeveloperRevenue_Purchases_PurchaseId",
                         column: x => x.PurchaseId,
                         principalTable: "Purchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DeveloperRevenues_Users_DeveloperId",
+                        name: "FK_DeveloperRevenue_Users_DeveloperId",
                         column: x => x.DeveloperId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -479,18 +514,18 @@ namespace OnlineGameStoreSystem.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeveloperRevenues_DeveloperId",
-                table: "DeveloperRevenues",
+                name: "IX_DeveloperRevenue_DeveloperId",
+                table: "DeveloperRevenue",
                 column: "DeveloperId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeveloperRevenues_GameId",
-                table: "DeveloperRevenues",
+                name: "IX_DeveloperRevenue_GameId",
+                table: "DeveloperRevenue",
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeveloperRevenues_PurchaseId",
-                table: "DeveloperRevenues",
+                name: "IX_DeveloperRevenue_PurchaseId",
+                table: "DeveloperRevenue",
                 column: "PurchaseId");
 
             migrationBuilder.CreateIndex(
@@ -509,9 +544,19 @@ namespace OnlineGameStoreSystem.Migrations
                 column: "DeveloperId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GameTags_TagId",
+                table: "GameTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Likes_PostId",
                 table: "Likes",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Likes_ReviewId",
+                table: "Likes",
+                column: "ReviewId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Likes_UserId",
@@ -522,6 +567,12 @@ namespace OnlineGameStoreSystem.Migrations
                 name: "IX_Notifications_UserId",
                 table: "Notifications",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OtpEntry_UserId",
+                table: "OtpEntry",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_UserId",
@@ -591,7 +642,7 @@ namespace OnlineGameStoreSystem.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "DeveloperRevenues");
+                name: "DeveloperRevenue");
 
             migrationBuilder.DropTable(
                 name: "FavouriteTags");
@@ -600,13 +651,16 @@ namespace OnlineGameStoreSystem.Migrations
                 name: "GameMedia");
 
             migrationBuilder.DropTable(
+                name: "GameTags");
+
+            migrationBuilder.DropTable(
                 name: "Likes");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "OtpEntry");
 
             migrationBuilder.DropTable(
                 name: "UserPreferences");
@@ -627,50 +681,16 @@ namespace OnlineGameStoreSystem.Migrations
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "Games");
+                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "Payments");
 
-            migrationBuilder.RenameColumn(
-                name: "UpdatedAt",
-                table: "Users",
-                newName: "Updated_At");
+            migrationBuilder.DropTable(
+                name: "Games");
 
-            migrationBuilder.RenameColumn(
-                name: "PasswordHash",
-                table: "Users",
-                newName: "Password_Hash");
-
-            migrationBuilder.RenameColumn(
-                name: "IsDeveloper",
-                table: "Users",
-                newName: "Is_Developer");
-
-            migrationBuilder.RenameColumn(
-                name: "IsAdmin",
-                table: "Users",
-                newName: "Is_Admin");
-
-            migrationBuilder.RenameColumn(
-                name: "CreatedAt",
-                table: "Users",
-                newName: "Created_At");
-
-            migrationBuilder.RenameColumn(
-                name: "AvatarUrl",
-                table: "Users",
-                newName: "Avatar_Url");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Summary",
-                table: "Users",
-                type: "nvarchar(300)",
-                maxLength: 300,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

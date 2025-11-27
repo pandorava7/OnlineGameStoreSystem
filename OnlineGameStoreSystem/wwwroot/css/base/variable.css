@@ -20,7 +20,7 @@
     /* 其他 */
     --border-radius: 8px;
     --transition-speed: 0.3s;
-    --font-main: Arial, Helvetica, sans-serif;
+    --font-main: 'Inter', sans-serif;
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 16px;

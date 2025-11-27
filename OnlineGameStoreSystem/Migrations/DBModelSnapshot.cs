@@ -114,7 +114,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("DeveloperRevenue");
+                    b.ToTable("DeveloperRevenues");
                 });
 
             modelBuilder.Entity("FavouriteTags", b =>
@@ -303,7 +303,7 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("OtpEntry");
+                    b.ToTable("OtpEntries");
                 });
 
             modelBuilder.Entity("Payment", b =>
@@ -916,8 +916,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("OtpEntry")
-                        .IsRequired();
+                    b.Navigation("OtpEntry");
 
                     b.Navigation("Payments");
 
