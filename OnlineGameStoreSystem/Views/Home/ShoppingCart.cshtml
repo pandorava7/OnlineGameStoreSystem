@@ -21,9 +21,9 @@
                 <span>Total</span>
                 <span>RM <span id="cart-total-final">0.00</span></span> @* 购物车总价与此绑定 *@
             </div>
-            <button class="checkout-btn">
-                <i class="fas fa-credit-card"></i> Checkout
-            </button>
+            <a class="checkout-btn" asp-controller="Payment" asp-action="Index">
+                <i class="fas fa-credit-card" ></i> Checkout
+            </a>
             <a href="/" class="continue-shopping">
                 <i class="fas fa-arrow-left"></i> Continue Shopping
             </a>

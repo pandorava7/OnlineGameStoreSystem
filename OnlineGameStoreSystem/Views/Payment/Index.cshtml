@@ -1,0 +1,26 @@
+﻿@using OnlineGameStoreSystem.Models.ViewModels
+
+
+<div class="payment-method">
+    <h1>Select Payment Method</h1>
+
+    <form asp-action="ProcessPayment" method="post">
+
+        <div class="payment-options">
+            <label>Payment Method:</label>
+
+          
+            
+            <select asp-items="Html.GetEnumSelectList<PaymentMethod>()"
+					class="form-control">
+                <option value="">-- Please Select --</option>
+
+            </select>
+			@*<input type="hidden" asp-for="Amount" value="@ViewBag.TotalAmount" />*@
+
+            
+        </div>
+
+        <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+    </form>
+</div>
