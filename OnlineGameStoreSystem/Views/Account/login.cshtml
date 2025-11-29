@@ -6,13 +6,16 @@
 <link rel="stylesheet" href="~/css/Account/account.css" asp-append-version="true" />
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/functions/Account.js"></script>
+
     <script>
         // Check if TempData has a flash message
         @if (TempData["FlashMessage"] != null)
         {
-                <text>
-                    showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
-                </text>
+                        <text>
+                            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+                        </text>
         }
     </script>
 }
@@ -25,7 +28,6 @@
 
     <form asp-controller="Account" asp-action="login" method="post">
         <div class="sec-box">
-
             <div class="form-group">
                 <label>SIGN IN WITH ACCOUNT NAME</label>
                 <input type="text" placeholder="Enter username">
@@ -50,4 +52,5 @@
         </span>
     </div>
 </div>
+
 

@@ -109,6 +109,48 @@ public class HomeController : Controller
         return View(homeViewModel);
     }
 
+    [Route("cart")]
+    public IActionResult ShoppingCart()
+    {
+        // 1. 获取当前用户的 ID (假设是 1)
+        int userId = 1;
+
+        // 2. 从数据库获取该用户的购物车
+        var cart = db.ShoppingCarts.FirstOrDefault(c => c.UserId == userId);
+
+        // 如果还没有购物车，给个空的
+        if (cart == null)
+        {
+            return View(new ShoppingCartViewModel
+            {
+                Items = new List<CartItemViewModel>(),
+                TotalPrice = 0
+            });
+        }
+
+        // 3. ✅ 关键修改：从数据库查询真实的 CartItems (不要用 new List<CartItem>...)
+        // 必须加上 .Include(c => c.Game) 否则游戏信息是空的
+        var dbItems = db.CartItems
+            .Where(c => c.CartId == cart.Id)
+            .Include(c => c.Game)
+            .ToList();
+
+        // 4. 转换数据格式给页面用
+        var viewModelItems = dbItems.Select(item => new CartItemViewModel
+        {
+            Item = item, // 这里把真实的 ID (比如 5, 6) 传给页面
+            ThumbnailUrl = $"/images/example/silksong.png"
+        }).ToList();
+
+        var viewModel = new ShoppingCartViewModel
+        {
+            Items = viewModelItems,
+            TotalPrice = viewModelItems.Sum(x => x.Item.Game.Price) // 简单计算总价
+        };
+
+        return View();
+    }
+
     [Route("game/{name}")]
     public IActionResult GameDetail(string name)
     {
