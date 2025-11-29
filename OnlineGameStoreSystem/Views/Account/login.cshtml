@@ -7,19 +7,6 @@
 @* login Style *@
 <link rel="stylesheet" href="~/css/Account/account.css" asp-append-version="true" />
 
-@section Scripts {
-    <script>
-        // Check if TempData has a flash message
-        @if (TempData["FlashMessage"] != null)
-        {
-                <text>
-                    showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
-                </text>
-        }
-    </script>
-}
-
-
 <div class="login-container">
     <h2>Sign in</h2>
 
