@@ -1,7 +1,18 @@
-﻿@* Views/Shared/_NavBar.cshtml *@
+﻿@{
+    // 1. 从 Claims 读取当前登录用户 ID
+    var userId = User.FindFirst("UserId")?.Value;
+
+    // 2. 根据 userId 从数据库取得用户资料
+    User? currentUser = null;
+    if (!string.IsNullOrEmpty(userId))
+    {
+        currentUser = db.Users.FirstOrDefault(u => u.Id.ToString() == userId);
+    }
+}
 
 <header class="site-header">
     <div class="nav-container">
+        <!-- 左侧 Logo -->
         <div class="nav-left">
             <a class="brand" href="/">
                 <img src="@Url.Content("~/images/favicon.png")" alt="logo" class="brand-icon" />
@@ -9,6 +20,7 @@
             </a>
         </div>
 
+        <!-- 中间导航菜单 -->
         <nav class="nav-center" aria-label="Main navigation">
             <ul>
                 <li><a asp-controller="Home" asp-action="Index">Store</a></li>
@@ -17,11 +29,13 @@
             </ul>
         </nav>
 
+        <!-- 右侧搜索、购物车、用户菜单 -->
         <div class="nav-right">
             <button class="icon-btn" aria-label="Search">
                 <i class="fa fa-search"></i>
             </button>
 
+            <!-- 搜索栏 -->
             <div class="search-bar-container">
                 <input type="text" placeholder="Search..." class="search-input" />
                 <button class="search-submit"><i class="fa fa-search"></i></button>
@@ -32,9 +46,29 @@
                 <span class="cart-badge" id="cart-badge" aria-hidden="true"></span>
             </a>
 
-            <a class="icon-btn account" href="@Url.Action("Login", "Account")" aria-label="Account">
-                <i class="fa fa-user-circle"></i>
-            </a>
+            <!-- 用户登入后显示：头像 + 用户名 + 下拉菜单 -->
+            @if (User.Identity!.IsAuthenticated)
+            {
+                <div class="user-menu">
+                    <img src="@(!string.IsNullOrEmpty(currentUser?.AvatarUrl) ? currentUser.AvatarUrl : Url.Content("~/images/avatar_default.png"))"
+                         class="avatar"
+                         onclick="toggleUserDropdown()" />
+                    <span class="username" onclick="toggleUserDropdown()">@currentUser?.Username</span>
+
+                    <div id="userDropdown" class="dropdown-menu">
+                        <a class="dropdown-item" href="/Profile/Index">Profile</a>
+                        <a class="dropdown-item" href="/Account/Settings">Settings</a>
+                        <a class="dropdown-item text-danger" href="#" onclick="logout(event)">Logout</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- 未登录：只显示登录 icon -->
+                <a class="icon-btn account" href="/Account/Login" aria-label="Account">
+                    <i class="fa fa-user-circle"></i>
+                </a>
+            }
         </div>
     </div>
 </header>

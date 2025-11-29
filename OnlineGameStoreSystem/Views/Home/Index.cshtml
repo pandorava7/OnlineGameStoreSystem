@@ -20,5 +20,13 @@
 @section Scripts {
     <script src="~/js/components/carousel.js" asp-append-version="true"></script>    
     <script src="~/js/components/category.js" asp-append-version="true"></script>
-
+    <script>
+                // Check if TempData has a flash message
+        @if (TempData["FlashMessage"] != null)
+        {
+                    <text>
+                        showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+                    </text>
+        }
+    </script>
 }

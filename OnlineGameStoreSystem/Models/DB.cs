@@ -370,9 +370,9 @@ public class OtpEntry
     [Required]
     public int UserId { get; set; }  // Foreign key to User table
     [Required]
-    public string OtpCode { get; set; } = null!;
+    public string OtpCode { get; set; }
     public DateTime Expiry { get; set; }
-    public User User { get; set; } = new();   // Navigation property
+    public User User { get; set; }    // Navigation property
 }
 
 public class UserPreferences

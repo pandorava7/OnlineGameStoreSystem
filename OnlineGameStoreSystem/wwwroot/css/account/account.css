@@ -176,6 +176,29 @@
     color: #666; /* 可自定义颜色 */
 }
 
+/*check-box remember me*/
+/* 独立控制 Remember Me 区域 */
+.remember-me-container {
+    margin-top: 10px; /* 顶部间距 */
+    display: flex; /* checkbox 和文字在同一行 */
+    align-items: center; /* 垂直居中 */
+}
+
+/* checkbox 单独样式 */
+.remember-me-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px; /* checkbox 与文字间距 */
+}
+
+/* label 单独样式 */
+.remember-me-container label {
+    font-size: 14px;
+    color: #c5c5c5;
+}
+
+
+
 .register-form{
     padding: 20px;
 }

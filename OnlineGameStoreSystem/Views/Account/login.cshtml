@@ -1,21 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Sign In";
+﻿@model OnlineGameStoreSystem.Models.ViewModels.LoginVM;
+
+@{
+    ViewData["Title"] = " Login";
 }
 
 @* login Style *@
 <link rel="stylesheet" href="~/css/Account/account.css" asp-append-version="true" />
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/functions/Account.js"></script>
-
     <script>
         // Check if TempData has a flash message
         @if (TempData["FlashMessage"] != null)
         {
-                        <text>
-                            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
-                        </text>
+                <text>
+                    showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+                </text>
         }
     </script>
 }
@@ -24,21 +23,38 @@
 <div class="login-container">
     <h2>Sign in</h2>
 
-  
-
     <form asp-controller="Account" asp-action="login" method="post">
         <div class="sec-box">
             <div class="form-group">
-                <label>SIGN IN WITH ACCOUNT NAME</label>
-                <input type="text" placeholder="Enter username">
+                <label>SIGN IN WITH EMAIL ADDRESS</label>
+                <input asp-for="Email" placeholder="Enter Email Address">
+                <span asp-validation-for="Email" style="color:red"></span>
             </div>
 
             <div class="form-group">
                 <label>PASSWORD</label>
-                <input type="password" placeholder="Enter password">
+                <div class="password-input-container">
+                    <input asp-for="Password" class="form-control" id="confirmPasswordInput" placeholder="Enter password" required />
+                    <span class="password-toggle" onclick="togglePassword('confirmPasswordInput', this)">
+                        <!-- 默认闭眼，带斜杠 -->
+                        <svg class="eye-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.06 10.06 0 0 1 12 19c-5 0-9-7-9-7a19.45 19.45 0 0 1 5.06-6.06" />
+                            <line x1="1" y1="1" x2="23" y2="23" /> <!-- 斜杠 -->
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                    </span>
+                </div>
+                <span asp-validation-for="Password" style="color:red"></span>
             </div>
 
-            <button class="login-btn" type="button">Sign In</button>
+
+            <div class="remember-me-container">
+                <input type="checkbox" asp-for="RememberMe" id="rememberMe" />
+                <label asp-for="RememberMe" for="rememberMe">Remember Me</label>
+            </div>
+
+            <button class="login-btn" type="submit">Sign In</button>
 
             <p class="forgot"><a href="@Url.Action("ResetPassword", "Account")">Forgot your password?</a></p>
         </div>
@@ -52,5 +68,18 @@
         </span>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/functions/Account.js"></script>
+    <script>
+            // Check if TempData has a flash message
+    @if (TempData["FlashMessage"] != null)
+    {
+        <text>
+            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+        </text>
+    }
+    </script>
+}
 
 
