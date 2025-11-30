@@ -22,6 +22,8 @@
 
             // 判断是否显示删除按钮
             const showDelete = c.userId == currentUserId;
+            // 判断是否点过赞
+            const likedClass = c.isLiked ? "liked" : "";
 
             div.innerHTML = `
                 <div class="user-info">
@@ -30,8 +32,18 @@
                         <div class="comment-header" style="display:flex; justify-content:space-between; align-items:center;">
                             <span class="author-name">${c.authorName}</span>
                         </div>
+
                         <p class="comment-content">${c.content}</p>
-                        <span class="comment-date">${dateText}</span>
+
+                        <div class="comment-footer">
+                            <span class="comment-date">${dateText}</span>
+
+                            <!-- 这里：点赞按钮 -->
+                            <div class="like-area ${likedClass}" data-liked="false">
+                                <i class="fa fa-heart like-icon"></i>
+                                <span class="like-count">${c.likeCount ?? 0}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -45,6 +57,44 @@
             `;
 
             commentContainer.appendChild(div);
+
+            // 点赞按钮交互（只做视觉，不调用后端）
+            const likeArea = div.querySelector('.like-area');
+
+            likeArea.addEventListener('click', async () => {
+
+                const isLiked = likeArea.classList.contains('liked');
+                const commentId = c.id;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                const res = await fetch('/Comment/ToggleLike', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({ CommentId: commentId })
+                });
+
+                const data = await res.json();
+
+                if (res.status === 401) {
+                    alert("Please login first.");
+                    return;
+                }
+
+                if (!data.success) return;
+
+                // 根据后端返回的状态决定视觉
+                if (data.liked === true) {
+                    likeArea.classList.add('liked');
+                } else {
+                    likeArea.classList.remove('liked');
+                }
+
+                likeArea.querySelector('.like-count').textContent = data.likeCount;
+            });
+
 
             // 添加操作按钮事件
             const options = div.querySelector('.comment-options');
@@ -92,11 +142,11 @@
                             if (res.ok) {
                                 divToRemove.remove();
                             } else {
-                                alert('删除失败');
+                                showTemporaryMessage('Failed to delete', 'error')
                             }
                         } catch (err) {
                             console.error(err);
-                            alert('删除出错');
+                            showTemporaryMessage('Error when delete', 'error')
                         }
                     });
                 });
@@ -120,13 +170,17 @@
     async function loadComments() {
         const res = await fetch(`/Comment/GetByPost?postId=${postId}`);
         const data = await res.json();
-        renderComments(data.comments, data.currentUserId);
+        const { comments, currentUserId } = data;
+        renderComments(comments, currentUserId);
     }
 
     // 点击发布
     postCommentBtn.addEventListener('click', async () => {
         const text = commentContent.value.trim();
-        if (!text) return alert('评论不能为空');
+        if (!text) {
+            showTemporaryMessage('Comment cannot be empty', 'error')
+            return;
+        }
 
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -144,7 +198,7 @@
             await loadComments(); // 重新加载评论
         } else {
             const msg = await res.text();
-            alert(msg || '评论失败');
+            showTemporaryMessage(msg + 'failed to comment', 'error')
         }
     });
 

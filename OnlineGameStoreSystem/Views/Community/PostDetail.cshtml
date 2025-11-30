@@ -41,7 +41,7 @@
                         <span class="post-date">@Model.CreatedAt.ToString("yyyy-MM-dd")</span>
                         <div class="post-stats">
                             <span class="eye-icon"><i class="fa fa-eye"></i> @Model.ViewCount</span>
-                            <span class="like-icon" id="likeCount"><i class="fa fa-heart"></i> @Model.LikeCount</span>
+                            <span class="like-icon active" id="likeCount"><i class="fa fa-heart"></i> @Model.LikeCount</span>
 
                             @Html.AntiForgeryToken()
                         </div>
@@ -60,33 +60,6 @@
         </div>
 
         <div class="comment-container">
-            @foreach (var c in Model.Comments)
-            {
-                <div class="comment-item">
-                    <div class="user-info">
-                        <img src="@(string.IsNullOrEmpty(c.AuthorAvatarUrl) ? "/images/avatar_default.png" : c.AuthorAvatarUrl)" class="author-avatar" />
-                        <div class="right">
-                            <div class="comment-header">
-                                <span class="author-name">@c.AuthorName</span>
-                                <!-- 操作菜单按钮 -->
-                                <div class="comment-options">
-                                    <span class="dots">&#x22EE;</span> <!-- 三个点 icon -->
-                                    <div class="options-card">
-                                        <button class="report-btn" data-commentid="@c.Id">举报</button>
-                                        @if (c.UserId == int.Parse(User.FindFirst("UserId")!.Value))
-                                        {
-                                            <button class="delete-btn" data-commentid="@c.Id">删除</button>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="comment-content">@c.Content</p>
-                            <span class="comment-date">@c.CreatedAt.ToString("yyyy-MM-dd")</span>
-                        </div>
-                    </div>
-                </div>
-
-            }
         </div>
     </div>
 

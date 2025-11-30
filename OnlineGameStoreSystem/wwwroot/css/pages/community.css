@@ -186,13 +186,16 @@
 }
 
 .like-icon {
-    color: var(--primary-color) !important;
     background-image: url('/images/like.png'); /* 你自己的路径 */
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 4px;
 }
+
+    .like-icon.active {
+        color: var(--primary-color) !important;
+    }
 
 .comment-icon {
     color: var(--accent-color2) !important;

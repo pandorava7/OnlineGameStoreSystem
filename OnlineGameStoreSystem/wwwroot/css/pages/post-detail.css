@@ -109,6 +109,7 @@
     flex-direction: column;
     padding: 15px;
     gap: 15px;
+    max-width: 400px;
 }
 
 .comment-item {
@@ -246,3 +247,35 @@
         .options-card button:hover {
             background-color: lightgray;
         }
+
+.comment-footer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 6px;
+}
+
+/* 默认灰色 */
+.like-area {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    color: var(--text-light) !important; /* 灰色 */
+    transition: color .2s;
+}
+
+    .like-area .like-icon {
+        font-size: 16px;
+    }
+
+    /* hover 变 primary */
+    .like-area:hover {
+        color: var(--primary-color) !important;
+    }
+
+    /* 点赞状态 */
+    .like-area.liked {
+        color: var(--primary-color) !important;
+    }
+

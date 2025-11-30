@@ -48,26 +48,34 @@ public class CommentController : Controller
     [HttpGet]
     public async Task<IActionResult> GetByPost(int postId)
     {
+        var userId = User.GetUserId(); // -1 表示未登录
+
         var comments = await db.Comments
             .Where(c => c.PostId == postId)
             .Include(c => c.User)
+            .Include(c => c.Likes) // ⭐ 必须 include Likes
             .OrderBy(c => c.CreatedAt)
             .Select(c => new
             {
                 c.Id,
                 c.Content,
                 c.CreatedAt,
-                c.UserId,
+                c.LikeCount,
                 AuthorName = c.User.Username,
-                AuthorAvatarUrl = c.User.AvatarUrl
+                AuthorAvatarUrl = c.User.AvatarUrl,
+
+                // ⭐ 告诉前端当前用户是否点过赞
+                IsLiked = userId != -1 && c.Likes.Any(l => l.UserId == userId)
             })
             .ToListAsync();
 
-        var currentUserId = User.GetUserId();
-
-        return Json(new { comments, currentUserId });
-
+        return Json(new
+        {
+            comments,
+            currentUserId = userId
+        });
     }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -85,5 +93,61 @@ public class CommentController : Controller
         await db.SaveChangesAsync();
         return Ok();
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ToggleLike([FromBody] LikeRequest request)
+    {
+        if (request.CommentId <= 0)
+            return BadRequest(new { success = false });
+
+        var comment = await db.Comments.FindAsync(request.CommentId);
+        if (comment == null)
+            return NotFound(new { success = false });
+
+        var userId = User.GetUserId();
+        if (userId == -1)
+            return Unauthorized(new { success = false });
+
+        var user = await db.Users.FindAsync(userId);
+        if (user == null)
+            return Unauthorized(new { success = false });
+
+        var existing = await db.CommentLikes
+            .FirstOrDefaultAsync(l => l.CommentId == request.CommentId && l.UserId == userId);
+
+        bool liked;
+
+        if (existing != null)
+        {
+            // 已点赞 → 取消点赞
+            db.CommentLikes.Remove(existing);
+            comment.LikeCount--;
+            liked = false;
+        }
+        else
+        {
+            // 未点赞 → 新增点赞
+            db.CommentLikes.Add(new CommentLike
+            {
+                UserId = userId,
+                CommentId = request.CommentId,
+                CreatedAt = DateTime.UtcNow
+            });
+
+            comment.LikeCount++;
+            liked = true;
+        }
+
+        await db.SaveChangesAsync();
+
+        return Ok(new
+        {
+            success = true,
+            liked,
+            likeCount = comment.LikeCount
+        });
+    }
+
 
 }
