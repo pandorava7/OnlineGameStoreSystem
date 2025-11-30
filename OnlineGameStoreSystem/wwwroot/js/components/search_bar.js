@@ -3,13 +3,9 @@ const btn = document.querySelector(".search-submit");
 
 function doSearch() {
     const term = input.value.trim();
-    if (term === "") {
-        return; // 空字符串不执行搜索
-    }
-
+    // 不再阻止空字符串
     // 跳转到 SearchController 的 Index
     window.location.href = `/Search?term=${encodeURIComponent(term)}`;
-    // 或者你写了路由可用 `/Search/Index?term=...`
 }
 
 // 点击按钮

@@ -23,14 +23,6 @@
     @* 这里我们不使用TempInfo（被我注释掉的部分），推荐使用Ajax（flash message）显示临时信息，具体代码在alert.js里，使用showTemporaryMessage调用。 *@
     <div id="flash-message-container"></div>
 
-    @* 通过后端显示flash message，只需要TempInfo里塞入指定的FlashMessage和FlashMessageType就行，具体代码在alert.js里，使用showTemporaryMessage调用。 *@
-    @if (TempData["FlashMessage"] != null)
-    {
-        <script>
-            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
-        </script>
-    }
-
     <!-- 全局弹窗容器 -->
     <div id="customModal" class="custom-modal hidden">
         <div class="modal-overlay"></div>
@@ -65,6 +57,13 @@
     <script src="~/js/components/modal.js" asp-append-version="true"></script>
     <script src="~/js/functions/modal-funtions.js" asp-append-version="true"></script>
     <script src="~/js/components/textarea_autosize.js" asp-append-version="true"></script>
+    @* 通过后端显示flash message，只需要TempInfo里塞入指定的FlashMessage和FlashMessageType就行，具体代码在alert.js里，使用showTemporaryMessage调用。 *@
+    @if (TempData["FlashMessage"] != null)
+    {
+        <script>
+            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

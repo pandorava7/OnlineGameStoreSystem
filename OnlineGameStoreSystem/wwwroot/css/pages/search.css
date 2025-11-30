@@ -1,0 +1,316 @@
+﻿.search-container {
+    width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 20px;
+}
+
+.results-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.result-card {
+    display: flex;
+    flex-direction: row;
+    background: #1b1b1b;
+    border-radius: 8px;
+    overflow: hidden;
+    padding-bottom: 12px;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+    .result-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 14px rgba(0,0,0,.35);
+    }
+
+    .result-card .cover img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        background: #333;
+    }
+
+    .result-card .info {
+        padding: 12px;
+    }
+
+    .result-card .title {
+        font-size: 17px;
+        margin: 0 0 6px;
+        color: #fff;
+    }
+
+    .result-card .date-developer {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        font-size: 13px;
+    }
+
+.date-developer .date {
+    color: #aaa;
+    margin-bottom: 6px;
+}
+
+.date-developer .developer {
+    color: var(--accent-color2);
+    margin-bottom: 6px;
+}
+
+    .date-developer .developer:hover{
+        text-decoration: underline;
+    }
+
+    .price-area {
+        margin: 8px 0;
+    }
+
+.price-normal {
+    color: #aaf;
+    font-size: 16px;
+}
+
+.price-original {
+    color: #777;
+    text-decoration: line-through;
+    margin-left: 6px;
+}
+
+.price-discount {
+    color: var(--primary-color);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rating {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+.no-results {
+    text-align: center;
+    color: #aaa;
+    padding: 40px 0;
+    font-size: 18px;
+}
+
+
+
+/* 左右两栏 */
+.left-col {
+    width: 70%;
+}
+
+.right-col {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+/* 搜索栏 */
+.search-box {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.search-input {
+}
+
+.search-submit {
+}
+
+
+/* 搜索结果列表 */
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+
+/* 右侧各筛选区基础 */
+.panel {
+}
+
+.panel h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+}
+
+.panel .help {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+
+/* 价格滑动条（使用 input range 做映射）*/
+.price-slider {
+    padding: 8px 0;
+}
+
+.price-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 8px;
+}
+
+.slider-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.slider-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.slider-input {
+    flex: 1;
+    padding: 0;
+}
+
+.price-values {
+    width: 100px;
+    font-size: 13px;
+    text-align: right;
+}
+
+
+/* toggle 开关 */
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+    .switch .knob {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(16,24,40,0.15);
+        transition: all .18s;
+    }
+
+    .switch.on {
+        background: #34d399;
+    }
+
+        .switch.on .knob {
+            left: 22px;
+        }
+
+
+/* 偏好筛选区 toggles 列表 */
+.pref-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* 标签筛选 */
+.tag-search {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.tag-input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #d0d5dd;
+}
+
+.tag-suggestions {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tag-pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #34d399;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.active-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 15px;
+    border-radius: 999px;
+    background: #34d399;
+    color: white;
+    font-size: 13px;
+}
+
+    .filter-pill button {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        color: inherit;
+        cursor: pointer;
+    }
+
+
+/* 小屏自适应 */
+@media (max-width:1100px) {
+    .search-container {
+        width: 100%;
+        padding: 0 16px;
+    }
+
+    .left-col {
+        width: 65%;
+    }
+
+    .right-col {
+        width: 35%;
+    }
+}
+
+@media (max-width:800px) {
+    .search-container {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .left-col, .right-col {
+        width: 100%;
+    }
+}

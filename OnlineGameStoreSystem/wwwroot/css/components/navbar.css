@@ -318,3 +318,11 @@
     .dropdown-item:hover {
         background: #42474e;
     }
+
+#userDropdown {
+    display: none;
+}
+
+    #userDropdown.open {
+        display: block;
+    }

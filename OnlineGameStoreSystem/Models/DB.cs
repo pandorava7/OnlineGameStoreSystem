@@ -590,14 +590,19 @@ public class CommentLike
 public class GameLike
 {
     public int Id { get; set; }
+
     public int UserId { get; set; }
     public User User { get; set; } = null!;
 
-    public int? GameId { get; set; }
-    public Game? Game { get; set; }
+    public int GameId { get; set; }
+    public Game Game { get; set; } = null!;
 
-    public DateTime CreatedAt { get; set; }
+    // 新增字段：true = Like，false = Dislike
+    public bool IsLike { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
+
 
 public class Comment
 {

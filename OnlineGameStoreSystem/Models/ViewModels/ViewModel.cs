@@ -136,3 +136,24 @@ public class PaymentInputViewModel
     public bool ChoicePayment { get; set; }
 }
 #endregion
+
+#region 搜索界面
+
+public class SearchPageVM {
+    public string SearchTerm { get; set; } = "";
+    public List<SearchResultVM> Results { get; set; } = new List<SearchResultVM>();
+}
+
+public class SearchResultVM
+{
+    public string Title { get; set; } = "";
+    public string? Cover { get; set; }
+    public DateTime ReleaseDate { get; set; }
+    public decimal Price { get; set; }
+    public decimal? DiscountPrice { get; set; }
+    public double PositiveRate { get; set; }
+    public int DeveloperId { get; set; }
+    public string DeveloperName { get; set; } = "";
+}
+
+#endregion

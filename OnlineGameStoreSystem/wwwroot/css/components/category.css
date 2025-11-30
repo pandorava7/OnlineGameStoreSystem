@@ -51,6 +51,7 @@
 /* Game Card */
 .game-card {
     width: 207.5px;
+    height: 207.5px;
     margin: 0 15px;
     background: #1a1c1f;
     border-radius: 10px;
