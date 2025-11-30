@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
 using OnlineGameStoreSystem.Helpers;
+using OnlineGameStoreSystem.Extensions;
 
 namespace OnlineGameStoreSystem.Controllers;
 
@@ -92,7 +93,8 @@ public class CommunityController : Controller
     public IActionResult PostManage()
     {
         // 获取自己的帖子列表
-        var userId = 1;
+        var userId = User.GetUserId();
+
         var userPosts = db.Posts
             .Where(p => p.UserId == userId)
             .Select(p => new UserPostViewModel
@@ -172,7 +174,7 @@ public class CommunityController : Controller
             // 新帖
             var post = new Post
             {
-                UserId = 1, // TODO: 替换为当前用户ID
+                UserId = User.GetUserId(),
                 Title = model.Title,
                 Content = model.Content,
                 Thumbnail = thumbnailUrl
