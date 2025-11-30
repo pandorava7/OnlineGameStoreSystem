@@ -50,10 +50,12 @@
             @if (User.Identity!.IsAuthenticated)
             {
                 <div class="user-menu">
-                    <img src="@(!string.IsNullOrEmpty(currentUser?.AvatarUrl) ? currentUser.AvatarUrl : Url.Content("~/images/avatar_default.png"))"
-                         class="avatar"
-                         onclick="toggleUserDropdown()" />
-                    <span class="username" onclick="toggleUserDropdown()">@currentUser?.Username</span>
+                    <div onclick="toggleUserDropdown()" class="flex-row gap">
+                        <img src="@(!string.IsNullOrEmpty(currentUser?.AvatarUrl) ? currentUser.AvatarUrl : Url.Content("~/images/avatar_default.png"))"
+                             class="avatar" />
+                        <span class="username">@currentUser?.Username</span>
+                    </div>
+                    
 
                     <div id="userDropdown" class="dropdown-menu">
                         <a class="dropdown-item" href="/Profile/Index">Profile</a>

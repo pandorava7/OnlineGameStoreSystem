@@ -8,7 +8,7 @@ namespace OnlineGameStoreSystem.Models.ViewModels
     public class RegisterVM{
 
         [Required(ErrorMessage = "! Username is required")]
-        [MaxLength(50)]
+        [MaxLength(20)]
         [RegularExpression(@"^\S+$", ErrorMessage = "! Username cannot contain spaces")]
         public string Username { get; set; } = null!;
 
@@ -20,8 +20,8 @@ namespace OnlineGameStoreSystem.Models.ViewModels
         [Required(ErrorMessage = "! Password is required")]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 8, ErrorMessage = "! Password must be between 8 and 12 characters")]
-        [RegularExpression(@"^[A-Z][A-Za-z0-9!@#$%^&*()_+=-]{7,11}$",
-        ErrorMessage = "! Password must start with a capital letter and be 8–12 characters long")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-]).{8,16}$",
+    ErrorMessage = "Password must include upper case, lower case, number and special character")]
         public string Password { get; set; } = null!;
 
 

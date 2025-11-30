@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineGameStoreSystem.Extensions;
 using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
 
@@ -19,7 +20,6 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-
         var categories = new List<GameCategoryViewModel>()
         {
             new GameCategoryViewModel {

@@ -34,6 +34,6 @@ async function addToCart(gameId) {
         showTemporaryMessage("Added to your cart", "success");
 
         // 更新购物车徽章
-        await CartAPI.loadCartFromServer(userId);
+        await CartAPI.loadCartFromServer();
     }
 }

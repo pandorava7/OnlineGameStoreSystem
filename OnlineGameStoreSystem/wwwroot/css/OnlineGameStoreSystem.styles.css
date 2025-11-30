@@ -23,6 +23,16 @@
     flex-direction: row;
 }
 
+.flex-row{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+}
+
+.gap{
+    gap: 10px;
+}
+
 .glass {
     background: rgba(255, 255, 255, 0.15); /* 半透明白 */
     backdrop-filter: blur(15px) saturate(150%);

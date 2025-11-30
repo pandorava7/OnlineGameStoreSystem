@@ -1,7 +1,4 @@
-﻿const shoppingCartId = 1;
-
-
-var cartItemsContainer = document.getElementById('cart-items-container');
+﻿var cartItemsContainer = document.getElementById('cart-items-container');
 var cartTotalElement = document.getElementById('cart-total');
 var cartTotalFinalElement = document.getElementById('cart-total-final');
 
@@ -76,7 +73,7 @@ function renderCartItems(cart) {
                 const cartItemId = btn.dataset.id;
 
                 await CartAPI.removeCartItem(cartItemId);  // 等后端删除 + reload 执行完
-                await CartAPI.loadCartFromServer(userId); // 重新加载购物车数据
+                await CartAPI.loadCartFromServer(); // 重新加载购物车数据
 
                 renderCartItems(CartAPI.cart);             // 用新的 cart 渲染
             });
@@ -92,7 +89,7 @@ function renderCartItems(cart) {
 // 初始加载购物车
 document.addEventListener("DOMContentLoaded", async () => {
     if (isLoggedIn) {
-        await CartAPI.loadCartFromServer(userId); // 确保购物车数据最新
+        await CartAPI.loadCartFromServer(); // 确保购物车数据最新
         renderCartItems(CartAPI.cart);            // 渲染UI
     }
 });

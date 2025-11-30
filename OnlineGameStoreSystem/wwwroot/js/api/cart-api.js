@@ -2,16 +2,16 @@
 window.CartAPI = {
     cart: [],
 
-    async loadCartFromServer(userId) {
-        const res = await fetch(`/Cart/GetItems?userId=${userId}`);
+    async loadCartFromServer() {
+        const res = await fetch(`/Cart/GetItems`);
         const data = await res.json();
         this.cart = data.items || [];
         this.updateCartBadge();
         return this.cart;
     },
 
-    async removeCartItem(cartId) {
-        const res = await fetch(`/Cart/RemoveItem?cartId=${cartId}`, {
+    async removeCartItem(cartItemId) {
+        const res = await fetch(`/Cart/RemoveItem?cartItemId=${cartItemId}`, {
             method: 'POST'
         });
 

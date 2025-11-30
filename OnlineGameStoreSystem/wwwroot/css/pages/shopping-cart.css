@@ -3,9 +3,8 @@
    ========================================= */
 
 .cart-page-container {
-    max-width: 1200px; /* 顶部留出导航栏空间，底部留出页脚空间 */
-    margin: 100px auto 50px auto;
-    padding: var(--spacing-md);
+    max-width: 1000px; /* 顶部留出导航栏空间，底部留出页脚空间 */
+    margin: 0 auto;
     min-height: calc(100vh - 150px); /* 确保内容区不会太短 */
 }
 

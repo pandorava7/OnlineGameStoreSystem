@@ -58,15 +58,6 @@
 
 @section Scripts {
     <script src="~/js/functions/Account.js"></script>
-    <script>
-            // Check if TempData has a flash message
-    @if (TempData["FlashMessage"] != null)
-    {
-        <text>
-            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
-        </text>
-    }
-    </script>
 }
 
 

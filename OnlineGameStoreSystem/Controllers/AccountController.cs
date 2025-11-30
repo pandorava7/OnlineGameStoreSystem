@@ -44,7 +44,7 @@ namespace OnlineGameStoreSystem.Controllers
 
             if (user == null || !hp.VerifyPassword(user, model.Password))
             {
-                ModelState.AddModelError("Password", "Incorrect username or password.");
+                ModelState.AddModelError("Password", "Incorrect email or password.");
                 return View(model);
             }
 
