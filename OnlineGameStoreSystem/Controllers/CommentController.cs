@@ -58,6 +58,7 @@ public class CommentController : Controller
             .Select(c => new
             {
                 c.Id,
+                c.UserId,
                 c.Content,
                 c.CreatedAt,
                 c.LikeCount,

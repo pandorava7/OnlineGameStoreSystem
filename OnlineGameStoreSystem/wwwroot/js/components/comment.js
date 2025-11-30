@@ -8,8 +8,10 @@
     let openOptionsCard = null; // 当前打开的 card
 
     function renderComments(comments, currentUserId) {
+        console.log(comments)
         commentContainer.innerHTML = '';
         comments.forEach(c => {
+            console.log(c.id)
             const div = document.createElement('div');
             div.className = 'comment-item';
 
@@ -22,6 +24,7 @@
 
             // 判断是否显示删除按钮
             const showDelete = c.userId == currentUserId;
+            console.log(c.userId);
             // 判断是否点过赞
             const likedClass = c.isLiked ? "liked" : "";
 
@@ -171,7 +174,9 @@
         const res = await fetch(`/Comment/GetByPost?postId=${postId}`);
         const data = await res.json();
         const { comments, currentUserId } = data;
+        console.log(comments)
         renderComments(comments, currentUserId);
+
     }
 
     // 点击发布
