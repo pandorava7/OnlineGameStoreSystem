@@ -37,7 +37,7 @@ public class CommunityController : Controller
                     AuthorAvatarUrl = p.User.AvatarUrl ?? "",
                     CreatedAt = p.CreatedAt,
                     ViewCount = p.ViewCount,
-                    LikeCount = p.Likes.Count,
+                    LikeCount = p.LikeCount,
                     CommentCount = db.Comments.Count(c => c.PostId == p.Id)
                 })
                 .ToList()

@@ -34,7 +34,10 @@ public class DB : DbContext
 
     // Community
     public DbSet<Post> Posts { get; set; }
-    public DbSet<Like> Likes { get; set; }
+    public DbSet<PostLike> PostLikes { get; set; }
+    public DbSet<ReviewLike> ReviewLikes { get; set; }
+    public DbSet<CommentLike> CommentLikes { get; set; }
+    public DbSet<GameLike> GameLikes { get; set; }
     public DbSet<Comment> Comments { get; set; }
 
     // Review
@@ -240,22 +243,54 @@ public class DB : DbContext
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Like>()
-            .HasOne(l => l.User)
-            .WithMany(u => u.Likes)
-            .HasForeignKey(l => l.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+        // User 删除 → 各类 Like 级联删除
+        modelBuilder.Entity<PostLike>()
+            .HasOne(pl => pl.User)
+            .WithMany(u => u.PostLikes)
+            .HasForeignKey(pl => pl.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Like>()
-            .HasOne(l => l.Post)
+        modelBuilder.Entity<ReviewLike>()
+            .HasOne(rl => rl.User)
+            .WithMany(u => u.ReviewLikes)
+            .HasForeignKey(rl => rl.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CommentLike>()
+            .HasOne(cl => cl.User)
+            .WithMany(u => u.CommentLikes)
+            .HasForeignKey(cl => cl.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<GameLike>()
+            .HasOne(gl => gl.User)
+            .WithMany(u => u.GameLikes)
+            .HasForeignKey(gl => gl.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // 对象删除 → 相应 Like 级联删除
+        modelBuilder.Entity<PostLike>()
+            .HasOne(pl => pl.Post)
             .WithMany(p => p.Likes)
-            .HasForeignKey(l => l.PostId)
-            .OnDelete(DeleteBehavior.Cascade); // 删除帖子 → 删除点赞
+            .HasForeignKey(pl => pl.PostId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Like>()
-            .HasOne(l => l.Review)
+        modelBuilder.Entity<ReviewLike>()
+            .HasOne(rl => rl.Review)
+            .WithMany(r => r.Likes)
+            .HasForeignKey(rl => rl.ReviewId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CommentLike>()
+            .HasOne(cl => cl.Comment)
             .WithMany(c => c.Likes)
-            .HasForeignKey(l => l.ReviewId) // 删除评论 → 删除点赞
+            .HasForeignKey(cl => cl.CommentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<GameLike>()
+            .HasOne(gl => gl.Game)
+            .WithMany(g => g.Likes)
+            .HasForeignKey(gl => gl.GameId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // -------------------------
@@ -353,7 +388,10 @@ public class User
     public List<Wishlist> Wishlists { get; set; } = new();
     public List<Review> Reviews { get; set; } = new();
     public List<Post> Posts { get; set; } = new();
-    public List<Like> Likes { get; set; } = new();
+    public List<PostLike> PostLikes { get; set; } = new();
+    public List<ReviewLike> ReviewLikes { get; set; } = new();
+    public List<CommentLike> CommentLikes { get; set; } = new();
+    public List<GameLike> GameLikes { get; set; } = new();
     public List<Comment> Comments { get; set; } = new();
     public List<Notification> Notifications { get; set; } = new();
     public List<Purchase> Purchases { get; set; } = new();
@@ -454,7 +492,7 @@ public class GameTag
     public Tag Tag { get; set; } = null!;
 }
 
-public class Review : ILikeable
+public class Review
 {
     public int Id { get; set; }
 
@@ -469,7 +507,8 @@ public class Review : ILikeable
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<Like> Likes { get; set; } = new List<Like>();
+    public int LikeCount { get; set; }
+    public List<ReviewLike> Likes { get; set; } = new List<ReviewLike>();
 }
 
 public class Notification
@@ -489,7 +528,7 @@ public class Notification
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
-public class Post : ILikeable
+public class Post
 {
     public int Id { get; set; }
 
@@ -508,19 +547,27 @@ public class Post : ILikeable
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<Like> Likes { get; set; } = new List<Like>();
+    public ICollection<PostLike> Likes { get; set; } = new List<PostLike>();
+    public int LikeCount { get; set; }
     public List<Comment> Comments { get; set; } = new();
 }
 
-public class Like
+public class PostLike
 {
     public int Id { get; set; }
     public int UserId { get; set; }
     public User User { get; set; } = null!;
-
-    // 多态引用
     public int? PostId { get; set; }
     public Post? Post { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
+
+public class ReviewLike
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
 
     public int? ReviewId { get; set; }
     public Review? Review { get; set; }
@@ -528,6 +575,29 @@ public class Like
     public DateTime CreatedAt { get; set; }
 }
 
+public class CommentLike
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
+
+    public int? CommentId { get; set; }
+    public Comment? Comment { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
+
+public class GameLike
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
+
+    public int? GameId { get; set; }
+    public Game? Game { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
 
 public class Comment
 {
@@ -542,6 +612,8 @@ public class Comment
     public string Content { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public int LikeCount { get; set; }
+    public List<CommentLike> Likes { get; set; } = new List<CommentLike>();
 }
 
 public class Purchase
@@ -607,6 +679,8 @@ public class Game
     public List<Review> Reviews { get; set; } = new();
     public List<Purchase> Purchases { get; set; } = new();
     public List<GameTag> Tags { get; set; } = new();
+    public int LikeCount { get; set; }
+    public List<GameLike> Likes { get; set; } = new();
 }
 
 public class GameMedia

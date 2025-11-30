@@ -18,7 +18,7 @@
         @* 点赞 *@
         <div class="like-section">
             <p>If you like this post, please give it a like!</p>
-            <button class="primary-btn button">
+            <button class="primary-btn button" id="likeBtn" data-postid="@Model.Id">
                 <i class="fa fa-heart"></i> Like
             </button>
         </div>
@@ -41,7 +41,9 @@
                         <span class="post-date">@Model.CreatedAt.ToString("yyyy-MM-dd")</span>
                         <div class="post-stats">
                             <span class="eye-icon"><i class="fa fa-eye"></i> @Model.ViewCount</span>
-                            <span class="like-icon"><i class="fa fa-heart"></i> @Model.LikeCount</span>
+                            <span class="like-icon" id="likeCount"><i class="fa fa-heart"></i> @Model.LikeCount</span>
+
+                            @Html.AntiForgeryToken()
                         </div>
                     </div>
                 </div>
@@ -74,4 +76,9 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/community.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/pages/post-detail.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/components/post_like.js" asp-append-version="true"></script>
+
 }
