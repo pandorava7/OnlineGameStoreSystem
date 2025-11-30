@@ -96,6 +96,7 @@ public class PostDetailsViewModel
 public class CommentViewModel
 {
     public int Id { get; set; }
+    public int UserId { get; set; }
     public string AuthorName { get; set; } = null!;
     public string AuthorAvatarUrl { get; set; } = null!;
     public string Content { get; set; } = null!;

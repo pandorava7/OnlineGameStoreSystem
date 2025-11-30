@@ -53,6 +53,12 @@
         <!-- 评论标题 -->
         <h2 class="comment-section-title">Comments (@Model.Comments.Count)</h2>
 
+        <!-- 发布评论 -->
+        <div class="comment-post">
+            <textarea id="commentContent" data-postid="@Model.Id" placeholder="Write your comment..." rows="3"></textarea>
+            <button id="postCommentBtn" class="primary-btn">Upload</button>
+        </div>
+
         <div class="comment-container">
             @foreach (var c in Model.Comments)
             {
@@ -60,12 +66,26 @@
                     <div class="user-info">
                         <img src="@(string.IsNullOrEmpty(c.AuthorAvatarUrl) ? "/images/avatar_default.png" : c.AuthorAvatarUrl)" class="author-avatar" />
                         <div class="right">
-                            <span class="author-name">@c.AuthorName</span>
+                            <div class="comment-header">
+                                <span class="author-name">@c.AuthorName</span>
+                                <!-- 操作菜单按钮 -->
+                                <div class="comment-options">
+                                    <span class="dots">&#x22EE;</span> <!-- 三个点 icon -->
+                                    <div class="options-card">
+                                        <button class="report-btn" data-commentid="@c.Id">举报</button>
+                                        @if (c.UserId == int.Parse(User.FindFirst("UserId")!.Value))
+                                        {
+                                            <button class="delete-btn" data-commentid="@c.Id">删除</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="comment-content">@c.Content</p>
                             <span class="comment-date">@c.CreatedAt.ToString("yyyy-MM-dd")</span>
                         </div>
                     </div>
-                    <p class="comment-content">@c.Content</p>
                 </div>
+
             }
         </div>
     </div>
@@ -79,6 +99,6 @@
 }
 
 @section Scripts {
-    <script src="~/js/components/post_like.js" asp-append-version="true"></script>
-
+    <script src="~/js/components/likes.js" asp-append-version="true"></script>
+    <script src="~/js/components/comment.js" asp-append-version="true"></script>
 }

@@ -18,3 +18,26 @@
         ]
     });
 }
+
+function confirmDeleteComment(onConfirm) {
+    Modal.show({
+        message: "Delete your comment?",
+        buttons: [
+            {
+                text: "Cancel",
+                type: "secondary-btn",
+                onClick: () => console.log("Cancel clicked")
+            },
+            {
+                text: "Delete",
+                type: "primary-btn",
+                onClick: () => {
+                    console.log("Deleting...");
+                    if (typeof onConfirm === "function") {
+                        onConfirm(); // 调用回调
+                    }
+                }
+            }
+        ]
+    });
+}

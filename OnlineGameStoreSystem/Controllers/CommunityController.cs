@@ -78,6 +78,7 @@ public class CommunityController : Controller
                 .Select(c => new CommentViewModel
                 {
                     Id = c.Id,
+                    UserId = c.User.Id,
                     Content = c.Content,
                     AuthorName = c.User.Username,
                     AuthorAvatarUrl = c.User.AvatarUrl ?? "",
