@@ -130,11 +130,6 @@ public class CreatePostViewModel
     public IFormFile? Thumbnail { get; set; }
     public string? ThumbnailUrl { get; set; } = null!; // 编辑时显示已有缩略图
 }
-public class PaymentInputViewModel
-{
-    [RegularExpression(@"Paypal & TnG", ErrorMessage = "Payment method must be either 'Paypal' or 'TnG'.")]
-    public bool ChoicePayment { get; set; }
-}
 #endregion
 
 #region 搜索界面

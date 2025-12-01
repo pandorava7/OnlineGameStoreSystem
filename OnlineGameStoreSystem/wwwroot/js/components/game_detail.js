@@ -23,13 +23,17 @@ document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
 // 添加到购物车（服务器）
 // =====================
 async function addToCart(gameId) {
+    console.log("gameid: "+ gameId);
     const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
         method: 'POST'
     });
 
-    console.log(res.success);
-
     const result = await res.json();
+
+    if (result.message == "User not found") {
+        showTemporaryMessage("Please log in before your add item!", "error");
+    }
+
     if (result.success) {
         showTemporaryMessage("Added to your cart", "success");
 

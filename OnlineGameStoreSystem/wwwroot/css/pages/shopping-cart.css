@@ -4,7 +4,7 @@
 
 .cart-page-container {
     max-width: 1000px; /* 顶部留出导航栏空间，底部留出页脚空间 */
-    margin: 0 auto;
+    margin: 40px auto;
     min-height: calc(100vh - 150px); /* 确保内容区不会太短 */
 }
 
@@ -22,12 +22,13 @@
 
 .cart-content {
     display: flex;
+    width: 100%;
     gap: var(--spacing-lg);
     flex-wrap: wrap; /* 允许在小屏幕上换行 */
     justify-content: center; /* 居中内容 */
 }
 
-.cart-items-list {
+.left-container {
     flex: 2; /* 占用更多空间 */
     min-width: 300px; /* 最小宽度 */
     background-color: var(--bg-surface);
@@ -133,7 +134,7 @@
 
 .cart-summary {
     flex: 1; /* 总结区域占据较少空间 */
-    min-width: 280px;
+    max-width: 330px;
     background-color: var(--bg-surface);
     border-radius: var(--border-radius);
     padding: var(--spacing-md);
@@ -172,6 +173,7 @@
     padding: 1rem;
     font-size: 1.1rem;
     background-color: var(--primary-color);
+    text-align:center;
 }
 
     .checkout-btn:hover {

@@ -1,0 +1,83 @@
+﻿@model PaymentSummaryViewModel
+
+<div class="cart-page-container">
+    <h1 class="cart-page-title">Summary</h1>
+
+    <form asp-controller="Payment" asp-action="ProcessPayment" method="post" class="cart-content">
+        <div class="left-container">
+            <div class="cart-item-container">
+                @foreach(var g in Model.GameList)
+                {
+                    <div class="summmary-cart-item">
+                        <div class="item-left">
+                            <img src="@g.ThumbnailUrl" alt="@g.Title" class="item-img">
+                        </div>
+                        <div class="item-right">
+                            <div class="item-name">@g.Title</div>
+                            <div class="item-price">@g.Price</div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="payment-description">
+                <p class="method-view">
+                    Payment method: @Model.SelectedPaymentMethod.ToString()
+                    <a class="change-method" asp-controller="Payment" asp-action="Index"
+                       asp-route-selectedPaymentMethod="@(Model.SelectedPaymentMethod?.ToString())">
+                        Change
+                    </a>
+                </p>
+                <p class="des">Once you've completed this transaction, your payment method will be debited and you'll receive an email message confirming receipt of your purchase.</p>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h3 class="summary-title">Order Summary</h3>
+            <div class="summary-row">
+                <span>Item Subtotal</span>
+                <span id="summary-subtotal">RM <span id="cart-total">0.00</span></span>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>RM <span id="cart-total-final">0.00</span></span> @* 购物车总价与此绑定 *@
+            </div>
+
+            <a id="proceed-payment-btn"
+               class="checkout-btn primary-btn button"
+               data-selected-method="@(Model.SelectedPaymentMethod.HasValue ? (int)Model.SelectedPaymentMethod.Value : -1)">
+                Proceed Payment
+            </a>
+            <a asp-controller="Payment" asp-action="Index" class="continue-shopping">
+                <i class="fas fa-arrow-left"></i> Cancel & Back
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Payment Modal -->
+<div id="payment-modal" class="modal hidden">
+    <div class="payment-modal-content glass">
+        <div id="modal-icon">
+            <!-- Loading 默认Icon -->
+            <div class="loader"></div>
+        </div>
+
+        <h2 id="modal-title">Payment Process...</h2>
+        <p id="modal-desc">Please wait while we process your transaction.</p>
+
+        <div id="modal-actions" class="actions hidden">
+            <!-- 按钮会由 JS 动态添加 -->
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/components/shopping_cart.js" asp-append-version="true"></script>
+    <script src="~/js/components/payment_loading.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/shopping-cart.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/payment.css" asp-append-version="true" />
+}

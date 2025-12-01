@@ -1,0 +1,124 @@
+﻿.left-container .des {
+    color: white;
+    margin-bottom: 5px;
+}
+
+.payment-options{
+    margin-bottom: 15px;
+}
+
+.left-container .des2 {
+    color: lightgray;
+}
+
+.summmary-cart-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    color: #f0f0f0;
+    position: relative;
+}
+
+    .summmary-cart-item .item-img{
+        height: 80px;
+    }
+
+    .summmary-cart-item .item-name{
+        font-size: 18px;
+    }
+
+    .summmary-cart-item .item-price {
+        text-align: right;
+        font-size: 20px;
+    }
+
+.payment-form{
+    display: flex;
+    flex-direction: row;
+}
+
+.payment-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-description .method-view {
+    color: white;
+    margin-bottom: 10px;
+}
+
+    .payment-description .method-view .change-method {
+        color: var(--primary-color);
+    }
+
+.payment-description .des { 
+    color: lightgray;
+}
+
+/* Payment 弹窗 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.hidden {
+    display: none;
+}
+
+.payment-modal-content {
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    width: 340px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+
+/* Loading Spinner */
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ddd;
+    border-top-color: #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success Icon */
+.success-icon {
+    font-size: 50px;
+    color: #27ae60;
+}
+
+/* Error Icon */
+.error-icon {
+    font-size: 50px;
+    color: #c0392b;
+}
+
+.actions{
+    display:flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content:center;
+}

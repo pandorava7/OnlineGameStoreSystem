@@ -61,6 +61,7 @@
     @if (TempData["FlashMessage"] != null)
     {
         <script>
+            console.log("trigger");
             showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
         </script>
     }

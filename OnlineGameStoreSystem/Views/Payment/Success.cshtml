@@ -1,4 +1,4 @@
-﻿@model PaymentMethodViewModel
+﻿@using OnlineGameStoreSystem.Models.ViewModels
 
 <div class="cart-page-container">
     <h1 class="cart-page-title">Payment Method</h1>
@@ -7,11 +7,9 @@
         <div class="left-container">
             <p class="des">Please select a payment method</p>
 
-            <select asp-for="SelectedPaymentMethod" asp-items="Html.GetEnumSelectList<PaymentMethod>()" class="form-control payment-options">
+            <select asp-items="Html.GetEnumSelectList<PaymentMethod>()" class="form-control payment-options">
                 <option value="" disabled selected hidden>-- Please Select --</option>
             </select>
-            <!-- 显示验证信息 -->
-            <span asp-validation-for="SelectedPaymentMethod" class="text-danger"></span>
 
             <p class="des2">
                 You'll have a chance to review your order before it's placed.

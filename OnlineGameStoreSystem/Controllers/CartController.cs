@@ -57,7 +57,7 @@ public class CartController : Controller
         // 查找用户
         var user = await db.Users.FindAsync(userId);
         if (user == null)
-            return Json(new { success = false, message = "用户不存在" });
+            return Json(new { success = false, message = "User not found" });
 
         // 查找用户现有的购物车
         var cart = await db.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == userId);

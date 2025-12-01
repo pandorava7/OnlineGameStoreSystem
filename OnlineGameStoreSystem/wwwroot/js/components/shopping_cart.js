@@ -1,19 +1,19 @@
-﻿var cartItemsContainer = document.getElementById('cart-items-container');
-var cartTotalElement = document.getElementById('cart-total');
-var cartTotalFinalElement = document.getElementById('cart-total-final');
-
+﻿
 function updateCartTotal(cart) {
-    let sum = cart.reduce((t, i) => t + i.price, 0);
-    cartTotalElement.textContent = sum.toFixed(2);
-    cartTotalFinalElement.textContent = sum.toFixed(2);
+    updateTotalUI(cart);
 }
 
 function renderCartItems(cart) {
+    var cartItemsContainer = document.getElementById('cart-items-container');
+    if (!cartItemsContainer) {
+        return;
+    }
+
     console.log("Rendering cart items:", cart);
+
     cartItemsContainer.innerHTML = "";
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = `<p class="empty-cart-message">Your cart is empty</p>`;
-        updateCartTotal(cart);
         return;
     }
 
@@ -81,8 +81,6 @@ function renderCartItems(cart) {
 
         cartItemsContainer.appendChild(el);
     });
-
-    updateCartTotal(cart);
 }
 
 
@@ -90,6 +88,18 @@ function renderCartItems(cart) {
 document.addEventListener("DOMContentLoaded", async () => {
     if (isLoggedIn) {
         await CartAPI.loadCartFromServer(); // 确保购物车数据最新
+        updateTotalUI(CartAPI.cart);
         renderCartItems(CartAPI.cart);            // 渲染UI
     }
 });
+
+
+function updateTotalUI(cart) {
+    let sum = cart.reduce((t, i) => t + (i.discount_price ?? i.price), 0);
+
+    const el1 = document.getElementById('cart-total');
+    const el2 = document.getElementById('cart-total-final');
+
+    if (el1) el1.textContent = sum.toFixed(2);
+    if (el2) el2.textContent = sum.toFixed(2);
+}

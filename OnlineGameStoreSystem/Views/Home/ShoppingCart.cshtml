@@ -6,7 +6,7 @@
     <h1 class="cart-page-title">My Shopping Cart</h1>
 
     <div class="cart-content">
-        <div class="cart-items-list" id="cart-items-container">
+        <div class="left-container" id="cart-items-container">
             @* 购物车商品将由 JavaScript 渲染到这里 *@
             <p class="empty-cart-message">Loading...</p>
         </div>
@@ -21,7 +21,7 @@
                 <span>Total</span>
                 <span>RM <span id="cart-total-final">0.00</span></span> @* 购物车总价与此绑定 *@
             </div>
-            <a class="checkout-btn" asp-controller="Payment" asp-action="Index">
+            <a class="checkout-btn primary-btn button" asp-controller="Payment" asp-action="Index">
                 <i class="fas fa-credit-card" ></i> Checkout
             </a>
             <a href="/" class="continue-shopping">

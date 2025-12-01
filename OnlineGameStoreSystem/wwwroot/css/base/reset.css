@@ -19,6 +19,10 @@ html, body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.text-danger{
+    color: red;
+}
+
 h1, h2, h3, h4, h5, h6 {
     margin: 0 0 0 0;
     font-weight: 600;
@@ -35,6 +39,7 @@ a {
     color: var(--color-muted);
     text-decoration: none;
     transition: color var(--transition-normal);
+    line-height: 20px;
 }
 
     a:hover {
@@ -69,11 +74,17 @@ textarea {
     padding: var(--space-sm) var(--space-md);
     transition: background var(--transition-normal), border-color var(--transition-normal);
 }
-button{}
+
+button {
+    line-height: 20px;
+    white-space: nowrap; /* 禁止换行 */
+}
+
 textarea {
     overflow-y: hidden; /* 隐藏滚动条 */
     resize: none; /* 禁止手动拉伸（可选） */
 }
+
 .button {
     font-family: var(--font-main);
     font-size: 1rem;
@@ -85,46 +96,51 @@ textarea {
     transition: background var(--transition-normal), border-color var(--transition-normal);
 }
 
-    button:hover,
-    input:hover,
-    select:hover,
-    textarea:hover {
-        border-color: var(--color-text);
-    }
+button:hover,
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: var(--color-text);
+}
+
 .button:hover {
     border-color: var(--color-text);
 }
 
-    button:focus,
-    input:focus,
-    select:focus,
-    textarea:focus {
-        outline: none;
-        border-color: var(--color-text);
-    }
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-text);
+}
+
 input:focus,
 textarea:focus {
     border: solid 1px var(--accent-color2) !important;
 }
+
 .button:focus {
     outline: none;
     border-color: var(--color-text);
 }
 
-    button:disabled,
-    input:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    .button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
+button:disabled,
+input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
 button {
     cursor: pointer;
     border-radius: 9999px;
 }
+
 .button {
     cursor: pointer;
     border-radius: 9999px;
@@ -196,13 +212,13 @@ th {
     padding: var(--space-sm) var(--space-md);
 }
 
-.navbar-brand{
+.navbar-brand {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--color-text);
 }
 
-.nav-link{
+.nav-link {
     color: var(--color-text);
     margin-right: var(--space-md);
 }
