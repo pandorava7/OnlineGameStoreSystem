@@ -51,11 +51,12 @@ public class CartController : Controller
     [HttpPost]
     public async Task<IActionResult> AddItem(int gameId)
     {
-        // 假设当前用户 ID 是 1，实际可用 User.Identity 或其它方式获取
         var userId = User.GetUserId();
 
         // 查找用户
-        var user = await db.Users.FindAsync(userId);
+        var user = await db.Users
+                           .Include(u => u.Purchases) // 包含用户购买记录
+                           .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)
             return Json(new { success = false, message = "User not found" });
 
@@ -74,6 +75,13 @@ public class CartController : Controller
             };
             db.ShoppingCarts.Add(cart);
             await db.SaveChangesAsync(); // 先保存，生成购物车 Id
+        }
+
+        // 检查用户是否已经购买该游戏
+        bool alreadyPurchased = user.Purchases.Any(p => p.GameId == gameId);
+        if (alreadyPurchased)
+        {
+            return Json(new { success = false, message = "You already own this game" });
         }
 
         // 添加商品到购物车

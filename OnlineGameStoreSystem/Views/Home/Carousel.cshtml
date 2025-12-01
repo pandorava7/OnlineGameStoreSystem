@@ -7,12 +7,12 @@
     <div class="carousel-viewport">
         <div class="carousel-track">
 
-            @for (int i = 0; i < Model.Count; i++)
+            @foreach(var game in Model)
             {
                 <div class="carousel-item">
-                    <a class="thumbnail" asp-controller="Home" asp-action="GameDetail" asp-route-name="@Model[i].Title.Replace(' ', '_')">
-                        <img class="main-img main-img-top" src="@Model[i].ThumbnailUrl" alt="@Model[i].Title">
-                        <img class="main-img main-img-bottom" src="@Model[i].ThumbnailUrl" alt="@Model[i].Title">
+                        <a class="thumbnail" asp-controller="Home" asp-action="GameDetail" asp-route-name="@game.Title.Replace(' ', '_')">
+                            <img class="main-img main-img-top" src="@game.ThumbnailUrl" alt="@game.Title">
+                            <img class="main-img main-img-bottom" src="@game.ThumbnailUrl" alt="@game.Title">
 
                         <div class="progress-bar-container">
                             <div class="progress-bar"></div>
@@ -20,19 +20,20 @@
                     </a>
 
                     <div class="game-info">
-                        <h2 class="game-title">@Model[i].Title</h2>
+                            <h2 class="game-title">@game.Title</h2>
 
                         <div class="thumbs">
-                            @foreach(var imageUrl in Model[i].ImageUrls)
+                                @foreach (var imageUrl in game.ImageUrls)
                             {
                                 <img src="@imageUrl">
                             }
                         </div>
 
                         <div class="tags">
-                            <span>Cyberpunk</span>
-                            <span>Open World</span>
-                            <span>RPG</span>
+                            @foreach(var tag in game.TagName)
+                            {
+                                <span>@tag</span>
+                            }
                         </div>
                     </div>
                 </div>

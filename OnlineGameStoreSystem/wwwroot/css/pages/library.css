@@ -1,0 +1,189 @@
+﻿.library-container {
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+.library-flex {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.left-container {
+    flex: 2;
+    min-height: 200px;
+    padding: 20px;
+}
+
+.left-container,
+.right-container {
+    min-width: 0; /* 关键 */
+}
+
+.page-title{
+    margin-bottom: 20px;
+}
+
+.filter-section{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.filter-section .title{
+
+}
+
+    .filter-section .options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap; /* 自动换行 */
+        max-width: 300px; /* 超过 300px 时触发换行 */
+        margin-bottom: 30px;
+    }
+
+.options .option{
+    border-radius: 8px;
+}
+
+.options .option.active {
+    border: none;
+    background-color: var(--primary-color);
+}
+
+.right-container {
+    flex: 3;
+    min-height: 200px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 两列 */
+    gap: 20px; /* 间距可自定义 */
+}
+
+.card-item {
+    background: #1E1E22;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: white;
+    border: 1px gray solid;
+}
+
+/* --- 16:9 缩略图 --- */
+.thumb-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+    position: relative; /* ✅ 必须加 */
+}
+
+    .thumb-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0;
+    }
+
+/* --- Title --- */
+.card-item .title {
+    font-size: 1rem;
+    color: #FFFFFF;
+    font-weight: 600;
+    text-align: left;
+}
+
+/* --- Storage & Download Align Right --- */
+.storage-require-box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+/* Storage Number */
+.storage-require {
+    color: #CCCCCC;
+    font-size: 1.2rem;
+    align-self: flex-end;
+    margin: 0;
+}
+
+/* Download button box */
+.download-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+    .download-box:hover {
+        transform: scale(1.1);
+        filter: brightness(1.15);
+    }
+
+
+    .download-box i {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+/* Date */
+.purchased-date {
+    font-size: 0.75rem;
+    color: var(--darklight-color, #808080);
+    text-align: right;
+    margin: 10px 0;
+}
+
+
+
+
+/* ----- 遮罩层 ----- */
+.hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0); /* 默认透明 */
+    backdrop-filter: blur(0); /* 默认无模糊 */
+    transition: all 0.25s ease;
+    pointer-events: none; /* 不阻止按钮点击 */
+    z-index: 1; /* 保证按钮在上方 */
+}
+
+/* 悬浮时变暗或模糊 */
+.thumb-wrapper:hover .hover-overlay {
+    background: rgba(0,0,0,0.4); /* 半透明暗色 */
+    backdrop-filter: blur(2px); /* 可选：轻微模糊 */
+}
+
+/* ----- 悬浮按钮层 ----- */
+.hover-actions {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 2; /* 高于遮罩层 */
+}
+
+/* 悬浮时按钮出现 */
+.thumb-wrapper:hover .hover-actions {
+    opacity: 1;
+    pointer-events: auto;
+}

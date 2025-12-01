@@ -686,6 +686,7 @@ public class Game
     public List<GameTag> Tags { get; set; } = new();
     public int LikeCount { get; set; }
     public List<GameLike> Likes { get; set; } = new();
+    public int StorageRequireMB { get; set; }
 }
 
 public class GameMedia

@@ -257,6 +257,7 @@
     padding: 6px 10px;
     border-radius: 999px;
     background: #34d399;
+    color: black;
     cursor: pointer;
     font-size: 13px;
 }

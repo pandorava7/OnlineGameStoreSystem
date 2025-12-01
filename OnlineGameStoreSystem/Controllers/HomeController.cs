@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Extensions;
 using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
+using System.IO.Pipelines;
+using System.Linq;
 
 namespace OnlineGameStoreSystem.Controllers;
 
@@ -66,6 +68,8 @@ public class HomeController : Controller
 
         var topGamesBySales = db.Games
             .Include(g => g.Media)
+            .Include(g => g.Tags)
+                .ThenInclude(gt => gt.Tag)
             .Select(g => new
             {
                 Game = g,
@@ -88,6 +92,9 @@ public class HomeController : Controller
                     .Where(m => m.MediaType == "image")
                     .Select(m => m.MediaUrl)
                     .ToList(),
+                TagName = x.Game.Tags
+                    .Select(gt => gt.Tag.Name)
+                    .ToList()
             }).ToList(),
 
             Categories = categories
@@ -161,11 +168,10 @@ public class HomeController : Controller
         var game = db.Games
             .Include(g => g.Media)
             .Include(g => g.Tags)
+            .ThenInclude(gt => gt.Tag)
             .Include(g => g.Reviews)
             .ThenInclude(r => r.User)
             .FirstOrDefault(g => g.Title.ToLower() == realName.ToLower());
-
-        Console.WriteLine("Searching for game: " + name);
 
         if (game == null)
         {
@@ -203,7 +209,87 @@ public class HomeController : Controller
         return View(gameDetailViewModel);
     }
 
-    
+    [Route("library")]
+    public async Task<IActionResult> GameLibrary(
+        string? term,
+        string? sort,
+        string? sortType, // "asc" 或 "desc"
+        string? tags)
+    {
+        var userId = User.GetUserId();
+
+        // 先筛选用户拥有的游戏
+        var query = db.Games
+            .Include(g => g.Media)
+            .Include(g => g.Tags).ThenInclude(gt => gt.Tag)
+            .Include(g => g.Purchases).ThenInclude(p => p.Payment)
+            .Where(g => g.Purchases.Any(p => p.UserId == userId)) // 关键：只显示玩家拥有的游戏
+            .AsQueryable();
+
+        // ---------------- 搜索词 ----------------
+        if (!string.IsNullOrWhiteSpace(term))
+        {
+            string t = term.ToLower();
+            query = query.Where(g => g.Title.ToLower().Contains(t)
+                                  || g.Developer.Username.ToLower().Contains(t));
+        }
+
+        // ---------------- 标签过滤 ----------------
+        if (!string.IsNullOrWhiteSpace(tags))
+        {
+            var tagList = tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                              .Select(x => x.Trim().ToLower())
+                              .ToList();
+            query = query.Where(g => g.Tags.Any(gt => tagList.Contains(gt.Tag.Name.ToLower())));
+        }
+
+        // ---------------- 排序 ----------------
+        bool ascending = string.Equals(sortType, "asc", StringComparison.OrdinalIgnoreCase);
+
+        query = sort?.ToLower() switch
+        {
+            "name" => ascending ? query.OrderBy(g => g.Title) : query.OrderByDescending(g => g.Title),
+            "price" => ascending
+                ? query.OrderBy(g => g.DiscountPrice ?? g.Price)
+                : query.OrderByDescending(g => g.DiscountPrice ?? g.Price),
+            "purchase date" => ascending
+                ? query.OrderBy(g => g.Purchases
+                                    .Where(p => p.UserId == userId)
+                                    .OrderByDescending(p => p.Payment.CreatedAt)
+                                    .Select(p => p.Payment.CreatedAt)
+                                    .FirstOrDefault())
+                : query.OrderByDescending(g => g.Purchases
+                                    .Where(p => p.UserId == userId)
+                                    .OrderByDescending(p => p.Payment.CreatedAt)
+                                    .Select(p => p.Payment.CreatedAt)
+                                    .FirstOrDefault()),
+            "like rate" => ascending
+                ? query.OrderBy(g => g.Likes.Count == 0 ? 0 : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count)
+                : query.OrderByDescending(g => g.Likes.Count == 0 ? 0 : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count),
+            _ => query.OrderBy(g => g.Title)
+        };
+
+        // ---------------- 投影 ----------------
+        var games = await query.Select(g => new GameLibraryViewModel
+        {
+            Title = g.Title,
+            ThumbnailUrl = g.Media
+                            .Where(m => m.MediaType == "thumb")
+                            .OrderBy(m => m.SortOrder)
+                            .Select(m => m.MediaUrl)
+                            .FirstOrDefault() ?? "/images/default-thumbnail.png",
+            PurchasedDate = g.Purchases
+                            .Where(p => p.UserId == userId)
+                            .OrderByDescending(p => p.Payment.CreatedAt)
+                            .Select(p => p.Payment.CreatedAt)
+                            .FirstOrDefault(),
+            RequireMB = g.StorageRequireMB
+        }).ToListAsync();
+
+        return View(games);
+    }
+
+
 
 
 

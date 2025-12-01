@@ -235,3 +235,16 @@ function enableThumbnailHover() {
 }
 
 enableThumbnailHover();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const thumbs = document.querySelectorAll('.thumbs'); // 正确方法
+
+    thumbs.forEach(t => {
+        t.addEventListener('wheel', function (e) {
+            e.preventDefault();       // 阻止页面上下滚动
+            t.scrollLeft += e.deltaY; // 上下滚动转为横向滚动
+            console.log(e.deltaY);
+        });
+    });
+});
+

@@ -12,6 +12,7 @@ public class TopGameViewModel
     public string Title { get; set; } = null!;
     public string ThumbnailUrl { get; set; } = null!;
     public List<string> ImageUrls { get; set; } = null!;
+    public List<string> TagName { get; set; } = null!;
 }
 
 
@@ -149,6 +150,29 @@ public class SearchResultVM
     public double PositiveRate { get; set; }
     public int DeveloperId { get; set; }
     public string DeveloperName { get; set; } = "";
+}
+
+#endregion
+
+#region
+
+public class GameLibraryViewModel
+{
+    public string Title { get; set;  } = null!;
+    public string ThumbnailUrl { get; set; } = null!;
+    public DateTime PurchasedDate { get; set; }
+    public int RequireMB { get; set; }
+
+    public string StorageDisplay
+    {
+        get
+        {
+            if (RequireMB >= 1024)
+                return $"{(RequireMB / 1024.0):0.0} GB";
+
+            return $"{RequireMB} MB";
+        }
+    }
 }
 
 #endregion

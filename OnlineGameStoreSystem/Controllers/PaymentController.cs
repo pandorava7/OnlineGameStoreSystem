@@ -153,7 +153,7 @@ public class PaymentController : Controller
         db.Payments.Add(payment);
         await db.SaveChangesAsync();
 
-        // 3️⃣ 创建 Purchase
+        // 3️⃣ 创建 Purchase 
         var purchases = cart.Items.Select(ci => new Purchase
         {
             UserId = userId,

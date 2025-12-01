@@ -1,0 +1,80 @@
+﻿@model List<GameLibraryViewModel>
+
+<div class="library-container">
+    <div class="library-flex">
+        <div class="left-container">
+            <h1 class="page-title">Game Library</h1>
+            <div class="search-box" bis_skin_checked="1">
+                <input id="searchInput" type="text" placeholder="Search your games..." value="" aria-label="search-input">
+                <button id="searchSubmit" class="primary-btn">Search</button>
+            </div>
+            <div class="filter-section">
+                <span class="title">Filtering</span>
+                <div class="options">
+                    <button class="option active">Name</button>
+                    <button class="option">Price</button>
+                    <button class="option">Purchase Date</button>
+                    <button class="option">Like Rate</button>
+                </div>
+                <!-- 标签筛选区 -->
+                <section class="panel" id="tagPanel">
+                    <h4>标签筛选</h4>
+                    <div>
+                        <div class="tag-search">
+                            <input type="text" class="tag-input" id="tagInput" placeholder="搜索标签，按 Enter 添加" />
+                            <button class="search-submit" id="tagAddBtn">Add</button>
+                        </div>
+                        <div class="tag-suggestions" id="tagSuggestions" aria-hidden="true"></div>
+                        <div class="active-filters" id="activeFilters" aria-live="polite"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="right-container">
+            @foreach(var g in Model)
+            {
+                <div class="card-item">
+                    <div class="thumb-wrapper">
+                        <img src="@g.ThumbnailUrl" alt="@g.Title" />
+
+                        <!-- 遮罩层 -->
+                        <div class="hover-overlay"></div>
+
+                        <!-- 悬浮按钮覆盖层 -->
+                        <div class="hover-actions">
+                            <a class="hover-btn view-btn primary-btn button"
+                               asp-controller="Home"
+                               asp-action="GameDetail"
+                               asp-route-name="@g.Title.Replace(' ', '_')">View</a>
+                        </div>
+                    </div>
+
+                    <div style="padding: 0 15px">
+                        <span class="title">@g.Title</span>
+
+                        <div class="storage-require-box">
+                            <p class="storage-require">@g.StorageDisplay</p>
+
+                            <div class="download-box">
+                                <i class="fa-solid fa-download"></i>
+                            </div>
+                        </div>
+
+                        <p class="purchased-date">@g.PurchasedDate.ToString("yyyy-MM-dd")</p>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/pages/library.js" asp-append-version="true"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/library.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/pages/search.css" asp-append-version="true" />
+}
