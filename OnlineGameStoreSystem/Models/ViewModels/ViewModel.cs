@@ -43,6 +43,8 @@ public class GameDetailViewModel
     public List<string> ImageUrls { get; set; } = null!;
     public List<string> Genres { get; set; } = null!;
     public List<Review> Reviews { get; set; } = null!;
+    public DateTime ReleasedDate { get; set; }
+    public string DeveloperName { get; set; } = null!;
 }
 
 public class ShoppingCartViewModel

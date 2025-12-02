@@ -1,91 +1,191 @@
 ﻿@model GameDetailViewModel
+@{
+    Layout = "_Layout";
+    // 如果需要添加页面级别script/css，可以在Layout里定义section并在这里填充
+}
 
-<div class="container">
-    <div class="game-header">
-        <div class="game-media">
-            <div class="carousel" id="mediaCarousel">
-                <div class="carousel-inner">
-                    @foreach (var url in Model.VideoUrls)
+<main class="gd-container" aria-labelledby="game-title">
+
+    <section class="gd-main">
+        <div class="gd-left">
+            <!-- Gallery -->
+            <div class="gd-media">
+                <div class="gd-main-media" id="gd-main-media" data-current-index="0">
+                    @if (Model.VideoUrls != null && Model.VideoUrls.Any())
                     {
-                        <div class="carousel-item">
-                            <video controls src="@url"></video>
+                        <!-- 默认展示第一个视频缩略或内嵌video元素（JS可切换） -->
+                        <div class="gd-media-item gd-media-video" data-type="video" data-src="@Model.VideoUrls.First()" role="button" aria-label="Play video">
+                            <div class="gd-video-placeholder">
+                                <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                                <img src="@(Model.ImageUrls.FirstOrDefault() ?? "/images/placeholder.png")" alt="video thumbnail" />
+                                <span class="gd-video-tag">Video</span>
+                            </div>
                         </div>
-
                     }
-                    @foreach (var url in Model.ImageUrls)
+                    else if (Model.ImageUrls != null && Model.ImageUrls.Any())
                     {
-                        <div class="carousel-item">
-                            <img src="@url" alt="Game Image">
+                        <img src="@Model.ImageUrls.First()" alt="@Model.Title" class="gd-media-item gd-media-image" data-type="image" />
+                    }
+                    else
+                    {
+                        <img src="/images/placeholder.png" alt="no media" class="gd-media-item gd-media-image" />
+                    }
+                </div>
+
+                <div class="gd-thumbs" id="gd-thumbs" role="list">
+
+                    @if (Model.VideoUrls != null)
+                    {
+                        var vIdx = Model.ImageUrls?.Count ?? 0;
+                        foreach (var v in Model.VideoUrls)
+                        {
+                            <button class="gd-thumb" role="listitem" data-index="@vIdx" data-type="video" data-src="@v" aria-label="Video thumb">
+                                <div class="thumb-video">
+                                    <img src="/images/placeholder.png" alt="Alternate Text" />
+                                    <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                                </div>
+                            </button>
+                            vIdx++;
+                        }
+                    }
+                    @* 缩略图列表，JS 用事件代理绑定 *@
+                    @if (Model.ImageUrls != null)
+                    {
+                        var idx = 0;
+                        foreach (var url in Model.ImageUrls)
+                        {
+                            <button class="gd-thumb" role="listitem" data-index="@idx" data-type="image" data-src="@url" aria-label="Thumbnail @idx">
+                                <img src="@url" alt="thumb @idx" />
+                            </button>
+                            idx++;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <aside class="gd-right" aria-labelledby="game-title">
+            <h1 id="game-title" class="gd-title">@Model.Title</h1>
+
+            <div class="gd-meta">
+                <div class="gd-price" id="gd-price" data-price="@Model.Price" data-discount="@Model.DiscountPrice">
+                    @if (Model.DiscountPrice.HasValue)
+                    {
+                        <div class="price-row">
+                            <span class="price-discount">@Model.DiscountPrice.Value.ToString("C")</span>
+                            <span class="price-original">@Model.Price.ToString("C")</span>
+                            @{
+                                var percent = 0;
+                                if (Model.Price > 0)
+                                {
+                                    percent = (int)Math.Round(100 * (1 - (double)Model.DiscountPrice.Value / (double)Model.Price));
+                                }
+                            }
+                            <span class="price-badge">-@percent% </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="price-row">
+                            <span class="price-current">@Model.Price.ToString("C")</span>
                         </div>
                     }
                 </div>
-                <button class="carousel-btn left" onclick="prevSlide()">‹</button>
-                <button class="carousel-btn right" onclick="nextSlide()">›</button>
+
+                <div class="gd-genres" aria-label="Genres">
+                    @if (Model.Genres != null && Model.Genres.Any())
+                    {
+                        foreach (var g in Model.Genres)
+                        {
+                            <span class="genre-chip">@g</span>
+                        }
+                    }
+                </div>
+
+                <div class="gd-actions">
+                    <button id="btn-add-cart" class="primary-btn" data-game-id="@Model.Id">Add to Cart</button>
+                    <button id="btn-buy-now" class="secondary-btn" data-game-id="@Model.Id">Wishlist</button>
+                </div>
+
+                <div class="gd-keyinfo">
+                    <div><strong>Language：</strong>English</div>
+                    <div><strong>Release Date：</strong>@Model.ReleasedDate.ToString("yyyy-MM-dd")</div>
+                    <div>
+                        <strong>Developer：</strong>
+                        <a class="gd-developer">@Model.DeveloperName</a>
+                    </div>
+                </div>
             </div>
+        </aside>
+    </section>
+
+    <section class="gd-detail" id="gd-detail">
+        <div class="gd-description">
+            <h2>Game Description</h2>
+            <p>@Html.Raw(Model.Description?.Replace("\n", "<br/>"))</p>
         </div>
-        <div class="game-info">
-            <div class="game-title">@Model.Title</div>
-            <div class="game-price">
-                @if (Model.DiscountPrice != null)
+
+        <div class="gd-reviews" id="gd-reviews" aria-live="polite">
+            <h2>Player Reviews (@(Model.Reviews?.Count ?? 0))</h2>
+            <div class="reviews-list" id="reviews-list">
+                @if (Model.Reviews != null && Model.Reviews.Any())
                 {
-                    <del>$@(Model.Price)</del>
-                    <span>$@Model.DiscountPrice</span>
+                    foreach (var r in Model.Reviews)
+                    {
+                        <article class="review">
+                            <div class="review-head">
+                                <div class="review-author">@((r.User.Username ?? "匿名"))</div>
+                                <div class="review-rating" aria-label="Rating">
+                                    @for (int i = 0; i < (r.Rating); i++)
+                                    {
+                                        <span class="star">★</span>
+                                    }
+                                </div>
+                                <div class="review-date">@r.CreatedAt.ToString("yyyy-MM-dd")</div>
+                            </div>
+                            <div class="review-body">
+                                <p>@r.Content</p>
+                            </div>
+                        </article>
+                    }
                 }
                 else
                 {
-                    <span>$@(Model.Price)</span>
+                    <p class="no-reviews">No review yet, let become the first one!</p>
                 }
             </div>
-            <a class="btn btn-add-to-cart" data-gameid="@Model.Id">Add to Cart</a>
-            <a class="btn" asp-controller="Home" asp-action="ShoppingCart">Add to Wishlist</a>
-            <div class="game-tags">
-                @foreach (var tag in Model.Genres)
-                {
-                    <span>@tag</span>
-                }
+
+            <div class="review-form">
+                <h3>写评价</h3>
+
+                <div id="star-box" class="star-input">
+                    <span data-v="1">★</span>
+                    <span data-v="2">★</span>
+                    <span data-v="3">★</span>
+                    <span data-v="4">★</span>
+                    <span data-v="5">★</span>
+                </div>
+
+                <textarea id="review-content"
+                          placeholder="写下你的评价..."
+                          style="width:100%;height:120px;margin-top:8px;"></textarea>
+
+                <button id="btn-submit-review" class="primary-btn" style="margin-top:10px;">
+                    提交评价
+                </button>
+
+                @Html.AntiForgeryToken()
             </div>
         </div>
-    </div>
-
-    <div class="game-description">
-        <h2>Game Description</h2>
-        <p>@Model.Description</p>
-    </div>
-
-    <div class="review-container">
-        <div class="rating-stars" id="ratingStars">
-            <span data-star="1" class="star">&#9733;</span>
-            <span data-star="2" class="star">&#9733;</span>
-            <span data-star="3" class="star">&#9733;</span>
-            <span data-star="4" class="star">&#9733;</span>
-            <span data-star="5" class="star">&#9733;</span>
-        </div>
-
-        <textarea id="reviewInput" class="review-input" placeholder="Write your review..."></textarea>
-
-        <button id="submitReview" class="review-submit-btn">Upload</button>
-    </div>
-
-    <div class="game-reviews">
-        <h2>Player Review</h2>
-        @foreach (var review in Model.Reviews)
-        {
-            <div class="review">
-                <div class="username">@review.User.Username</div>
-                <div class="content">@review.Content</div>
-                <button class="like-btn">👍 123</button>
-            </div>
-        }
-    </div>
-
-</div>
+    </section>
+</main>
 
 @section Scripts {
     <script src="~/js/components/game_detail.js" asp-append-version="true"></script>
-    <script src="~/js/components/review_container.js" asp-append-version="true"></script>
+    @* <script src="~/js/components/review_container.js" asp-append-version="true"></script> *@
 }
 
-@section Styles{
+@section Styles {
     <link rel="stylesheet" href="~/css/pages/game-detail.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/review-container.css" asp-append-version="true" />
 }

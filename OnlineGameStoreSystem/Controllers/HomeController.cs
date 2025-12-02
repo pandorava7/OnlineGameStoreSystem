@@ -166,6 +166,7 @@ public class HomeController : Controller
 
         // Search game by name from database
         var game = db.Games
+            .Include(g => g.Developer)
             .Include(g => g.Media)
             .Include(g => g.Tags)
             .ThenInclude(gt => gt.Tag)
@@ -204,7 +205,9 @@ public class HomeController : Controller
                     Likes = r.Likes,
                     CreatedAt = r.CreatedAt
                 })
-                .ToList()
+                .ToList(),
+            ReleasedDate = game.ReleaseDate,
+            DeveloperName = game.Developer.Username,
         };
         return View(gameDetailViewModel);
     }

@@ -1,142 +1,311 @@
-﻿body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--color-bg);
-    color: #fff;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
+﻿.gd-container {
+    max-width: var(--max-width);
+    margin: 28px auto;
     padding: 20px;
 }
 
-.game-header {
+/* 主体 */
+.gd-main {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: var(--gap);
+    align-items: start;
+    margin-bottom: 28px;
+}
+
+.gd-left {
+    background: transparent;
+    width: 780px;
+}
+
+.gd-right {
+/*    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));*/
+    border-radius: var(--radius);
+    padding: 18px;
+/*    box-shadow: var(--shadow);*/
+    border: 1px solid var(--glass-border);
+}
+
+/* 标题 */
+.gd-title {
+    font-size: 28px;
+    margin: 4px 0 12px 0;
+    font-weight: 700;
+    color: #f8fbff;
+}
+
+/* 媒体画廊 */
+.gd-media {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.gd-main-media {
+    height: 420px;
+    border-radius: 10px;
+    overflow: hidden;
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg,#071428,#07182b);
+    position: relative;
 }
 
-.game-media {
-    flex: 1 1 400px;
-}
-
-    .game-media img, .game-media video {
+    .gd-main-media img {
         width: 100%;
-        border-radius: 10px;
+        height: 100%;
+        object-fit: cover;
+        display: block;
     }
 
-.game-info {
-    flex: 1 1 400px;
-}
-
-.game-title {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-.game-price {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-    .game-price del {
-        color: #888;
-        margin-right: 10px;
+    .gd-main-media .gd-video-placeholder {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-.btn {
-    background-color: #BA2D50;
+    .gd-main-media video {
+        aspect-ratio: 16/9;
+        height: 100%;
+    }
+
+        .gd-video-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.6);
+        }
+
+.play-icon {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    fill: rgba(255,255,255,0.95); /* 使用 fill 来显示 SVG */
+    stroke: none; /* 不需要描边 */
+}
+
+.gd-video-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.5);
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
     color: #fff;
-    border: none;
-    padding: 10px 20px;
+}
+
+/* 缩略图 */
+.gd-thumbs {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+}
+
+.gd-thumb {
+    background: transparent;
+    border: 1px solid transparent;
     border-radius: 8px;
+    padding: 4px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: 0.2s;
-    margin-right: 10px;
-    margin-top: 10px;
+    aspect-ratio: 16/9;
 }
 
-    .btn:hover {
-        background-color: #850883;
-        transform: translateY(-5px);
+    .gd-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+        display: block;
     }
 
-.game-tags {
-    margin-top: 10px;
+    .gd-thumb:focus, .gd-thumb:hover {
+        outline: none;
+        border-color: rgba(255,255,255,0.06);
+        transform: translateY(-3px);
+        transition: transform .18s ease;
+    }
+
+    .gd-thumb .thumb-video {
+        position: relative;
+    }
+
+        .gd-thumb .thumb-video img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+        }
+
+/* 价格与操作 */
+.gd-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-    .game-tags span {
-        background-color: #333;
-        padding: 5px 10px;
-        border-radius: 5px;
-        margin-right: 5px;
-        font-size: 14px;
+.price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.price-current, .price-discount {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.price-original {
+    text-decoration: line-through;
+    color: var(--muted);
+}
+
+.price-badge {
+    background: linear-gradient(90deg,var(--accent),var(--accent-2));
+    color: #022;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.gd-genres{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.genre-chip {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #2e2e2e;
+    border-radius: 6px;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.gd-developer {
+    color: var(--accent-color2);
+    margin-bottom: 6px;
+}
+
+    .gd-developer:hover{
+        text-decoration: underline;
     }
 
-.game-description, .game-reviews {
-    margin-top: 30px;
+    .gd-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 6px;
+    }
+
+/* 详情与评价 */
+.gd-detail {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: var(--gap);
+}
+
+.gd-description {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--glass-border);
+}
+
+.gd-reviews {
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--glass-border);
 }
 
 .review {
-    background-color: var(--color-bg-2);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    padding: 12px 0;
 }
 
-    .review .username {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    .review .content {
-        margin-bottom: 5px;
-    }
-
-    .review .like-btn {
-        background: none;
-        border: none;
-        color: #BA2D50;
-        cursor: pointer;
-    }
-
-        .review .like-btn:hover {
-            color: #850883;
-        }
-
-.carousel {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.carousel-inner {
+.review-head {
     display: flex;
-    transition: transform 0.3s ease-in-out;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.carousel-item {
-    min-width: 100%;
+.review-author {
+    font-weight: 700;
+    color: #f3fbff;
 }
 
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(40,40,40,0.8);
-    border: none;
-    color: white;
-    font-size: 24px;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 8px;
+.review-rating .star {
+    color: #ffd166;
+    margin-right: 2px;
 }
 
-    .carousel-btn.left {
-        left: 10px;
+.review-body p {
+    color: var(--muted);
+    margin-top: 8px;
+}
+
+/* 响应式 */
+@media (max-width: 980px) {
+    .gd-main, .gd-detail {
+        grid-template-columns: 1fr;
     }
 
-    .carousel-btn.right {
-        right: 10px;
+    .gd-right {
+        order: 2;
     }
+
+    .gd-left {
+        order: 1;
+    }
+
+    .gd-main-media {
+        height: 320px;
+    }
+
+    .gd-container {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gd-main-media {
+        height: 240px;
+    }
+
+    .gd-thumbs {
+        gap: 8px;
+    }
+
+    .gd-thumb {
+        min-width: 56px;
+        height: 56px;
+    }
+
+    .gd-title {
+        font-size: 20px;
+    }
+}
+
