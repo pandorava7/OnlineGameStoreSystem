@@ -690,6 +690,7 @@ public class Game
     public int LikeCount { get; set; }
     public List<GameLike> Likes { get; set; } = new();
     public int StorageRequireMB { get; set; }
+    public List<Comment> Comments { get; set; } = new();
 }
 
 public class GameMedia
