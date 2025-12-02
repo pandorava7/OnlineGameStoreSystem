@@ -20,8 +20,8 @@ namespace OnlineGameStoreSystem.Models.ViewModels
         [Required(ErrorMessage = "! Password is required")]
         [DataType(DataType.Password)]
         [StringLength(12, MinimumLength = 8, ErrorMessage = "! Password must be between 8 and 12 characters")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+=-]).{8,16}$",
-    ErrorMessage = "Password must include upper case, lower case, number and special character")]
+        [RegularExpression(@"^[A-Z].*(?=.*[a-z])(?=.*[!@#$%^&*()_+=-]).*$",
+     ErrorMessage = "Password must start with a capital letter and include at least one lowercase letter and one special character")]
         public string Password { get; set; } = null!;
 
 
