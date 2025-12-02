@@ -62,6 +62,9 @@ namespace OnlineGameStoreSystem.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
                     b.Property<int>("LikeCount")
                         .HasColumnType("int");
 
@@ -72,6 +75,8 @@ namespace OnlineGameStoreSystem.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.HasIndex("PostId");
 
@@ -695,6 +700,12 @@ namespace OnlineGameStoreSystem.Migrations
 
             modelBuilder.Entity("Comment", b =>
                 {
+                    b.HasOne("Game", "Game")
+                        .WithMany("Comments")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
@@ -706,6 +717,8 @@ namespace OnlineGameStoreSystem.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Game");
 
                     b.Navigation("Post");
 
@@ -1010,6 +1023,8 @@ namespace OnlineGameStoreSystem.Migrations
 
             modelBuilder.Entity("Game", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Likes");
 
                     b.Navigation("Media");
