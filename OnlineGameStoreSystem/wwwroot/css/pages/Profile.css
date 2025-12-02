@@ -202,7 +202,7 @@ h1.Tags {
     position: relative;
     display: flex;
     align-items: center;
-    width: 78%;
+    width: 80%;
     margin-bottom: 20px;
 }
 
@@ -311,6 +311,7 @@ h1.Tags {
     border-radius: 50%;
     cursor: pointer;
     transition: background .2s, transform .2s;
+    margin-bottom:20px;
 }
 
     .dot.active {
@@ -351,5 +352,50 @@ h1.Tags {
     margin-bottom: 30px;
 }
 
+/* 整个页面左右布局 */
+.profile-page-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+}
+
+/* 左边内容 */
+.profile-content {
+    margin-right: 220px; /* 给右边固定栏留出空间，不被遮挡 */
+}
+
+/* 右边导航栏 */
+.profile-nav-container {
+    width: 200px; /* 固定宽度 */
+    position: fixed; /* 完全固定 */
+    right: 14vw; /* 距离页面右侧20px */
+    top: 17vw; /* 根据页面需要调整距离顶部 */
+   
+}
+
+/* 垂直导航栏 */
+.profile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    
+}
+
+    .profile-nav a {
+        text-decoration: none;
+        padding: 10px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+        transition: background-color 0.2s;
+        border: 2px solid white; /* also sets width and style */
+    }
+
+        .profile-nav a:hover {
+            background-color: var(--accent-color);
+        }
 
 
