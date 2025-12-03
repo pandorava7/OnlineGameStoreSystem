@@ -1,4 +1,21 @@
-﻿function initLibraryFilters(config) {
+﻿document.addEventListener('DOMContentLoaded', () => {
+    const downloadBoxs = document.querySelectorAll('.download-box');
+    downloadBoxs.forEach(db => {
+        db.addEventListener('click', function () {
+
+            confirmDownloadGame(async () => {
+                const link = document.createElement('a');
+                link.href = '/download/example.zip'; // 安装包路径
+                link.download = 'example.zip'; // 下载时的文件名
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    });
+});
+
+function initLibraryFilters(config) {
     // --------- 价格滑条 ---------
     const priceRange = document.getElementById(config.priceRangeId);
     const priceValue = document.getElementById(config.priceValueId);

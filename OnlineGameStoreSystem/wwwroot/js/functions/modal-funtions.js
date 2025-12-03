@@ -41,3 +41,25 @@ function confirmDeleteReview(onConfirm) {
         ]
     });
 }
+
+function confirmDownloadGame(onConfirm) {
+    Modal.show({
+        message: "Confirm to download?",
+        buttons: [
+            {
+                text: "Cancel",
+                type: "secondary-btn",
+                onClick: () => console.log("Cancel clicked")
+            },
+            {
+                text: "Download",
+                type: "primary-btn",
+                onClick: () => {
+                    if (typeof onConfirm === "function") {
+                        onConfirm(); // 调用回调
+                    }
+                }
+            }
+        ]
+    });
+}
