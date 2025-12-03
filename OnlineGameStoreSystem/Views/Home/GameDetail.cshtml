@@ -127,33 +127,6 @@
 
         <div class="gd-reviews" id="gd-reviews" aria-live="polite">
             <h2>Player Reviews (@(Model.Reviews?.Count ?? 0))</h2>
-            <div class="reviews-list" id="reviews-list">
-                @if (Model.Reviews != null && Model.Reviews.Any())
-                {
-                    foreach (var r in Model.Reviews)
-                    {
-                        <article class="review">
-                            <div class="review-head">
-                                <div class="review-author">@((r.User.Username ?? "匿名"))</div>
-                                <div class="review-rating" aria-label="Rating">
-                                    @for (int i = 0; i < (r.Rating); i++)
-                                    {
-                                        <span class="star">★</span>
-                                    }
-                                </div>
-                                <div class="review-date">@r.CreatedAt.ToString("yyyy-MM-dd")</div>
-                            </div>
-                            <div class="review-body">
-                                <p>@r.Content</p>
-                            </div>
-                        </article>
-                    }
-                }
-                else
-                {
-                    <p class="no-reviews">No review yet, let become the first one!</p>
-                }
-            </div>
 
             <div class="review-form">
                 <div id="star-box" class="star-input">
