@@ -13,7 +13,7 @@
         public List<Tag> FavoriteTags { get; set; } = new();
 
         // 用户所有留言
-        public List<CommentItem> UserComments { get; set; } = new();
+        public List<ReviewItem> UserComments { get; set; } = new();
         public List<PurchasedGameVM> PurchasedGames { get; set; } = new();
 
 
@@ -28,7 +28,7 @@
     #endregion
 
     #region Comment 
-    public class CommentItem
+    public class ReviewItem
     {
         public int GameId { get; set; }
         public string GameTitle { get; set; } = null!;

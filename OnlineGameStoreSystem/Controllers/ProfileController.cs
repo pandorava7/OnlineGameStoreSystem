@@ -39,22 +39,22 @@ namespace OnlineGameStoreSystem.Controllers
                              .Select(f => f.Tag)
                              .ToList();
             // 获取用户留言
-            var comments = db.Comments
-                .Where(c => c.UserId == userId)
-                .Include(c => c.Game)
+            var comments = db.Reviews
+                .Where(r => r.UserId == userId)
+                .Include(r => r.Game)
                 .ThenInclude(g => g.Media)
                 .OrderByDescending(c => c.CreatedAt)
-                .Select(c => new CommentItem
+                .Select(r => new ReviewItem
                 {
-                    GameId = c.Game.Id,
-                    GameTitle = c.Game.Title,
-                    CoverUrl = c.Game.Media
-                        .Where(m => m.MediaType == "image")
+                    GameId = r.Game.Id,
+                    GameTitle = r.Game.Title,
+                    CoverUrl = r.Game.Media
+                        .Where(m => m.MediaType == "thumb")
                         .OrderBy(m => m.SortOrder)
                         .Select(m => m.MediaUrl)
                         .FirstOrDefault() ?? "/images/default-cover.jpg",
-                    Content = c.Content,
-                    CreatedAt = c.CreatedAt
+                    Content = r.Content ?? "",
+                    CreatedAt = r.CreatedAt
                 })
                 .ToList();
 
@@ -81,7 +81,7 @@ namespace OnlineGameStoreSystem.Controllers
             // 建立 ViewModel（跟你要求的完全一致）
             var vm = new ProfileViewModel
             {
-                AvatarUrl = user.AvatarUrl,
+                AvatarUrl = user.AvatarUrl ?? "/images/avatar_default.png",
                 Username = user.Username,
                 Summary = string.IsNullOrEmpty(user.Summary) ? "Empty" : user.Summary,
                 IsDeveloper = user.IsDeveloper,
