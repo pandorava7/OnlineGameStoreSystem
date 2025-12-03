@@ -128,66 +128,142 @@
         color: #555;
     }
 
-/*Comment*/
-.comment-header {
-    width: 80%;
-    align-items: flex-start; /* 顶部对齐 */
-    gap: 1rem; /* 左右间距 */
-    background-color: var(--bg-surface);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-sm);
-    box-shadow: 0 4px 20px var(--shadow-color);
-    border: 1px solid var(--border-color);
-    margin-bottom:30px;
-}
-
-.comments-grid {
+/* 评论区 Slider Container */
+.comment-slider {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 15px;
+    align-items: center;
+    width: 80%;
+    margin-bottom: 20px;
 }
 
-.comment-card {
-    background: #1a1c1f;
-    border-radius: 10px;
+/* Wrapper hides overflow */
+.comment-wrapper {
     overflow: hidden;
-    width: 220px; /* 可以根据需要调整 */
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    transition: transform 0.2s;
+    width: 100%;
+    padding: 10px 0;
 }
 
-    .comment-card:hover {
-        transform: translateY(-5px);
-    }
+/* 评论卡列表 */
+.comment-list {
+    display: flex;
+    gap: 20px; /* 与游戏库一致 */
+    transition: transform 0.35s ease;
+}
 
+/* 单个评论卡 */
+.comment-card {
+    width: 210px; /* 与游戏库相同 */
+    height: 270px; /* 与游戏库相同 */
+    background: #1a1c1f;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0; /* 不收缩 */
+    box-shadow: 0 0 12px rgba(0,0,0,0.35);
+    cursor: default; /* 不需要 hover 动画 */
+
+}
+
+    /* 评论卡图片 */
     .comment-card img {
         width: 100%;
-        aspect-ratio: 16 / 9;
+        height: 140px; /* 与游戏库一致 */
         object-fit: cover;
     }
 
+/* 评论信息 */
 .comment-info {
-    padding: 10px;
+    padding: 12px;
+    color: #dbe4ee;
 }
 
+    /* 游戏标题样式 */
     .comment-info .game-title {
         font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #fff;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #dbe4ee;
     }
 
+    /* 评论内容 */
     .comment-info .comment-content {
         font-size: 14px;
-        color: #dfe6f5;
-        margin-bottom: 6px;
+        color: #b8c6db;
     }
 
+    /* 日期 */
     .comment-info .comment-date {
         font-size: 12px;
         color: #999;
     }
+
+/* 评论左右按钮 */
+.comment-left-btn, .comment-right-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(35, 35, 35, 0.8);
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+/* 左右位置 */
+.comment-left-btn {
+    left: -70px;
+}
+
+.comment-right-btn {
+    right: -70px;
+}
+
+/* 评论 Dots */
+.comment-dots {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.comment-dot {
+    width: 11px;
+    height: 11px;
+    background: #444;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+    .comment-dot.active {
+        background: #9fc0ff;
+        transform: scale(1.2);
+    }
+
+    .comment-dot:hover {
+        background: #c5dbff;
+        transform: scale(1.1);
+    }
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .comment-left-btn {
+        left: -40px;
+    }
+
+    .comment-right-btn {
+        right: -40px;
+    }
+
+    .comment-card {
+        width: 180px;
+        height: 250px;
+    }
+}
+
 
 
 /* Title */

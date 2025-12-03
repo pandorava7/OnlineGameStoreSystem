@@ -70,32 +70,35 @@
             }
         </div>
 
-        <h1 class="Tags">Recently Review</h1>
-        <div class="review-header">
 
-            @if (Model.UserReviews == null || !Model.UserReviews.Any())
-            {
-                <div class="no-tags-container">
-                    <p>No reviews yet.</p>
-                </div>
-            }
-            else
-            {
-                <div class="reviews-grid">
+        <h1 class="Tags">Recently Reviews</h1>
+        <div class="comment-slider">
+            <button class="comment-left-btn">&#10094;</button>
+            <div class="comment-wrapper">
+                <div class="comment-list">
                     @foreach (var review in Model.UserReviews)
                     {
-                        <div class="review-card">
+                        <div class="comment-card">
                             <img src="@review.CoverUrl" alt="@review.GameTitle" />
-                            <div class="review-info">
+                            <div class="comment-info">
                                 <p class="game-title">@review.GameTitle</p>
-                                <p class="review-content">@review.Content</p>
-                                <small class="review-date">@review.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                                <p class="comment-content">@review.Content</p>
+                                <small class="comment-date">@review.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
                             </div>
                         </div>
                     }
                 </div>
+            </div>
+            <button class="comment-right-btn">&#10095;</button>
+        </div>
+
+        <div class="comment-dots">
+            @for (int i = 0; i < Math.Ceiling(Model.UserReviews.Count / 4.0); i++)
+            {
+                <span class="comment-dot @(i == 0 ? "active" : "")" data-index="@i"></span>
             }
         </div>
+
 
         <h1 class="Tags">Game Library</h1>
 
@@ -144,5 +147,6 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/components/profile.js" asp-append-version="true"></script>
+    <script src="~/js/components/ProfileGame.js" asp-append-version="true"></script>
+    <script src="~/js/components/Review.js" asp-append-version="true"></script>
 }
