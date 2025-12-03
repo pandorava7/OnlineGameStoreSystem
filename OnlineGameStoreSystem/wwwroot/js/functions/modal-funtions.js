@@ -19,7 +19,7 @@
     });
 }
 
-function confirmDeleteComment(onConfirm) {
+function confirmDeleteReview(onConfirm) {
     Modal.show({
         message: "Delete your comment?",
         buttons: [

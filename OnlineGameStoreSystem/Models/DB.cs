@@ -615,13 +615,9 @@ public class Comment
     public User User { get; set; } = null!;
 
     public string Content { get; set; } = null!;
-    public int GameId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public int LikeCount { get; set; }
     public List<CommentLike> Likes { get; set; } = new List<CommentLike>();
-
-    // 导航属性
-    public Game Game { get; set; } = null!;   // 留言属于哪个游戏
 }
 
 public class Purchase
@@ -690,7 +686,6 @@ public class Game
     public int LikeCount { get; set; }
     public List<GameLike> Likes { get; set; } = new();
     public int StorageRequireMB { get; set; }
-    public List<Comment> Comments { get; set; } = new();
 }
 
 public class GameMedia

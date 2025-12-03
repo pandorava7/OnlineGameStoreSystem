@@ -36,7 +36,7 @@
 
                     @if (Model.VideoUrls != null)
                     {
-                        var vIdx = Model.ImageUrls?.Count ?? 0;
+                        var vIdx = 0;
                         foreach (var v in Model.VideoUrls)
                         {
                             <button class="gd-thumb" role="listitem" data-index="@vIdx" data-type="video" data-src="@v" aria-label="Video thumb">
@@ -51,7 +51,7 @@
                     @* 缩略图列表，JS 用事件代理绑定 *@
                     @if (Model.ImageUrls != null)
                     {
-                        var idx = 0;
+                        var idx = Model.VideoUrls?.Count ?? 0;
                         foreach (var url in Model.ImageUrls)
                         {
                             <button class="gd-thumb" role="listitem" data-index="@idx" data-type="image" data-src="@url" aria-label="Thumbnail @idx">
@@ -156,8 +156,6 @@
             </div>
 
             <div class="review-form">
-                <h3>写评价</h3>
-
                 <div id="star-box" class="star-input">
                     <span data-v="1">★</span>
                     <span data-v="2">★</span>
@@ -166,13 +164,13 @@
                     <span data-v="5">★</span>
                 </div>
 
-                <textarea id="review-content"
-                          placeholder="写下你的评价..."
-                          style="width:100%;height:120px;margin-top:8px;"></textarea>
+                <div class="review-post">
+                    <textarea id="reviewContent" data-game-id="@Model.Id" placeholder="Write your review..." rows="3"></textarea>
+                    <button id="postReviewBtn" class="primary-btn">Upload</button>
+                </div>
 
-                <button id="btn-submit-review" class="primary-btn" style="margin-top:10px;">
-                    提交评价
-                </button>
+                <div class="review-container">
+                </div>
 
                 @Html.AntiForgeryToken()
             </div>

@@ -8,7 +8,6 @@
     let openOptionsCard = null; // 当前打开的 card
 
     function renderComments(comments, currentUserId) {
-        console.log(comments)
         commentContainer.innerHTML = '';
         comments.forEach(c => {
             console.log(c.id)
@@ -135,7 +134,7 @@
                     const divToRemove = div; // 闭包保存当前评论元素
                     const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-                    confirmDeleteComment(async () => {
+                    confirmDeleteReview(async () => {
                         try {
                             const res = await fetch(`/Comment/Delete?commentId=${commentId}`, {
                                 method: 'POST',
@@ -189,6 +188,8 @@
 
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
+        console.log(text)
+        console.log(postId)
         const res = await fetch('/Comment/Add', {
             method: 'POST',
             headers: {

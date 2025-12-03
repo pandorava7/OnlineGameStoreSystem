@@ -43,13 +43,13 @@
 }
 
 .gd-main-media {
-    height: 420px;
+    width: 100%;
+    aspect-ratio: 16/9;
     border-radius: 10px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(180deg,#071428,#07182b);
     position: relative;
 }
 
@@ -257,9 +257,76 @@
     color: #f3fbff;
 }
 
-.review-rating .star {
-    color: #ffd166;
-    margin-right: 2px;
+/* 星级评分 */
+/* 默认星星 */
+#star-box span {
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.2s;
+    color: #aaa;
+}
+
+    /* hover 时（active） */
+    #star-box span.active {
+        color: var(--accent-color2); /* 悬停颜色 */
+    }
+
+    /* 点击确定后的颜色（selected） */
+    #star-box span.selected {
+        color: var(--primary-color); /* 你的品牌主色 */
+    }
+
+    /* 点击动画 core */
+    #star-box span.pop {
+        animation: star-pop 0.4s ease-out;
+        position: relative;
+    }
+
+/* 星星爆开动画 */
+@keyframes star-pop {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    40% {
+        transform: scale(1.35);
+        filter: brightness(1.8);
+    }
+
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
+
+/* 点击时的光圈扩散 */
+#star-box span.pop::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0px;
+    height: 0px;
+    border-radius: 50%;
+    background: rgba(255, 220, 120, 0.6); /* 金色光圈，可调 */
+    transform: translate(-50%, -50%);
+    animation: star-ripple 0.4s forwards;
+    pointer-events: none;
+}
+
+@keyframes star-ripple {
+    0% {
+        width: 0px;
+        height: 0px;
+        opacity: 0.6;
+    }
+
+    100% {
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+    }
 }
 
 .review-body p {

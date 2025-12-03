@@ -28,7 +28,7 @@ public class CommentController : Controller
         if (post == null)
             return NotFound("帖子不存在");
 
-        var userId = int.Parse(User.FindFirst("UserId")!.Value);
+        var userId = User.GetUserId();
 
         var comment = new Comment
         {
