@@ -39,7 +39,7 @@ namespace OnlineGameStoreSystem.Controllers
                              .Select(f => f.Tag)
                              .ToList();
             // 获取用户留言
-            var comments = db.Reviews
+            var reviews = db.Reviews
                 .Where(r => r.UserId == userId)
                 .Include(r => r.Game)
                 .ThenInclude(g => g.Media)
@@ -87,7 +87,7 @@ namespace OnlineGameStoreSystem.Controllers
                 IsDeveloper = user.IsDeveloper,
                 CreatedAt = user.CreatedAt,
                 FavoriteTags = favTags,
-                UserComments = comments,
+                UserReviews = reviews,
                 PurchasedGames = purchasedGames,
 
                 GameLibraryUrl = Url.Action("Library", "Game", new { id = user.Id }),

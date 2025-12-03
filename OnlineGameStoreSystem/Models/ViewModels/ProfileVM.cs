@@ -13,7 +13,7 @@
         public List<Tag> FavoriteTags { get; set; } = new();
 
         // 用户所有留言
-        public List<ReviewItem> UserComments { get; set; } = new();
+        public List<ReviewItem> UserReviews { get; set; } = new();
         public List<PurchasedGameVM> PurchasedGames { get; set; } = new();
 
 
