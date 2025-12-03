@@ -237,9 +237,9 @@
 
 /* 详情与评价 */
 .gd-detail {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: var(--gap);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .gd-description {
@@ -254,7 +254,7 @@
     flex-direction: column;
     padding: 15px;
     gap: 15px;
-    max-width: 400px;
+    width: 100%;
 }
 
 .review-item {
@@ -346,10 +346,12 @@
     margin-top: 20px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
+    max-width: 600px;
 }
 
 .review-post button {
-    align-self: flex-end;
+    align-self: flex-start;
     margin-top: 15px;
 }
 
