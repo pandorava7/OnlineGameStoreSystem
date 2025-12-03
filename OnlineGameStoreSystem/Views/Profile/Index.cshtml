@@ -15,6 +15,11 @@
 
 <link rel="stylesheet" href="~/css/pages/Profile.css" asp-append-version="true" />
 
+<div class="profile-page-container">
+
+    <!-- 左边：用户资料 -->
+    <div class="profile-content">
+
 <h1 class="User-Profile">User Profile</h1>
 <div class="profile-header">
     <div class="profile-left">
@@ -127,8 +132,17 @@ else
         </div>
     </div>
     <div class="dots"></div>
-    }
+}
 
+    </div>
+
+    <!-- 右边：垂直导航栏 -->
+    <div class="profile-nav-container">
+        @Html.Partial("_ProfileLayout")
+    </div>
+
+</div>
+  
 @section Scripts {
     <script src="~/js/components/profile.js" asp-append-version="true"></script>
 }
