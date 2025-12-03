@@ -19,26 +19,27 @@ public class ReviewController : Controller
     // 添加评论
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Add(int postId, string content)
+    public async Task<IActionResult> Add(int gameId, string content)
     {
         if (string.IsNullOrWhiteSpace(content))
-            return BadRequest("内容不能为空");
+            return BadRequest("Content cannot be empty");
 
-        var post = await db.Posts.FindAsync(postId);
-        if (post == null)
-            return NotFound("帖子不存在");
+        var game = await db.Games.FindAsync(gameId);
+        if (game == null)
+            return NotFound("Game is not exist");
 
         var userId = User.GetUserId();
 
-        var comment = new Comment
+        var review = new Review
         {
-            PostId = postId,
+            GameId = gameId,
             UserId = userId,
             Content = content,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Rating = 5
         };
 
-        db.Comments.Add(comment);
+        db.Reviews.Add(review);
         await db.SaveChangesAsync();
 
         return Ok();
@@ -50,8 +51,8 @@ public class ReviewController : Controller
     {
         var userId = User.GetUserId(); // -1 表示未登录
 
-        var reviews = await db.Comments
-            .Where(c => c.PostId == gameId)
+        var reviews = await db.Reviews
+            .Where(c => c.GameId == gameId)
             .Include(c => c.User)
             .Include(c => c.Likes) // ⭐ 必须 include Likes
             .OrderBy(c => c.CreatedAt)
@@ -80,17 +81,17 @@ public class ReviewController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(int commentId)
+    public async Task<IActionResult> Delete(int reviewId)
     {
-        var comment = await db.Comments.FindAsync(commentId);
-        if (comment == null) return NotFound();
+        var review = await db.Reviews.FindAsync(reviewId);
+        if (review == null) return NotFound();
 
         var userId = User.GetUserId();
 
-        if (comment.UserId != userId)
+        if (review.UserId != userId)
             return Forbid(); // 只有作者可以删除
 
-        db.Comments.Remove(comment);
+        db.Reviews.Remove(review);
         await db.SaveChangesAsync();
         return Ok();
     }
@@ -99,11 +100,11 @@ public class ReviewController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleLike([FromBody] LikeRequest request)
     {
-        if (request.CommentId <= 0)
+        if (request.ReviewId <= 0)
             return BadRequest(new { success = false });
 
-        var comment = await db.Comments.FindAsync(request.CommentId);
-        if (comment == null)
+        var review = await db.Reviews.FindAsync(request.ReviewId);
+        if (review == null)
             return NotFound(new { success = false });
 
         var userId = User.GetUserId();
@@ -114,29 +115,29 @@ public class ReviewController : Controller
         if (user == null)
             return Unauthorized(new { success = false });
 
-        var existing = await db.CommentLikes
-            .FirstOrDefaultAsync(l => l.CommentId == request.CommentId && l.UserId == userId);
+        var existing = await db.ReviewLikes
+            .FirstOrDefaultAsync(l => l.ReviewId == request.ReviewId && l.UserId == userId);
 
         bool liked;
 
         if (existing != null)
         {
             // 已点赞 → 取消点赞
-            db.CommentLikes.Remove(existing);
-            comment.LikeCount--;
+            db.ReviewLikes.Remove(existing);
+            review.LikeCount--;
             liked = false;
         }
         else
         {
             // 未点赞 → 新增点赞
-            db.CommentLikes.Add(new CommentLike
+            db.ReviewLikes.Add(new ReviewLike
             {
                 UserId = userId,
-                CommentId = request.CommentId,
+                ReviewId = request.ReviewId,
                 CreatedAt = DateTime.UtcNow
             });
 
-            comment.LikeCount++;
+            review.LikeCount++;
             liked = true;
         }
 
@@ -146,7 +147,7 @@ public class ReviewController : Controller
         {
             success = true,
             liked,
-            likeCount = comment.LikeCount
+            likeCount = review.LikeCount
         });
     }
 

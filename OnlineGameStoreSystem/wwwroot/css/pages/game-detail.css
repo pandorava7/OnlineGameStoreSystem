@@ -1,4 +1,20 @@
-﻿.gd-container {
+﻿.author-avatar {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.review-section-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+    margin-left: 15px;
+    color: var(--text-light);
+}
+
+.gd-container {
     max-width: var(--max-width);
     margin: 28px auto;
     padding: 20px;

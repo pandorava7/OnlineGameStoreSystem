@@ -125,36 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
-    /* 提交评论到 MVC */
-    document.getElementById("btn-submit-review").onclick = async () => {
-        let content = document.getElementById("review-content").value.trim();
-        if (rating == 0) return alert("请给星级！");
-        if (!content) return alert("评价内容不能为空！");
-
-        let token = document.querySelector("input[name='__RequestVerificationToken']").value;
-
-        let res = await fetch("/Game/Review", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "RequestVerificationToken": token
-            },
-            body: JSON.stringify({
-                GameId: 2,
-                Rating: rating,
-                Content: content
-            })
-        });
-
-        let json = await res.json();
-        if (json.success) {
-            alert("评价已提交！");
-            location.reload();
-        } else {
-            alert(json.message || "提交失败");
-        }
-    };
 });
 
 
@@ -332,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 获取评论
     async function loadReviews() {
-        const res = await fetch(`/Review/GetByPost?postId=${gameId}`);
+        const res = await fetch(`/Review/GetByGame?gameId=${gameId}`);
         const data = await res.json();
         const { reviews, currentUserId } = data;
         console.log(reviews)
@@ -356,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'RequestVerificationToken': token
             },
-            body: `postId=${gameId}&content=${encodeURIComponent(text)}`
+            body: `gameId=${gameId}&content=${encodeURIComponent(text)}`
         });
 
         if (res.ok) {

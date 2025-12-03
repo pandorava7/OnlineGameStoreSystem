@@ -126,7 +126,7 @@
         </div>
 
         <div class="gd-reviews" id="gd-reviews" aria-live="polite">
-            <h2>Player Reviews (@(Model.Reviews?.Count ?? 0))</h2>
+            <h2 class="review-section-title">Player Reviews (@(Model.Reviews?.Count ?? 0))</h2>
 
             <div class="review-form">
                 <div id="star-box" class="star-input">
@@ -153,10 +153,8 @@
 
 @section Scripts {
     <script src="~/js/components/game_detail.js" asp-append-version="true"></script>
-    @* <script src="~/js/components/review_container.js" asp-append-version="true"></script> *@
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/game-detail.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/components/review-container.css" asp-append-version="true" />
 }

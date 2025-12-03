@@ -22,11 +22,11 @@ public class CommentController : Controller
     public async Task<IActionResult> Add(int postId, string content)
     {
         if (string.IsNullOrWhiteSpace(content))
-            return BadRequest("内容不能为空");
+            return BadRequest("Content cannot be empty");
 
         var post = await db.Posts.FindAsync(postId);
         if (post == null)
-            return NotFound("帖子不存在");
+            return NotFound("Post is not exist");
 
         var userId = User.GetUserId();
 
