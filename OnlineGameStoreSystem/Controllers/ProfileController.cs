@@ -143,129 +143,128 @@ namespace OnlineGameStoreSystem.Controllers
         #endregion
 
         #region Edit Profile Page
-        public IActionResult EditProfile()
-        {
-            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
+        //public IActionResult EditProfile()
+        //{
+        //    var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
             
-            if (string.IsNullOrEmpty(userIdString))
-            {
+        //    if (string.IsNullOrEmpty(userIdString))
+        //    {
                 
-                return RedirectToAction("Login", "Account");
-            }
+        //        return RedirectToAction("Login", "Account");
+        //    }
 
           
-            int userId;
-            if (!int.TryParse(userIdString, out userId))
-            {
-                return StatusCode(500, "User ID claim format error.");
-            }
+        //    int userId;
+        //    if (!int.TryParse(userIdString, out userId))
+        //    {
+        //        return StatusCode(500, "User ID claim format error.");
+        //    }
 
 
 
            
-            var user = db.Users
-                .Include(u => u.FavouriteTags)
-                    .ThenInclude(ft => ft.Tag)
-                .FirstOrDefault(u => u.Id == userId); 
-
-            if (user == null)
-            {
+        //    var user = db.Users
+        //        .Include(u => u.FavouriteTags)
+        //        .ThenInclude(ft => ft.Tag)
+        //        .FirstOrDefault(u => u.Id == userId); 
+        //    if (user == null)
+        //    {
                
-                return NotFound();
-            }
-
-           
-            var allTags = db.Tags.ToList(); 
+        //        return NotFound();
+        //    }         
+        //    var allTags = db.Tags.ToList(); 
 
             
-            var viewModel = new EditProfileViewModel
-            {
-                Id = user.Id,
-                Username = user.Username,
-                AvatarUrl = user.AvatarUrl,
-                Summary = user.Summary,
-                AvailableTags = allTags,
-                SelectedTagIds = user.FavouriteTags.Select(ft => ft.TagId).ToList()
-            };
+        //    var viewModel = new EditProfileViewModel
+        //    {
+        //        Id = user.Id,
+        //        Username = user.Username,
+        //        AvatarUrl = user.AvatarUrl,
+        //        Summary = user.Summary,
+        //        AvailableTags = allTags,
+        //        SelectedTagIds = user.FavouriteTags.Select(ft => ft.TagId).ToList()
+        //        // 检查数据库中是否有头像数据，并获取其大小
+        //    CurrentAvatarDataSize = user.AvatarData != null ? user.AvatarData.Length : 0
+        //    };
 
-            return View(viewModel);
-        }
+        //    return View(viewModel);
+        //}
 
         
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditProfile(EditProfileViewModel model)
-        {
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult EditProfile(EditProfileViewModel model)
+        //{
          
             
-            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
-            if (string.IsNullOrEmpty(userIdString))
-            {
-                return RedirectToAction("Login", "Account");
-            }
+        //    var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
+        //    if (string.IsNullOrEmpty(userIdString))
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
 
            
-            int currentUserId;
-            if (!int.TryParse(userIdString, out currentUserId))
-            {
-                return StatusCode(500, "User ID claim format error.");
-            }
+        //    int currentUserId;
+        //    if (!int.TryParse(userIdString, out currentUserId))
+        //    {
+        //        return StatusCode(500, "User ID claim format error.");
+        //    }
             
 
 
           
-            if (model.Id != currentUserId)
-            {
-                return Forbid(); // 返回 403 Forbidden
-            }
+        //    if (model.Id != currentUserId)
+        //    {
+        //        return Forbid(); // 返回 403 Forbidden
+        //    }
 
             
-            var userToUpdate = db.Users
-                .Include(u => u.FavouriteTags)
-                .FirstOrDefault(u => u.Id == model.Id); // 使用 FirstOrDefault() 同步方法
+        //    var userToUpdate = db.Users
+        //        .Include(u => u.FavouriteTags)
+        //        .FirstOrDefault(u => u.Id == model.Id); // 使用 FirstOrDefault() 同步方法
 
-            if (userToUpdate == null)
-            {
-                return NotFound();
-            }
+        //    if (userToUpdate == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
+        //    if (ModelState.IsValid)
+        //    {
                 
-                userToUpdate.Username = model.Username;
-                userToUpdate.AvatarUrl = model.AvatarUrl;
-                userToUpdate.Summary = model.Summary;
-                userToUpdate.UpdatedAt = DateTime.UtcNow;
+        //        userToUpdate.Username = model.Username;
+        //        userToUpdate.AvatarUrl = model.AvatarUrl;
+        //        userToUpdate.Summary = model.Summary;
+        //        userToUpdate.UpdatedAt = DateTime.UtcNow;
 
-                // 7. Handle FavoriteTags (The many-to-many relationship management)
-                // 处理收藏标签的多对多关系
+        //        // 7. Handle FavoriteTags (The many-to-many relationship management)
+        //        // 处理收藏标签的多对多关系
 
-                // a. Remove existing tags that are no longer selected
-                var tagsToRemove = userToUpdate.FavouriteTags
-                    .Where(ft => !model.SelectedTagIds.Contains(ft.TagId))
-                    .ToList();
-                db.FavouriteTags.RemoveRange(tagsToRemove);
+        //        // a. Remove existing tags that are no longer selected
+        //        var tagsToRemove = userToUpdate.FavouriteTags
+        //            .Where(ft => !model.SelectedTagIds.Contains(ft.TagId))
+        //            .ToList();
+        //        db.FavouriteTags.RemoveRange(tagsToRemove);
 
-                // b. Add new tags that were selected
-                var existingTagIds = userToUpdate.FavouriteTags.Select(ft => ft.TagId).ToList();
-                var tagsToAdd = model.SelectedTagIds
-                    .Where(id => !existingTagIds.Contains(id))
-                    .Select(id => new FavouriteTags { UserId = userToUpdate.Id, TagId = id })
-                    .ToList();
-                db.FavouriteTags.AddRange(tagsToAdd);
+        //        // b. Add new tags that were selected
+        //        var existingTagIds = userToUpdate.FavouriteTags.Select(ft => ft.TagId).ToList();
+        //        var tagsToAdd = model.SelectedTagIds
+        //            .Where(id => !existingTagIds.Contains(id))
+        //            .Select(id => new FavouriteTags { UserId = userToUpdate.Id, TagId = id })
+        //            .ToList();
+        //        db.FavouriteTags.AddRange(tagsToAdd);
 
-                // 8. Save changes to the database synchronously
-                db.SaveChanges(); // 使用 SaveChanges() 同步方法
+        //        // 8. Save changes to the database synchronously
+        //        db.SaveChanges(); // 使用 SaveChanges() 同步方法
 
-                // 9. Redirect on success (Message in English)
-                TempData["SuccessMessage"] = "Profile updated successfully!";
-                return RedirectToAction("EditProfile");
-            }
+        //        // 9. Redirect on success (Message in English)
+        //        TempData["SuccessMessage"] = "Profile updated successfully!"; //===========================================
+        //        return RedirectToAction("EditProfile");
+        //    }
 
-            // If ModelState is invalid, re-fetch all tags to display them again
-            model.AvailableTags = db.Tags.ToList();
-            return View(model);
-        }
+        //    // If ModelState is invalid, re-fetch all tags to display them again
+        //    model.AvailableTags = db.Tags.ToList();
+        //    return View(model);
+        //}
         #endregion
     }
 

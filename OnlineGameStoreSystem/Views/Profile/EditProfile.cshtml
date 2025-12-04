@@ -5,8 +5,8 @@
 }
 
 <div class="container mt-4">
-    <h2>Edit Profile</h2>
-    <hr />
+    <h1 class="EditProfile">Edit Profile</h1>
+
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -15,12 +15,15 @@
         </div>
     }
 
-    <div class="row">
-        <div class="col-md-6">
-            <form asp-action="EditProfile" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" />
 
+    <div class="col-md-6">
+        <form asp-action="EditProfile" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+
+            @* Edit Profile *@
+            <div class="edit">
                 <div class="form-group mb-3">
                     <label asp-for="Username" class="form-label"></label>
                     <input asp-for="Username" class="form-control" />
@@ -42,33 +45,34 @@
                     <textarea asp-for="Summary" class="form-control" rows="3"></textarea>
                     <span asp-validation-for="Summary" class="text-danger"></span>
                 </div>
+            </div>
 
-                <div class="form-group mb-4">
-                    <label class="form-label">⭐ Favorite Tags</label>
-                    <div class="d-flex flex-wrap border p-3 rounded bg-light">
-                        @foreach (var tag in Model.AvailableTags)
-                        {
-                            var isSelected = Model.SelectedTagIds.Contains(tag.Id);
-                            <div class="form-check me-3 mb-2">
-                                <input type="checkbox"
-                                       id="tag_@tag.Id"
-                                       name="SelectedTagIds"
-                                       value="@tag.Id"
-                                       class="form-check-input"
-                                       @(isSelected ? "checked" : "") />
-                                <label class="form-check-label" for="tag_@tag.Id">
-                                    @tag.Name
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+            <div class="form-group mb-4">
+                <label class="form-label">⭐ Favorite Tags</label>
+                <div class="d-flex flex-wrap border p-3 rounded bg-light">
+                    @foreach (var tag in Model.AvailableTags)
+                    {
+                        var isSelected = Model.SelectedTagIds.Contains(tag.Id);
+                        <div class="form-check me-3 mb-2">
+                            <input type="checkbox"
+                                   id="tag_@tag.Id"
+                                   name="SelectedTagIds"
+                                   value="@tag.Id"
+                                   class="form-check-input"
+                                   @(isSelected ? "checked" : "") />
+                            <label class="form-check-label" for="tag_@tag.Id">
+                                @tag.Name
+                            </label>
+                        </div>
+                    }
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -76,4 +80,8 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/EditProfile.css" asp-append-version="true" />
 }

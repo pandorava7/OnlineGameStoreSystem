@@ -15,63 +15,70 @@
 
 <link rel="stylesheet" href="~/css/pages/Profile.css" asp-append-version="true" />
 
-<div class="profile-page-container">
 
-    <!-- 左边：用户资料 -->
-    <div class="profile-content">
+<!-- 左边：用户资料 -->
+<div class="profile-content">
 
-        <h1 class="User-Profile">User Profile</h1>
-        <div class="profile-header">
-            <div class="profile-left">
-                <img class="profile-avatar"
-                     src="@(!string.IsNullOrEmpty(currentUser?.AvatarUrl) ? currentUser.AvatarUrl : Url.Content("~/images/avatar_default.png"))" />
+    <h1 class="User-Profile">User Profile</h1>
+    <div class="profile-header">
+        <div class="profile-left">
+            <img class="profile-avatar"
+                 src="@(!string.IsNullOrEmpty(currentUser?.AvatarUrl) ? currentUser.AvatarUrl : Url.Content("~/images/avatar_default.png"))" />
+        </div>
+
+
+        <div class="profile-right">
+            <h2>
+                Gamer Tag: <span class="username">@Model.Username</span>
+            </h2>
+
+            @if (Model.IsDeveloper)
+            {
+                <span class="badge badge-info">Developer</span>
+            }
+
+            <p>
+                User Description:
+                <span class="user-summary">
+                    @(string.IsNullOrEmpty(Model.Summary) ? "Empty" : Model.Summary)
+                </span>
+            </p>
+
+            <p>Joined on @Model.CreatedAt.ToString("yyyy-MM-dd")</p>
+        </div>
+    </div>
+
+
+
+    <h1 class="Tags">Favorite Tags</h1>
+    <div class="tags-header">
+        @if (Model.FavoriteTags == null || !Model.FavoriteTags.Any())
+        {
+            <div class="no-tags-container">
+                <p>No favorite tags selected.</p>
             </div>
-
-
-            <div class="profile-right">
-                <h2>
-                    Gamer Tag: <span class="username">@Model.Username</span>
-                </h2>
-
-                @if (Model.IsDeveloper)
+        }
+        else
+        {
+            <div class="tag-list">
+                @foreach (var tag in Model.FavoriteTags)
                 {
-                    <span class="badge badge-info">Developer</span>
+                    <span class="tag">@(@tag.Name)</span>
                 }
-
-                <p>
-                    User Description:
-                    <span class="user-summary">
-                        @(string.IsNullOrEmpty(Model.Summary) ? "Empty" : Model.Summary)
-                    </span>
-                </p>
-
-                <p>Joined on @Model.CreatedAt.ToString("yyyy-MM-dd")</p>
             </div>
+        }
+    </div>
+
+
+    <h1 class="Tags">Recently Reviews</h1>
+    @if (Model.UserReviews == null || !Model.UserReviews.Any())
+    {
+        <div class="no-review-container">
+            <p>No recent reviews.</p>
         </div>
-
-
-
-        <h1 class="Tags">Favorite Tags</h1>
-        <div class="tags-header">
-            @if (Model.FavoriteTags == null || !Model.FavoriteTags.Any())
-            {
-                <div class="no-tags-container">
-                    <p>No favorite tags selected.</p>
-                </div>
-            }
-            else
-            {
-                <div class="tag-list">
-                    @foreach (var tag in Model.FavoriteTags)
-                    {
-                        <span class="tag">@(@tag.Name)</span>
-                    }
-                </div>
-            }
-        </div>
-
-
-        <h1 class="Tags">Recently Reviews</h1>
+    }
+    else
+    {
         <div class="comment-slider">
             <button class="comment-left-btn">&#10094;</button>
             <div class="comment-wrapper">
@@ -98,64 +105,62 @@
                 <span class="comment-dot @(i == 0 ? "active" : "")" data-index="@i"></span>
             }
         </div>
+    }
 
 
-        <h1 class="Tags">Game Library</h1>
+    <h1 class="Tags">Game Library</h1>
+    @if (Model.PurchasedGames == null || !Model.PurchasedGames.Any())
+    {
+        <div class="no-review-container">
+                <p>No game yet.</p>
+       </div>
+    }
+    else
+    {
+        <div class="category-slider">
+            <button class="cat-btn left-btn" id="leftBtn">&#10094;</button>
+            <button class="cat-btn right-btn" id="rightBtn">&#10095;</button>
 
-        @if (Model.PurchasedGames == null || !Model.PurchasedGames.Any())
-        {
-            <div class="games-header">
-                <div class="no-tags-container">
-                    <p>No game yet.</p>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="category-slider">
-                <button class="cat-btn left-btn" id="leftBtn">&#10094;</button>
-                <button class="cat-btn right-btn" id="rightBtn">&#10095;</button>
-
-                <div class="game-list-wrapper">
-                    <div class="game-list" id="gameList">
-                        @foreach (var game in Model.PurchasedGames)
-                        {
-                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@game.Title.Replace(" ", "_")">
-                                <div class="game-card">
-                                    <img src="@game.CoverUrl" alt="@game.Title" />
-                                    <div class="game-info">
-                                        <p class="game-title">@game.Title</p>
-                                        <p class="game-price">Purchased: @game.PurchasedAt.ToString("yyyy-MM-dd")</p>
-                                        <p class="game-price">RM @game.PriceAtPurchase</p>
-                                    </div>
+            <div class="game-list-wrapper">
+                <div class="game-list" id="gameList">
+                    @foreach (var game in Model.PurchasedGames)
+                    {
+                        <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@game.Title.Replace(" ", "_")">
+                            <div class="game-card">
+                                <img src="@game.CoverUrl" alt="@game.Title" />
+                                <div class="game-info">
+                                    <p class="game-title">@game.Title</p>
+                                    <p class="game-price">Purchased: @game.PurchasedAt.ToString("yyyy-MM-dd")</p>
+                                    <p class="game-price">RM @game.PriceAtPurchase</p>
                                 </div>
-                            </a>
-                        }
-                    </div>
+                            </div>
+                        </a>
+                    }
                 </div>
             </div>
-            <div class="dots"></div>
-        }
-
-    </div>
-
-    <div class="profile-nav-container">
-        <nav class="profile-nav">
-            <a asp-controller="Profile" asp-action="EditProfile">Edit Profile</a>
-            <div class="privacy-switch">
-                <div class="switch-content">
-                    <span class="switch-label">Private</span>
-                    <div class="toggle-switch" id="toggleSwitch" data-public="@Model.UserPreferences.PublicProfile">
-                        <div class="switch-handle"></div>
-                    </div>
-                </div>
-                @Html.AntiForgeryToken()
-            </div>
-
-
-        </nav>
-    </div>
+        </div>
+        <div class="dots"></div>
+    }
 </div>
+
+
+<div class="profile-nav-container">
+    <nav class="profile-nav">
+        <a asp-controller="Profile" asp-action="EditProfile">Edit Profile</a>
+        <div class="privacy-switch">
+            <div class="switch-content">
+                <span class="switch-label">Private</span>
+                <div class="toggle-switch" id="toggleSwitch" data-public="@Model.UserPreferences.PublicProfile">
+                    <div class="switch-handle"></div>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()
+        </div>
+
+
+    </nav>
+</div>
+
 @section Scripts {
     <script src="~/js/components/ProfileGame.js" asp-append-version="true"></script>
     <script src="~/js/components/Review.js" asp-append-version="true"></script>

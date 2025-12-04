@@ -59,6 +59,10 @@ namespace OnlineGameStoreSystem.Models.ViewModels
 
         [Url(ErrorMessage = "Invalid URL format.")]
         public string? AvatarUrl { get; set; }
+        // NEW: Property to receive the uploaded file
+        public IFormFile? NewAvatarFile { get; set; }
+        // Property to display the *current* avatar data size (optional, for demo)
+        public int CurrentAvatarDataSize { get; set; }
 
         [StringLength(500, ErrorMessage = "Summary cannot exceed 500 characters.")]
         public string? Summary { get; set; }
