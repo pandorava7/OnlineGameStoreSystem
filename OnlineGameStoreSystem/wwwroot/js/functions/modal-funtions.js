@@ -63,3 +63,25 @@ function confirmDownloadGame(onConfirm) {
         ]
     });
 }
+
+function confirmMessage(onConfirm, message) {
+    Modal.show({
+        message: message,
+        buttons: [
+            {
+                text: "Cancel",
+                type: "secondary-btn",
+                onClick: () => console.log("Cancel clicked")
+            },
+            {
+                text: "Confirm",
+                type: "primary-btn",
+                onClick: () => {
+                    if (typeof onConfirm === "function") {
+                        onConfirm(); // 调用回调
+                    }
+                }
+            }
+        ]
+    });
+}

@@ -146,7 +146,7 @@ button {
     border-radius: 9999px;
 }
 
-input[type="text"] {
+input {
     border-radius: 9999px;
     padding: var(--space-sm) var(--space-lg);
 }

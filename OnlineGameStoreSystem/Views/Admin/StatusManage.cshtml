@@ -1,77 +1,70 @@
 ﻿@{
     Layout = "_AdminLayout";
 }
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<OnlineGameStoreSystem.Models.ViewModels.StatusManageVM>
 
 <div class="admin-container">
-    <h1 class="panel-title">User &gt;&gt; Status Manage</h1>
-    <p class="panel-description">This page is for brabrabra</p>
+    <h1 class="panel-title">@ViewData["Title"]</h1>
+    <p class="panel-description">@ViewData["Description"]</p>
 
-    <div class="search-bar-container">
-        <input type="text" placeholder="Search..." class="search-input">
-        <button class="search-submit"><i class="fa fa-search"></i></button>
+    <div class="search-box">
+        <form method="get" action="/Admin/StatusManage">
+            <input id="searchInput"
+                   name="search"
+            type="text"
+            placeholder="Search by name..."
+            value="@Context.Request.Query["search"]"
+            aria-label="search-input">
+
+            <button type="submit" class="primary-btn">Search</button>
+        </form>
     </div>
 
-    <div class="panel">
-        <div class="panel-header">
-            <h2>示例后台管理列表</h2>
-        </div>
 
+    <div class="panel">
         <table class="panel-table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>UserId</th>
                     <th>UserName</th>
-                    <th>Email</th>
+                    <th>UserEmail</th>
                     <th>Status</th>
-                    <th>操作</th>
+                    <th class="action-col">Action</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr>
-                    <td>101</td>
-                    <td>Alice</td>
-                    <td>alice@example.com</td>
-                    <td>Active</td>
-                    <td>
-                        <button class="panel-btn edit">编辑</button>
-                        <button class="panel-btn delete">删除</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>102</td>
-                    <td>Bob</td>
-                    <td>bob@example.com</td>
-                    <td>Pending</td>
-                    <td>
-                        <button class="panel-btn edit">编辑</button>
-                        <button class="panel-btn delete">删除</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>103</td>
-                    <td>Chris</td>
-                    <td>chris@example.com</td>
-                    <td>Disabled</td>
-                    <td>
-                        <button class="panel-btn edit">编辑</button>
-                        <button class="panel-btn delete">删除</button>
-                    </td>
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.UserId</td>
+                        <td>@item.UserName</td>
+                        <td>@item.UserEmail</td>
+                        <td>@item.Status</td>
+
+                        <td class="action-col">
+                            <div class="button-group">
+                                <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@item.UserId" class="button secondary-btn">Edit</a>
+
+                                <form id="deleteUserForm" method="post" asp-controller="Admin", asp-action="DeleteUser">
+                                    <input type="hidden" name="id" id="deleteUserId" />
+                                </form>
+                                <button id="delUserBtn" data-user-id="@item.UserId" class="danger-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
 
     <div class="panel-pager">
-        <button class="pager-btn">«</button>
-        <button class="pager-btn">‹</button>
-
-        <button class="pager-btn page">1</button>
-        <button class="pager-btn page active">2</button>
-        <button class="pager-btn page">3</button>
-        <button class="pager-btn page">4</button>
-
-        <button class="pager-btn">›</button>
-        <button class="pager-btn">»</button>
+        @Html.PagedListPager(
+        Model,
+        page => Url.Action("StatusManage", new { page }),
+                PagedListRenderOptions.ClassicPlusFirstAndLast
+                )
     </div>
-
 </div>

@@ -379,7 +379,7 @@ public class User
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     [Required]
-    public string Status { get; set; } = "active"; // active / banned
+    public string Status { get; set; } = "active"; // active / banned / deleted
 
     // Navigation
     public UserPreferences? Preferences { get; set; }

@@ -8,14 +8,25 @@
 
 .secondary-btn {
     background-color: transparent;
-    border: 1px solid var(--text-muted);
-    color: var(--text-muted);
+    border: 1px solid white;
+    color: white;
 }
 
 .secondary-btn:hover {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
+
+.danger-btn {
+    background-color: red;
+    border: 1px solid white;
+    color: white;
+}
+
+    .danger-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
 
 .button-group {
     display: flex;
