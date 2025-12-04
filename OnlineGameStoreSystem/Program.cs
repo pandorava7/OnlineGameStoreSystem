@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Helpers;
+using OnlineGameStoreSystem.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,9 @@ builder.Services.AddSqlServer<DB>($@"
 
 // OTP
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+// Recommendation services
+builder.Services.AddScoped<RecommendationService>();
 
 // ?? HttpContextAccessor
 builder.Services.AddHttpContextAccessor();

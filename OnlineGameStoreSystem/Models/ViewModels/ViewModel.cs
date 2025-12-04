@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 public class HomeViewModel
 {
-    public List<TopGameViewModel> topGamesBySales { get; set; } = null!;
+    public List<TopGameViewModel> TopGamesBySales { get; set; } = null!;
     public List<GameCategoryViewModel> Categories { get; set; } = null!;
 }
 
