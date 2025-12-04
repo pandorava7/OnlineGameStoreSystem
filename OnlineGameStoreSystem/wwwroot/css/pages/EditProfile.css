@@ -1,0 +1,33 @@
+﻿.EditProfile{
+     font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: var(--spacing-sm);
+    display: inline-block; /* 让边框只在文本下方 */
+    margin: 0 auto var(--spacing-lg) auto;
+}
+
+.edit {
+    width: 80%;
+    align-items: flex-start;
+    gap: 1rem;
+    background-color: var(--bg-surface);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
+}
+
+    .edit input {
+        width: 100%;
+        padding: 14px 12px;
+        border-radius: 8px;
+        border: 2px solid #444; /* 默认深灰边线 */
+        background-color: #202024; /* 深色背景 */
+        color: #ffffff;
+        font-size: 15px;
+        transition: all 0.25s ease-in-out; /* 平滑过渡 */
+    }
