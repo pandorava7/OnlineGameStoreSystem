@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-container">
+    <h1 class="panel-title">User &gt;&gt; Status Manage</h1>
+    <p class="panel-description">This page is for brabrabra</p>
+
+    <div class="search-bar-container">
+        <input type="text" placeholder="Search..." class="search-input">
+        <button class="search-submit"><i class="fa fa-search"></i></button>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2>示例后台管理列表</h2>
+        </div>
+
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>UserName</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>101</td>
+                    <td>Alice</td>
+                    <td>alice@example.com</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="panel-btn edit">编辑</button>
+                        <button class="panel-btn delete">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>102</td>
+                    <td>Bob</td>
+                    <td>bob@example.com</td>
+                    <td>Pending</td>
+                    <td>
+                        <button class="panel-btn edit">编辑</button>
+                        <button class="panel-btn delete">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>103</td>
+                    <td>Chris</td>
+                    <td>chris@example.com</td>
+                    <td>Disabled</td>
+                    <td>
+                        <button class="panel-btn edit">编辑</button>
+                        <button class="panel-btn delete">删除</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel-pager">
+        <button class="pager-btn">«</button>
+        <button class="pager-btn">‹</button>
+
+        <button class="pager-btn page">1</button>
+        <button class="pager-btn page active">2</button>
+        <button class="pager-btn page">3</button>
+        <button class="pager-btn page">4</button>
+
+        <button class="pager-btn">›</button>
+        <button class="pager-btn">»</button>
+    </div>
+
+</div>

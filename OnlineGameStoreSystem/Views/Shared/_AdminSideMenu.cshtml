@@ -1,0 +1,61 @@
+﻿<nav class="admin-side-menu">
+    <h1 class="page-title">
+        Management
+    </h1>
+
+    <ul class="menu-section">
+        <li class="menu-title">User</li>
+        <li>
+            <a asp-controller="Admin" asp-action="StatusManage">StatusManage</a>
+        </li>
+    </ul>
+
+    <ul class="menu-section">
+        <li class="menu-title">Developer</li>
+        <li>
+            <a asp-controller="Admin" asp-action="RegistrationApproval">RegistrationApproval</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="Permissions">Permissions</a>
+        </li>
+    </ul>
+
+    <ul class="menu-section">
+        <li class="menu-title">Game</li>
+        <li>
+            <a asp-controller="Admin" asp-action="GameReleaseReview">GameReleaseReview</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="GameManagement">GameManagement</a>
+        </li>
+    </ul>
+
+    <ul class="menu-section">
+        <li class="menu-title">Purchase</li>
+        <li>
+            <a asp-controller="Admin" asp-action="RefundHandling">RefundHandling</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="WebsiteStatistics">WebsiteStatistics</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="TrackPurchase">TrackPurchase</a>
+        </li>
+    </ul>
+
+    <ul class="menu-section">
+        <li class="menu-title">Community</li>
+        <li>
+            <a asp-controller="Admin" asp-action="PostManagement">PostManagement</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="CommentManagement">CommentManagement</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="GameReviewMAnagment">GameReviewMAnagment</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="CommunityStatistics">CommunityStatistics</a>
+        </li>
+    </ul>
+</nav>

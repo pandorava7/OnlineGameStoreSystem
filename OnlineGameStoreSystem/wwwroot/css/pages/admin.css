@@ -1,0 +1,181 @@
+﻿.layout-wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+
+
+.admin-container {
+    display: inline-block;
+}
+
+.panel-title{
+
+}
+
+.panel-description{
+
+}
+
+/* Panel 外框 */
+.panel {
+    width: 100%;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* Panel 标题 */
+.panel-header h2 {
+    margin: 0 0 15px 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* 表格样式 */
+.panel-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .panel-table th,
+    .panel-table td {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 10px;
+        text-align: left;
+    }
+
+    .panel-table th {
+        background: #f3f4f6;
+        font-size: 14px;
+        color: #374151;
+    }
+
+    .panel-table tr:hover {
+        background: #f9fafb;
+    }
+
+/* 操作按钮 */
+.panel-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+    .panel-btn.edit {
+        background: #2563eb;
+        color: #fff;
+    }
+
+    .panel-btn.delete {
+        background: #dc2626;
+        color: #fff;
+    }
+
+/* ============ 分页器 ============ */
+.panel-pager {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 15px 0;
+}
+
+.pager-btn {
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background 0.2s, border 0.2s;
+}
+
+    .pager-btn:hover {
+        background: #f3f4f6;
+    }
+
+    .pager-btn.active {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.admin-side-menu {
+    width: 300px;
+    background: #1f1f1f;
+    color: #fff;
+    padding: 20px 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.page-title{
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.admin-side-menu .menu-section {
+    margin-bottom: 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+    .admin-side-menu .menu-title {
+        font-size: 18px;
+        text-transform: uppercase;
+        color: white;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-side-menu li {
+        list-style: none;
+    }
+
+    .admin-side-menu a {
+        display: block;
+        color: darkgray;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .admin-side-menu a:hover {
+            background: #374151;
+            color: var(--primary-color);
+        }
+
+        .admin-side-menu a.active {
+            background: #2563eb;
+            color: #fff;
+        }

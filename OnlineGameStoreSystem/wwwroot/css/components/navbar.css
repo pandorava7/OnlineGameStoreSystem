@@ -9,7 +9,6 @@
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     position: sticky;
     top: 0; /* 粘住的参考位置 */
-    margin-bottom: 60px;
 }
 
 .nav-container {
