@@ -1,4 +1,6 @@
-﻿namespace OnlineGameStoreSystem.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OnlineGameStoreSystem.Models.ViewModels
 {
     #region Profile 
 
@@ -15,13 +17,9 @@
         // 用户所有留言
         public List<ReviewItem> UserReviews { get; set; } = new();
         public List<PurchasedGameVM> PurchasedGames { get; set; } = new();
+        // Privacy Settings
+        public UserPreferences UserPreferences { get; set; } = new();
 
-
-        public string GameLibraryUrl { get; set; } = null!;
-        public string FavoriteTagGamesUrl { get; set; } = null!;
-        public string PrivacySettingsUrl { get; set; } = null!;
-        public string GameRatingUrl { get; set; } = null!;
-        public string EditProfileUrl { get; set; } = null!;
     }
 
 
@@ -46,6 +44,30 @@
         public string CoverUrl { get; set; } = null!;
         public decimal PriceAtPurchase { get; set; }
         public DateTime PurchasedAt { get; set; }
+    }
+    #endregion
+
+    #region Edit Profile
+    public class EditProfileViewModel
+    {
+        // User Details
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
+        public string Username { get; set; } = null!;
+
+        [Url(ErrorMessage = "Invalid URL format.")]
+        public string? AvatarUrl { get; set; }
+
+        [StringLength(500, ErrorMessage = "Summary cannot exceed 500 characters.")]
+        public string? Summary { get; set; }
+
+        // Favorite Tags
+        public List<int> SelectedTagIds { get; set; } = new List<int>();
+
+        // For displaying all available tags in the view
+        public List<Tag> AvailableTags { get; set; } = new List<Tag>();
     }
     #endregion
 }

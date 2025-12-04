@@ -139,14 +139,25 @@
 
     </div>
 
-    <!-- 右边：垂直导航栏 -->
     <div class="profile-nav-container">
-        @Html.Partial("_ProfileLayout")
+        <nav class="profile-nav">
+            <a asp-controller="Profile" asp-action="EditProfile">Edit Profile</a>
+            <div class="privacy-switch">
+                <div class="switch-content">
+                    <span class="switch-label">Private</span>
+                    <div class="toggle-switch" id="toggleSwitch" data-public="@Model.UserPreferences.PublicProfile">
+                        <div class="switch-handle"></div>
+                    </div>
+                </div>
+                @Html.AntiForgeryToken()
+            </div>
+
+
+        </nav>
     </div>
-
 </div>
-
 @section Scripts {
     <script src="~/js/components/ProfileGame.js" asp-append-version="true"></script>
     <script src="~/js/components/Review.js" asp-append-version="true"></script>
+    <script src="~/js/components/Privacy.js" asp-append-version="true"></script>
 }

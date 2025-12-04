@@ -418,9 +418,8 @@ public class UserPreferences
     public int Id { get; set; }
 
     public int UserId { get; set; }
-
-    public bool PublicProfile { get; set; }
-
+    // Profile 是否公开
+    public bool PublicProfile { get; set; } = true;
     // Nav
     public User User { get; set; } = null!;
 }
