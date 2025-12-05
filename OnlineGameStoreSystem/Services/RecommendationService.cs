@@ -54,8 +54,14 @@ public class RecommendationService
                 score += 1 * WishlistWeight;
 
             // 2. 标签匹配（示例：交集标签数 / 用户兴趣标签总数）
-            var gameTags = game.Tags.Select(t => t.Tag.Name).ToList();
-            var userTags = interestTags.Select(t => t.Tag.Name).ToList();
+            var gameTags = game.Tags?
+                .Where(t => t.Tag != null && t.Tag.Name != null)
+                .Select(t => t.Tag.Name)
+                .ToList() ?? new List<string>();
+            var userTags = interestTags?
+                .Where(t => t.Tag != null && t.Tag.Name != null)
+                .Select(t => t.Tag.Name)
+                .ToList() ?? new List<string>();
             var tagMatch = gameTags.Intersect(userTags).Count();
 
             if (interestTags.Count > 0)
