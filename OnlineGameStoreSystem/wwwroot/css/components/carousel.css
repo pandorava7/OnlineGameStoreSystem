@@ -4,7 +4,7 @@
     position: relative;
     border-radius: 14px;
     background: var(--color-bg);
-    zoom: 1;
+    zoom: 120%;
 }
 
 /* 新增的视口容器：负责裁剪图片 */
@@ -94,7 +94,7 @@
     gap: 8px;
     height: 200px; /* 限制高度 */
     width: 330px; /* 容器宽度 */
-    overflow-x: hidden; /* 横向滚动 */
+    overflow-x: auto; /* 横向滚动 */
     overflow-y: hidden; /* 隐藏纵向滚动 */
     padding-bottom: 4px;
 }

@@ -1,0 +1,1150 @@
+﻿/* dashboard.css - Dark dashboard style for Razor Pages */
+body {
+    background: #111;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.dashboard-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 32px 24px;
+    background: #181818;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.dashboard-subtitle {
+    color: #bdbdbd;
+    font-size: 1.1rem;
+    margin-bottom: 32px;
+}
+.dashboard-chart-section {
+    background: #232323;
+    border-radius: 8px;
+    padding: 24px 24px 16px 24px;
+    margin-bottom: 32px;
+}
+.dashboard-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.dashboard-controls label {
+    color: #fff;
+    font-size: 1rem;
+    margin-right: 8px;
+}
+.dashboard-controls .btn,
+.dashboard-controls button {
+    background: #232323;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 4px 14px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-right: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+.dashboard-controls .btn.active,
+.dashboard-controls button.active {
+    background: #e94e88;
+    color: #fff;
+    border: none;
+}
+.dashboard-legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+.dashboard-legend span {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    gap: 6px;
+}
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.legend-dot.exposure { background: #b6ff3e; }
+.legend-dot.sales { background: #3eeaff; }
+.legend-dot.revenue { background: #e94e88; }
+.dashboard-chart {
+    width: 100%;
+    height: 260px;
+    background: #181818;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    position: relative;
+}
+.dashboard-report-btn {
+    background: #e94e88;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.dashboard-report-btn:hover {
+    background: #c93e6e;
+}
+.dashboard-summary-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+.dashboard-summary-box {
+    background: #232323;
+    border-radius: 8px;
+    padding: 20px 24px;
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.dashboard-summary-title {
+    font-size: 1.1rem;
+    color: #bdbdbd;
+    margin-bottom: 8px;
+}
+.dashboard-summary-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+}
+.dashboard-summary-label {
+    font-size: 1rem;
+    color: #bdbdbd;
+}
+.dashboard-summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.dashboard-summary-list li {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+.dashboard-summary-list .up { color: #b6ff3e; }
+.dashboard-summary-list .down { color: #e94e88; }
+.dashboard-revenue-section {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+.dashboard-revenue-box {
+    background: #232323;
+    border-radius: 8px;
+    padding: 20px 24px;
+    flex: 1;
+}
+.dashboard-revenue-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.dashboard-revenue-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+}
+.dashboard-revenue-desc {
+    color: #bdbdbd;
+    font-size: 1rem;
+    margin-top: 8px;
+}
+
+/* Game List Styles */
+.game-list-section {
+    margin-top: 28px;
+}
+.game-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.game-list-title {
+    margin: 0;
+    font-size: 1.4rem;
+}
+.publish-btn {
+    background: #e94e88;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.game-item {
+    background: #232323;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 18px;
+}
+.game-item-top {
+    color: #bdbdbd;
+    padding: 6px 0;
+    border-bottom: 1px solid #2b2b2b;
+    margin-bottom: 12px;
+}
+.game-item-body {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+.game-thumb {
+    width: 220px;
+    height: 110px;
+    background: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+    font-weight: bold;
+    border: 4px solid #8a57ff;
+}
+.game-info {
+    flex: 1;
+}
+.game-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+.meta-row {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.meta-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.status {
+    color: #bdbdbd;
+    margin-top: 8px;
+}
+.game-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.btn-outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-primary {
+    background: #e94e88;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Sales table */
+.sales-table-wrap {
+    margin-top: 18px;
+}
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+}
+.sales-table thead th {
+    text-align: left;
+    padding: 12px 8px;
+    border-bottom: 2px solid #2b2b2b;
+    color: #ddd;
+}
+.sales-table tbody td {
+    padding: 18px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.thumb-cell {
+    width: 180px;
+    background: #333;
+    text-align: center;
+    color: #999;
+    font-weight: bold;
+}
+
+/* DeveloperForm */
+
+/* 容器与基础布局 */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #fff; /* 假设背景是深色，确保文字可见 */
+}
+
+.dashboard-title {
+    margin-bottom: 10px;
+}
+
+.dashboard-subtitle {
+    margin-bottom: 30px;
+    color: #ccc;
+}
+
+/* 分区标题 (灰色胶囊状) */
+.section-wrapper {
+    margin: 24px 0 8px;
+}
+
+.section-badge {
+    background: #ddd;
+    color: #111;
+    padding: 12px 190px;
+    border-radius: 66px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.section-hint {
+    color: #bdbdbd;
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+
+/* 表单布局 */
+/* =========================================
+   修复 Media Upload 布局的核心 CSS
+   ========================================= */
+
+/* 1. 确保 Flex 容器允许子元素横向排列 */
+.dashboard-container.form-row {
+    display: flex;
+    flex-wrap: wrap; /* 允许在小屏幕上换行，避免重叠 */
+    gap: 24px; /* 列与列之间的间距 */
+    align-items: flex-start; /* 顶部对齐 */
+    width: 100%; /* 占满父容器宽度 */
+}
+
+/* 2. 定义固定宽度的列 (用于 Thumbnail 和 Trailers) */
+.dashboard-container.form-col-fixed {
+    /* flex: 0 0 auto 表示：不放大、不缩小、基于指定宽度 */
+    flex: 0 0 240px; /* 设置一个固定的宽度，您可以根据需要调整 */
+    width: 240px; /* 明确指定宽度 */
+    min-width: 240px; /* 确保不会小于这个宽度 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 3. 定义自适应宽度的列 (用于 Preview Images) */
+.dashboard-container.form-col-fluid {
+    /* flex: 1 表示：占据剩余的所有空间 */
+    flex: 1;
+    min-width: 300px; /* 确保在非常小的屏幕上不会压得太扁，而是会换行 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* =========================================
+   响应式调整 (可选，但推荐)
+   ========================================= */
+/* 在屏幕宽度小于 1024px 时，强制变为单列垂直排列 */
+@media (max-width: 1024px) {
+    .form-row {
+        flex-direction: column;
+        gap: 32px; /* 垂直排列时增加间距 */
+    }
+
+    /* 让所有列占满宽度 */
+    .form-col-fixed,
+    .form-col-fluid {
+        width: 100%;
+        flex: auto;
+        min-width: 0;
+    }
+}
+
+/* 地址部分的特殊布局 */
+.address-grid {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.address-col-small {
+    flex: 0 0 120px;
+}
+
+/* 输入框通用样式 */
+.form-input {
+    width: 100%;
+    background: #555;
+    border: none;
+    color: #fff;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    box-sizing: border-box; /* 确保 padding 不会撑大宽度 */
+}
+
+    .form-input:focus {
+        outline: 2px solid #007bff; /* 增加聚焦效果 */
+        background: #666;
+    }
+
+/* 特殊输入框样式 */
+.input-short {
+    width: 60%;
+}
+
+.input-date {
+    padding: 10px;
+}
+
+.phone-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.phone-select {
+    background: #444;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    height: 40px; /* 统一高度 */
+}
+
+/* 文本域 (Contract) */
+.form-textarea {
+    width: 100%;
+    height: 140px;
+    background: #666; /* 原代码中是 #666 */
+    border: none;
+    color: #fff;
+    padding: 16px;
+    border-radius: 4px;
+    margin: 8px 0;
+    resize: vertical;
+}
+
+/* =========================================
+   支付方式按钮样式修正
+   ========================================= */
+
+/* 1. 支付按钮的基础样式 (未选中状态) */
+/* 使用更具体的选择器 .payment-methods .btn-payment-option 以提高权重 */
+.payment-methods .btn-payment-option {
+    background-color: transparent; /* 或者设置成你想要的深色背景，例如 #333 */
+    color: #fff; /* 文字颜色 */
+    border: 2px solid #555; /* 边框颜色，稍微加粗一点以便看清 */
+    padding: 8px 16px; /* 确保有内边距 */
+    transition: all 0.3s ease;
+    outline: none !important; /* 【重要】移除点击时的默认白线/蓝线 */
+    box-shadow: none !important; /* 【重要】移除可能存在的阴影 */
+}
+
+    /* 鼠标悬停在未选中的按钮上时 (可选，增加交互感) */
+    .payment-methods .btn-payment-option:hover:not(.active) {
+        border-color: #888;
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    /* 2. 支付按钮的选中状态 (变为全粉色) */
+    /* 当按钮同时拥有 .active 类时应用此样式 */
+    .payment-methods .btn-payment-option.active {
+        /* 【重要】使用 !important 强制覆盖所有其他背景和边框设定 */
+        background-color: #e94e88 !important;
+        border-color: #e94e88 !important;
+        color: #fff !important;
+    }
+
+        /* 确保选中状态下，鼠标悬停也不会改变颜色 */
+        .payment-methods .btn-payment-option.active:hover {
+            background-color: #e94e88 !important;
+            border-color: #e94e88 !important;
+            opacity: 0.9; /* 可选：稍微变暗一点点表示悬停 */
+        }
+
+/* Checkbox 布局 */
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* Tag list */
+.tag-list {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.tag-chip {
+    background: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.tag-add-btn {
+    padding: 6px 10px;
+    background: #8a57ff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tag-search {
+    max-width: 260px;
+}
+
+/* Upload components */
+.upload-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+/* Make file label used inside upload-row match the dashed zone size */
+.file-label,
+.dashed-dropzone {
+    /* 核心样式：虚线边框和背景色 */
+    border: 3px dashed #555;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #bbb;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    /* 布局样式 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%; /* 占满容器宽度 */
+    min-height: 150px; /* 设置统一的最小高度 */
+}
+
+/* 鼠标悬停效果 */
+.file-label:hover,
+.dashed-dropzone:hover {
+    border-color: #8a57ff; /* 悬停变紫色 (使用您的主题色) */
+    color: #fff;
+    background-color: rgba(138, 87, 255, 0.1);
+}
+
+/* Preview grid that holds multiple preview tiles */
+.preview-grid {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+/* Each preview tile */
+.preview-item {
+    position: relative;
+    width: 220px; /* larger tile to match mock */
+    height: 120px;
+    background: #666;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2) inset;
+    font-weight: 700;
+    color: #111;
+}
+
+    /* Image/video fit */
+    .preview-item img,
+    .preview-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* Remove button (pink circle) */
+.preview-remove-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e94e88;
+    color: #fff;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    z-index: 3;
+}
+
+/* Slight hover emphasis for the remove control so it stands out like in mock */
+.preview-item .preview-remove-btn {
+    opacity: 0.95;
+    transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.preview-item:hover .preview-remove-btn {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* Small label overlay for accessible filename / type */
+.preview-item-label {
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+    right: 6px;
+    color: #fff;
+    font-size: 12px;
+    background: rgba(0,0,0,0.35);
+    padding: 4px 6px;
+    border-radius: 4px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+/* Dragover state */
+.dashed-dropzone.dragover,
+.file-label.dragover {
+    border-color: #e94e88;
+    color: #fff;
+    background-color: rgba(233,78,136,0.04);
+}
+
+/* Buttons and other smaller UI */
+.dashboard-report-btn {
+    background: #e94e88;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .dashboard-report-btn:hover {
+        background: #c93e6e;
+    }
+
+/* Responsive tweaks */
+@media (max-width: 1100px) {
+    .form-col-fixed {
+        width: 320px;
+    }
+
+    .upload-row .file-label, .dashed-dropzone {
+        width: 320px;
+    }
+
+    .preview-item {
+        width: 160px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .preview-item {
+        width: 120px;
+        height: 90px;
+    }
+
+    .upload-row .file-label,
+    .dashed-dropzone {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   Developer Console >> Sales Detail 页面特定样式
+   ========================================= */
+
+/* Sales Table */
+.sales-detail-table {
+    width: 100%;
+    margin-top: 18px;
+    border-collapse: collapse; /* 确保边框合并，看起来更整洁 */
+}
+
+    /* Table Header Cells */
+    .sales-detail-table th {
+        padding: 12px 8px;
+        border-bottom: 2px solid #2b2b2b; /* 沿用 developer.css 的风格 */
+        color: #ddd; /* 沿用 developer.css 的风格 */
+        font-weight: bold;
+        text-align: left; /* 默认左对齐 */
+    }
+
+        /* Center-aligned Header Cells */
+        .sales-detail-table th.text-center {
+            text-align: center;
+        }
+
+    /* Table Body Rows */
+    .sales-detail-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04); /* 沿用 developer.css 的风格 */
+    }
+
+    /* Table Body Cells */
+    .sales-detail-table td {
+        padding: 12px 8px;
+        vertical-align: middle; /* 垂直居中 */
+        color: #fff; /* 沿用 developer.css 的风格 */
+    }
+
+        /* Thumbnail Cell */
+        .sales-detail-table td.thumb-cell {
+            width: 160px;
+            padding: 12px;
+        }
+
+    /* Thumbnail Image */
+    .sales-detail-table .game-thumb-img {
+        width: 120px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        display: block; /* 确保图片独占一行 */
+    }
+
+    /* Center-aligned Body Cells */
+    .sales-detail-table td.text-center {
+        text-align: center;
+    }
+
+/* Back Button Container */
+.back-btn-container {
+    margin-top: 18px;
+}
+
+
+/* Developer-specific game detail styles - append to developer.css */
+.dev-gd-container .dev-gd-main {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.dev-gd-left {
+    flex: 1 1 640px;
+    min-width: 320px;
+}
+
+.dev-gd-right {
+    flex: 0 0 360px;
+    min-width: 260px;
+}
+
+.dev-gd-media {
+    background: #141414;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.dev-gd-main-media {
+    width: 100%;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+    .dev-gd-main-media img, .dev-gd-main-media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+.dev-gd-thumbs {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.dev-gd-thumb {
+    width: 100px;
+    height: 64px;
+    background: #2b2b2b;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    padding: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+    .dev-gd-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .dev-gd-thumb:hover {
+        border-color: #8a57ff;
+    }
+
+.dev-gd-title {
+    margin: 0 0 8px 0;
+    font-size: 1.6rem;
+}
+
+.dev-gd-meta {
+    background: #141414;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.dev-gd-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dev-gd-description {
+    margin-top: 18px;
+    background: #121212;
+    padding: 12px;
+    border-radius: 8px;
+    color: #ddd;
+}
+
+.dev-price-row .dev-price-current {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.dev-gd-stats {
+    margin-top: 10px;
+    color: #bdbdbd;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+@media (max-width: 900px) {
+    .dev-gd-main {
+        flex-direction: column;
+    }
+
+    .dev-gd-right {
+        width: 100%;
+    }
+
+    .dev-gd-left {
+        width: 100%;
+    }
+}
+
+/* Developer Edit Game page tweaks */
+.preview-placeholder {
+    color: #bbb;
+    font-weight: 600;
+}
+
+/* Existing preview items styling already present; add subtle differentiation for existing items */
+.preview-item[data-existing="true"] {
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+    .preview-item[data-existing="true"] .preview-remove-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        background: #e94e88;
+        color: #fff;
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+/* Ensure main thumbnail preview shows background image nicely */
+.thumbnail-preview {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+}
+
+/* Small responsive adjustments */
+@media (max-width: 900px) {
+    .form-col-fixed {
+        width: 100%;
+    }
+
+    .dashed-dropzone, .upload-row .file-label {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   Developer Payment Page Styles
+   ========================================= */
+
+/* 支付页面容器，限制最大宽度 */
+.payment-container {
+    max-width: 800px;
+    margin: 0 auto; /* 居中显示 */
+    padding: 20px;
+}
+
+/* "Included Services" 信息块 */
+.info-box {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+    .info-box h3 {
+        margin-top: 0;
+        color: #fff;
+    }
+
+    .info-box ul {
+        color: #ccc;
+        padding-left: 20px;
+        line-height: 1.6;
+    }
+
+/* 费用显示块 */
+.fee-box {
+    display: flex;
+    align-items: center;
+    background-color: #222;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+/* 价格标签 (RM 100) */
+.fee-price-tag {
+    background-color: #e94e88; /* 使用您的主题色 */
+    color: #fff;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-right: 16px;
+    font-size: 1.2rem;
+}
+
+/* 费用说明文字 */
+.fee-description {
+    color: #ccc;
+}
+
+/* 只读输入框样式 */
+.form-input-readonly {
+    background-color: #444;
+    cursor: not-allowed;
+    color: #aaa; /* 可选：让文字颜色淡一点 */
+}
+
+/* 确认复选框区域 */
+.confirm-checkbox-wrapper {
+    margin: 24px 0;
+}
+
+.confirm-checkbox-label {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* 验证错误信息 */
+.validation-error {
+    color: #e94e88;
+    display: block;
+    margin-top: 8px;
+}
+
+/* 底部按钮组 */
+.payment-btn-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+/* 大号按钮样式 (用于支付页面的主按钮和取消按钮) */
+.btn-large {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px; /* 确保有圆角 */
+}
+
+/* =========================================
+Thumbnail Upload Preview Styles
+========================================= */
+#thumbPreviewContainer {
+    /* 基础布局 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* 为了绝对定位移除按钮 */
+    overflow: hidden; /* 裁剪超出部分 */
+    /* 尺寸设置 (根据需要调整) */
+    width: 220px; /* 与您其他预览框的宽度保持一致 */
+    height: 120px;
+    /* 样式继承自 .file-label，这里进行覆盖或强化 */
+    padding: 0; /* 清除内边距，让图片充满 */
+    background-color: #222; /* 默认背景加深一点 */
+    text-align: center;
+    transition: all 0.3s ease;
+    /* 边框样式继承自 .file-label (3px dashed #555) */
+}
+
+    /* 拖拽悬停状态 */
+    #thumbPreviewContainer.dragover {
+        border-color: #e94e88; /* 主题色 */
+        background-color: rgba(233,78,136,0.05); /* 轻微背景色变化 */
+        color: #fff;
+    }
+
+    /* 有图片时的状态 */
+    #thumbPreviewContainer.has-image {
+        border-style: solid; /* 边框变实线 */
+        border-color: #444; /* 边框颜色变深 */
+        border-width: 1px; /* 边框变细 */
+        background-color: transparent; /* 背景透明 */
+    }
+
+    /* 占位符文本 */
+    #thumbPreviewContainer .upload-placeholder {
+        pointer-events: none; /* 避免文字遮挡点击 */
+        padding: 20px; /* 增加内边距，恢复原有的视觉效果 */
+        color: #bbb; /* 继承原有的文字颜色 */
+        z-index: 1; /* 确保在最底层 */
+    }
+
+    /* 预览图片 */
+    #thumbPreviewContainer .thumb-img {
+        position: absolute; /* 绝对定位以充满容器 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* 保持比例填充 */
+        display: none; /* 默认隐藏 */
+        z-index: 2; /* 在占位符之上 */
+    }
+
+    /* 有图片时显示图片 */
+    #thumbPreviewContainer.has-image .thumb-img {
+        display: block;
+    }
+
+    /* 有图片时隐藏占位符 */
+    #thumbPreviewContainer.has-image .upload-placeholder {
+        display: none;
+    }
+
+    /* 移除按钮 (复用 .preview-remove-btn 的样式基础) */
+    #thumbPreviewContainer .thumb-remove-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        /* 复用您现有的 .preview-remove-btn 样式 */
+        width: 26px; /* 稍微大一点点，方便点击 */
+        height: 26px;
+        border-radius: 50%;
+        background: #e94e88;
+        color: #fff;
+        border: none;
+        display: flex; /* 使用 flex 居中 */
+        align-items: center;
+        justify-content: center;
+        font-size: 16px; /* 字体稍微大一点 */
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* 加一点阴影 */
+
+        display: none; /* 默认隐藏 */
+        z-index: 3; /* 确保在图片之上 */
+    }
+
+    /* 有图片时显示移除按钮 */
+    #thumbPreviewContainer.has-image .thumb-remove-btn {
+        display: flex; /* 恢复为 flex 显示 */
+    }
+
+    /* 鼠标悬停在移除按钮上 */
+    #thumbPreviewContainer .thumb-remove-btn:hover {
+        background: #c93e6e; /* 深一点的粉色 */
+        transform: scale(1.05); /* 轻微放大 */
+    }
+
+    /* Test */

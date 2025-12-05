@@ -1,0 +1,83 @@
+﻿@using OnlineGameStoreSystem.Models.ViewModels;
+@model DeveloperRegistrationViewModel
+
+@{
+    ViewData["Title"] = "Developer Registration Fee";
+}
+<link rel="stylesheet" href="~/css/Developer/developer.css" />
+
+<div class="dashboard-container payment-container">
+    <h1 class="dashboard-title">Complete Your Registration</h1>
+    <p class="dashboard-subtitle">To enable developer features, please complete the one-time registration fee of RM100.</p>
+
+    <div class="info-box">
+        <h3>Included Services</h3>
+        <ul>
+            <li>Registration fee is a one-time charge.</li>
+            <li>After registration, you can upload games, view sales data, and enable the settlement function.</li>
+            <li>You can update developer information and release new works at any time.</li>
+        </ul>
+    </div>
+
+    <div class="section-wrapper">
+        <div class="section-badge">Developer Registration Fee</div>
+    </div>
+    <div class="fee-box">
+        <div class="fee-price-tag">
+            RM 100
+        </div>
+        <div class="fee-description">
+            This fee is used to verify the developer's identity and maintain the platform's operation (simulation).
+        </div>
+    </div>
+
+    <form asp-controller="Developer" asp-action="ProcessPayment" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="section-wrapper">
+            <div class="section-badge">Confirm Information</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Developer Name:</label>
+                <input asp-for="DeveloperName" class="form-input form-input-readonly" readonly />
+            </div>
+            <div class="form-col-fluid">
+                <label>Email:</label>
+                <input asp-for="Email" type="email" class="form-input form-input-readonly" readonly />
+            </div>
+        </div>
+
+        <div class="section-wrapper" style="margin-top: 24px;">
+            <div class="section-badge">Select a payment method</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <select asp-for="SelectedPaymentMethod" class="form-input">
+                    <option value="Method 1">Method 1 (Credit Card)</option>
+                    <option value="Method 2">Method 2 (PayPal)</option>
+                    <option value="Method 3">Method 3 (Bank Transfer)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="checkbox-wrapper confirm-checkbox-wrapper">
+            <label class="checkbox-label confirm-checkbox-label">
+                <input asp-for="ConfirmPayment" type="checkbox" />
+                I confirm to pay RM100 for developer registration.
+            </label>
+            <span asp-validation-for="ConfirmPayment" class="validation-error"></span>
+        </div>
+
+        <div class="btn-group-wrapper payment-btn-group">
+            <button type="submit" class="btn-primary btn-large">Confirm & Process payment</button>
+            <a asp-controller="Developer" asp-action="RegistrationCancelled" class="btn-outline btn-large">I want to cancel this registration</a>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+}

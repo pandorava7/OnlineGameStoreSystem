@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+@model OnlineGameStoreSystem.Models.ViewModels.StatusManageVM
+
+<div class="admin-container">
+    <h1 class="panel-title">User >> Status Manage >> Edit User</h1>
+
+    <!-- 显示 ModelState 错误 -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <form method="post" asp-action="EditUser" class="form-post">
+
+        <!-- 隐藏的 UserId -->
+        <input asp-for="UserId" type="hidden" />
+
+        <div class="form-row">
+            <label asp-for="UserId"></label>
+            <input asp-for="UserId" readonly />
+        </div>
+
+        <div class="form-row">
+            <label asp-for="UserName"></label>
+            <input asp-for="UserName" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="UserEmail"></label>
+            <input asp-for="UserEmail" />
+            <span asp-validation-for="UserEmail" class="text-danger"></span>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Status"></label>
+            <select asp-for="Status" class="form-select">
+                <option value="active">Active</option>
+                <option value="banned">Banned</option>
+                <option value="deleted">Deleted</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
+        <button class="primary-btn save-btn">Save</button>
+    </form>
+</div>

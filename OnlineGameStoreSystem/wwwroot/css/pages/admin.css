@@ -1,0 +1,238 @@
+﻿.form-panel {
+    margin-top: 30px;
+}
+
+.form-post {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.form-row{
+    display: flex;
+    gap: 20px;
+    align-items:center;
+}
+
+.save-btn{
+    align-self: flex-start;
+}
+
+
+
+
+
+
+
+.layout-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+
+
+.admin-container {
+    margin-top: 30px;
+}
+
+.panel-title{
+
+}
+
+.panel-description{
+
+}
+
+/* Panel 外框 */
+.panel {
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+/* Panel 标题 */
+.panel-header h2 {
+    margin: 0 0 15px 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* 表格样式 */
+.panel-table {
+    width: 100%;
+    border-spacing: 0; /* 去掉间距 */
+    border-radius: 20px;
+    outline: 2px var(--primary-color) solid;
+    overflow: hidden; /* 圆角生效 */
+}
+
+    .panel-table th,
+    .panel-table td {
+        padding: 12px 10px;
+        text-align: left;
+        border: none;
+    }
+
+        .panel-table th.action-col,
+        .panel-table td.action-col {
+            width: 150px; /* 自定义宽度 */
+            /*text-align: right;*/ /* 内容右对齐 */
+        }
+
+    .panel-table th {
+        background: var(--primary-color);
+        font-size: 14px;
+        color: white;
+    }
+
+    .panel-table tr:hover {
+        background-color: gray;
+    }
+
+/* ============ 分页器 ============ */
+/* 容器居中 */
+.panel-pager {
+    margin-top: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    display: flex;
+}
+
+.pagination-container{
+    align-self: flex-start;
+}
+
+/* ul 样式 */
+.panel-pager .pagination {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+}
+
+        /* li 样式 */
+        .panel-pager .pagination li {
+            margin: 0 3px;
+        }
+
+            /* 链接和 span 样式 */
+            .panel-pager .pagination li a,
+            .panel-pager .pagination li span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 6px 12px;
+                border-radius: 9999px;
+                border: 1px solid #ddd;
+                text-decoration: none;
+                color: white;
+                background-color: transparent;
+                min-width: 40px;
+                min-height: 40px;
+                text-align: center;
+                transition: all 0.2s;
+
+            }
+
+                /* hover 效果 */
+                .panel-pager .pagination li a:hover {
+                    background-color: #f0f0f0;
+                    border-color: #bbb;
+                }
+
+            /* 当前页高亮 */
+            .panel-pager .pagination li.active span {
+                background-color: var(--primary-color);
+                color: white;
+                border: none;
+                cursor: default;
+            }
+
+            /* 禁用按钮样式 */
+            .panel-pager .pagination li.disabled a {
+                color: #aaa;
+                border-color: #eee;
+                cursor: not-allowed;
+            }
+
+            /* 可选：箭头图标大小和居中 */
+            .panel-pager .pagination li a {
+                font-weight: bold;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.admin-side-menu {
+    width: 300px;
+    background: #1f1f1f;
+    color: #fff;
+    padding: 20px 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 20px;
+}
+
+.page-title{
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.admin-side-menu .menu-section {
+    margin-bottom: 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+    .admin-side-menu .menu-title {
+        font-size: 18px;
+        text-transform: uppercase;
+        color: white;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-side-menu li {
+        list-style: none;
+    }
+
+    .admin-side-menu a {
+        display: block;
+        color: darkgray;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background 0.2s, color 0.2s;
+    }
+
+        .admin-side-menu a:hover {
+            background: #374151;
+            color: var(--primary-color);
+        }
+
+        .admin-side-menu a.active {
+            background: #2563eb;
+            color: #fff;
+        }

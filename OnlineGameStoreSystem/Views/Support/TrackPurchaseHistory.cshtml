@@ -1,0 +1,96 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<PurchaseItemVM>
+
+<div class="container">
+    <h1 class="page-title">
+        @ViewData["UserName"]'s Purchase History
+    </h1>
+
+    <div class="search-box">
+        <form method="get" action="/Support/TrackPurchaseHistory">
+            <input id="searchInput"
+                   name="search"
+                   type="text"
+                   placeholder="Search by name..."
+                   value="@Context.Request.Query["search"]"
+                   aria-label="search-input">
+
+            <button type="submit" class="primary-btn">Search</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Type</th>
+                    <th>Total</th>
+                    <th class="action-col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.PurchaseDate</td>
+                        <td>
+                            @foreach(var i in @item.Items)
+                            {
+                                // print all the item name
+                                <span>@i</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="type-container">
+                                <p class="purpose">@item.PurchasePurpose</p>
+                                <p class="method">@item.PaymentMethod</p>
+                            </div>    
+                        </td>
+                        <td>@item.Total</td>
+
+                        <td class="action-col">
+                            <div class="button-group">
+                                <a asp-controller="Admin" asp-action="EditUser" asp-route-id="test" class="button secondary-btn">Edit</a>
+
+                                <form id="deleteUserForm" method="post" asp-controller="Admin" , asp-action="DeleteUser">
+                                    <input type="hidden" name="id" id="deleteUserId" />
+                                </form>
+                                <button id="delUserBtn" data-user-id="test" class="danger-btn">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel-pager">
+        @Html.PagedListPager(
+        Model,
+        page => Url.Action("StatusManage", new { page }),
+                PagedListRenderOptions.ClassicPlusFirstAndLast
+                )
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/support.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/admin.css" asp-append-version="true" />
+
+}
+
+@section Scripts {
+    @* <script src="~/js/components/category.js" asp-append-version="true"></script> *@
+}

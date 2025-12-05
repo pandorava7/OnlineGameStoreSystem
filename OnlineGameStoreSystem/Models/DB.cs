@@ -379,7 +379,7 @@ public class User
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     [Required]
-    public string Status { get; set; } = "active"; // active / banned
+    public string Status { get; set; } = "active"; // active / banned / deleted
 
     // Navigation
     public UserPreferences? Preferences { get; set; }
@@ -655,6 +655,8 @@ public class Payment
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public List<Purchase> Purchases { get; set; } = new();
+
+    public PaymentPurposeType Purpose {  get; set; }
 }
 
 public class Game

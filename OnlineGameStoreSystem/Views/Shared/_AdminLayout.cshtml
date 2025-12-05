@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OnlineGameStoreSystem</title>
+    @* 外部css *@
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    @* base css *@
+    <link rel="stylesheet" href="~/css/base/variable.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/base/reset.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/OnlineGameStoreSystem.styles.css" asp-append-version="true" />
+    @* components css *@
+    <link rel="stylesheet" href="~/css/components/navbar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/components/modal.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/components/alert.css" asp-append-version="true" />
+    @* admin *@
+    <link rel="stylesheet" href="~/css/pages/admin.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    @* 这里我们不使用TempInfo（被我注释掉的部分），推荐使用Ajax（flash message）显示临时信息，具体代码在alert.js里，使用showTemporaryMessage调用。 *@
+    <div id="flash-message-container"></div>
+
+    <!-- 全局弹窗容器 -->
+    <div id="customModal" class="custom-modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass">
+            <div class="modal-message" id="modalMessage"></div>
+            <div class="button-group" id="modalButtons"></div>
+        </div>
+    </div>
+
+    <partial name="_NavBar" />
+
+    <div class="layout-wrapper">
+        <partial name="_AdminSideMenu" />
+
+        <div class="container">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+   
+
+    @* <footer>
+
+    </footer> *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* API *@
+    <script src="~/js/api/cart-api.js" asp-append-version="true"></script>
+    <script src="~/js/api/post-api.js" asp-append-version="true"></script>
+    @* Initial *@
+    <script src="~/js/app.js" asp-append-version="true"></script>
+    <script src="~/js/components/navbar.js" asp-append-version="true"></script>
+    <script src="~/js/components/drop-down_menu.js" asp-append-version="true"></script>
+    <script src="~/js/components/search_bar.js" asp-append-version="true"></script>
+    <script src="~/js/components/alert.js" asp-append-version="true"></script>
+    <script src="~/js/components/modal.js" asp-append-version="true"></script>
+    <script src="~/js/functions/modal-funtions.js" asp-append-version="true"></script>
+    <script src="~/js/components/textarea_autosize.js" asp-append-version="true"></script>
+    @* Admin *@
+    <script src="~/js/pages/admin.js" asp-append-version="true"></script>
+
+    @* 通过后端显示flash message，只需要TempInfo里塞入指定的FlashMessage和FlashMessageType就行，具体代码在alert.js里，使用showTemporaryMessage调用。 *@
+    @if (TempData["FlashMessage"] != null)
+    {
+        <script>
+            console.log("trigger");
+            showTemporaryMessage("@TempData["FlashMessage"]", "@TempData["FlashMessageType"]");
+        </script>
+    }
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
