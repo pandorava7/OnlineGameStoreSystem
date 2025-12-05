@@ -1,0 +1,109 @@
+﻿@model OnlineGameStoreSystem.Models.ViewModels.DeveloperGameDetailViewModel
+@{
+    ViewData["Title"] = "Developer — Manage Game";
+}
+<link rel="stylesheet" href="~/css/Developer/developer.css" />
+
+<main class="dev-gd-container" aria-labelledby="dev-game-title">
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Developer Console &gt;&gt; Manage Game</h1>
+
+        <section class="dev-gd-main">
+            <div class="dev-gd-left">
+                <div class="dev-gd-media">
+                    <div id="dev-main-media" class="dev-gd-main-media" data-current-index="0">
+                        @if (Model.Media != null && Model.Media.Any(m => m.MediaType == "video"))
+                        {
+                            var v = Model.Media.First(m => m.MediaType == "video");
+                            <div class="dev-gd-media-item dev-gd-media-video" data-type="video" data-src="@v.MediaUrl" role="button" aria-label="Play video">
+                                <div class="dev-video-placeholder">
+                                    <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                                    <img src="@(Model.Media.FirstOrDefault(m => m.MediaType == "image")?.MediaUrl ?? "/images/placeholder.png")" alt="video thumbnail" />
+                                    <span class="dev-video-tag">Video</span>
+                                </div>
+                            </div>
+                        }
+                        else if (Model.Media != null && Model.Media.Any(m => m.MediaType == "image"))
+                        {
+                            <img src="@Model.Media.First(m => m.MediaType == "image").MediaUrl" alt="@Model.Title" class="dev-gd-media-item dev-gd-media-image" data-type="image" />
+                        }
+                        else
+                        {
+                            <img src="/images/placeholder.png" alt="no media" class="dev-gd-media-item dev-gd-media-image" />
+                        }
+                    </div>
+
+                    <div id="dev-gd-thumbs" class="dev-gd-thumbs" role="list">
+                        @{
+                            var idx = 0;
+                            if (Model.Media != null)
+                            {
+                                foreach (var m in Model.Media.OrderBy(mm => mm.SortOrder))
+                                {
+                                    if (m.MediaType == "video")
+                                    {
+                                        <button class="dev-gd-thumb" role="listitem" data-index="@idx" data-type="video" data-src="@m.MediaUrl" aria-label="Video thumb">
+                                            <div class="thumb-video">
+                                                <img src="/images/placeholder.png" alt="video thumb" />
+                                                <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                                            </div>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="dev-gd-thumb" role="listitem" data-index="@idx" data-type="image" data-src="@m.MediaUrl" aria-label="Image thumb">
+                                            <img src="@m.MediaUrl" alt="thumb @idx" />
+                                        </button>
+                                    }
+                                    idx++;
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <aside class="dev-gd-right" aria-labelledby="dev-game-title">
+                <h2 id="dev-game-title" class="dev-gd-title">@Model.Title</h2>
+
+                <div class="dev-gd-meta">
+                    <div class="dev-gd-price" data-price="@Model.Price">
+                        <div class="dev-price-row">
+                            <span class="dev-price-current">RM @Model.Price.ToString("N2")</span>
+                        </div>
+                    </div>
+
+                    <div class="dev-gd-stats">
+                        <div><strong>Sales:</strong> @Model.SalesCount</div>
+                        <div><strong>Likes:</strong> @Model.LikeCount</div>
+                        <div><strong>Reviews:</strong> @Model.ReviewsCount</div>
+                        <div><strong>Release:</strong> @Model.ReleaseDate.ToString("yyyy-MM-dd")</div>
+                        <div><strong>Status:</strong> @Model.Status</div>
+                    </div>
+
+                    <div class="dev-gd-actions">
+                        <a class="btn-primary" asp-controller="Developer" asp-action="DeveloperUploadGame" asp-route-id="@Model.Id">Edit / Upload</a>
+                        <a class="btn-primary" asp-controller="Developer" asp-action="Analysis" asp-route-id="@Model.Id">Analysis</a>
+                        <form asp-controller="Developer" asp-action="DeleteGame" method="post" onsubmit="return confirm('Remove this game? This action cannot be undone.');" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <button type="submit" class="btn-outline">Remove</button>
+                        </form>
+                    </div>
+
+                </div>
+            </aside>
+        </section>
+
+        <section class="dev-gd-detail" id="dev-gd-detail">
+            <div class="dev-gd-description">
+                <h3>Game Description</h3>
+                <p>@Html.Raw(Model.Description?.Replace("\n", "<br/>"))</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+@section scripts {
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+}

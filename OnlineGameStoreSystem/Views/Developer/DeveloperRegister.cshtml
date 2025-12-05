@@ -1,0 +1,145 @@
+@model OnlineGameStoreSystem.Models.ViewModels.DeveloperRegisterVM
+@{
+    ViewData["Title"] = "Developer Application";
+}
+<link rel="stylesheet" href="~/css/Developer/developer.css" />
+
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Join the Developer Planning</h1>
+    <p class="dashboard-subtitle">Please fill out the form to apply as a developer.</p>
+
+    <form asp-controller="Developer" asp-action="Apply" method="post">
+        @Html.AntiForgeryToken()
+
+        @if (TempData["FlashMessage"] != null)
+        {
+            <div class="upload-errors" role="status" style="background:#063; color:#fff; padding:10px; border-radius:6px; margin-bottom:12px;">
+                @TempData["FlashMessage"]
+            </div>
+        }
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="upload-errors" role="alert" style="background:#2b000a;color:#ffd7df;padding:10px;border-radius:6px;margin-bottom:12px;">
+                <strong>Validation errors:</strong>
+                <ul style="margin:8px 0 0 18px;">
+                    @foreach (var kv in ViewData.ModelState)
+                    {
+                        foreach (var err in kv.Value.Errors)
+                        {
+                            <li>@err.ErrorMessage</li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+
+        <div class="section-wrapper">
+            <div class="section-badge">Your information</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Legal English Name</label>
+                <input asp-for="FullName" class="form-input" />
+                <label>ID card number / Passport number</label>
+                <input asp-for="IdNumber" class="form-input" />
+            </div>
+
+            <div class="form-col-fixed">
+                <label>Date of birth</label>
+                <input asp-for="Dob" class="form-input input-date" type="date" />
+            </div>
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-badge">Country & Region</div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Street Address</label>
+                <input asp-for="Address1" class="form-input" />
+                <input asp-for="Address2" class="form-input" />
+
+                <div class="address-grid">
+                    <div class="address-col-small">
+                        <label>State/Province</label>
+                        <input asp-for="State" class="form-input input-date" />
+                    </div>
+                    <div class="address-col-small">
+                        <label>Postal Code</label>
+                        <input asp-for="PostalCode" class="form-input input-date" />
+                    </div>
+                </div>
+
+                <label style="display:block; margin-top:8px;">Country/Region</label>
+                <select asp-for="Country" class="form-input input-short">
+                    <option>Malaysia</option>
+                    <option>United States</option>
+                    <option>Singapore</option>
+                </select>
+            </div>
+
+            <div class="form-col-city">
+                <label>City</label>
+                <input asp-for="City" class="form-input" />
+            </div>
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-badge">Contact Information</div>
+        </div>
+
+        <div class="form-row" style="align-items: center;">
+            <div class="phone-wrapper">
+                <select asp-for="PhoneCountry" class="phone-select">
+                    <option>+60</option>
+                    <option>+1</option>
+                </select>
+                <input asp-for="Phone" class="form-input" placeholder="555-0123" style="width: auto; flex:1;" />
+            </div>
+
+            <div class="form-col-fluid" style="min-width: 240px;">
+                <label>Notification Email</label>
+                <input asp-for="NotifyEmail" class="form-input" placeholder="example@gmail.com" />
+            </div>
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-badge">Payment Information</div>
+            <p class="section-hint">This payment method and account will be used for income commission for developer.</p>
+        </div>
+
+        <input type="hidden" id="hiddenPaymentMethod" name="SelectedPaymentMethod" value="Method 1" />
+
+        <div class="payment-methods">
+            <button type="button" class="btn btn-payment-option active" data-value="Method 1">Method 1</button>
+            <button type="button" class="btn btn-payment-option" data-value="Method 2">Method 2</button>
+            <button type="button" class="btn btn-payment-option" data-value="Method 3">Method 3</button>
+        </div>
+
+        <div>
+            <label>Account Number</label>
+            <input asp-for="AccountNumber" class="form-input" style="width: 40%;" />
+        </div>
+
+        <div class="section-wrapper">
+            <div class="section-badge">Contract</div>
+        </div>
+
+        <div>
+            <textarea asp-for="Contract" class="form-textarea" placeholder="Contract content..."></textarea>
+        </div>
+
+        <div class="checkbox-wrapper">
+            <label class="checkbox-label">
+                <input asp-for="Agree" type="checkbox" /> Agree with terms
+            </label>
+        </div>
+
+        <div class="btn-group-wrapper">
+            <button class="btn-primary" type="submit">Confirm & Submit</button>
+        </div>
+    </form>
+</div>

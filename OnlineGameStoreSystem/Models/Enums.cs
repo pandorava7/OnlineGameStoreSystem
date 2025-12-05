@@ -33,6 +33,12 @@ namespace OnlineGameStoreSystem.Models
         Pending,
         Removed
     }
+
+    public enum PaymentPurposeType
+    {
+        DeveloperRegistration,
+        Purchase,
+    }
 }
 
 

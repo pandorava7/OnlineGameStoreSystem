@@ -1,0 +1,150 @@
+﻿@model OnlineGameStoreSystem.Models.ViewModels.DeveloperGameDetailViewModel
+@{
+    ViewData["Title"] = "Edit Game";
+}
+<link rel="stylesheet" href="~/css/Developer/developer.css" />
+
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Developer Console >> Edit Game</h1>
+    <p class="dashboard-subtitle">Update your game's metadata and media below.</p>
+
+    <form asp-controller="Developer" asp-action="DeveloperUploadGame" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <!-- Basic Info -->
+        <div class="section-wrapper">
+            <span class="section-badge">Basic Info</span>
+            <p class="section-hint">Update title and short description</p>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Game Title *</label>
+                <input class="form-input" name="Title" value="@Model.Title" placeholder="Enter game title" required />
+
+                <label>Tags (edit in dashboard later)</label>
+                <div class="tag-list">
+                    <div class="tag-chip">RPG</div>
+                    <div class="tag-chip">Open World</div>
+                    <button type="button" class="tag-add-btn">+</button>
+                    <input class="form-input tag-search" placeholder="Search tag..." />
+                </div>
+
+                <label class="small-gap">Short Description</label>
+                <textarea class="form-textarea" name="ShortDescription" placeholder="maximum about 30 words">@Model.Description?.Split('.')[0]</textarea>
+            </div>
+        </div>
+
+        <!-- Media Upload -->
+        <div class="section-wrapper">
+            <span class="section-badge">Media Upload</span>
+        </div>
+
+        <div class="form-row">
+            <!-- left: thumbnail -->
+            <div class="form-col-fixed">
+                <label>Thumbnail *</label>
+                <div class="upload-row">
+                    <label for="thumbnailInput" class="file-label">
+                        Click or drag your image
+                        <input id="thumbnailInput" name="Thumbnail" type="file" accept="image/*" style="display:none;" />
+                    </label>
+
+                    <div id="thumbPreview" class="thumbnail-preview" aria-live="polite"
+                         style="@(Model.ThumbnailUrl != null ? $"background-image:url('{Url.Content(Model.ThumbnailUrl)}')" : "")">
+                        @if (string.IsNullOrEmpty(Model.ThumbnailUrl))
+                        {
+                            <div class="preview-placeholder">Preview Image</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- middle: preview images -->
+            <div class="form-col-fluid">
+                <label>Preview Images (Maximum 8)</label>
+                <label class="dashed-dropzone" for="previewImagesInput">
+                    Click or drag your image
+                    <input id="previewImagesInput" name="PreviewImages" type="file" accept="image/*" multiple style="display:none;" />
+                </label>
+
+                <div id="previewGrid" class="preview-grid" aria-live="polite">
+                    @if (Model.Media != null)
+                    {
+                        foreach (var m in Model.Media.Where(x => x.MediaType == "image").OrderBy(x => x.SortOrder))
+                        {
+                            <div class="preview-item" data-existing="true" data-src="@m.MediaUrl">
+                                <img src="@Url.Content(m.MediaUrl)" alt="preview" />
+                                <button type="button" class="preview-remove-btn" title="Remove">✖</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- right: trailers -->
+            <div class="form-col-fixed">
+                <label class="small-gap">Trailer Videos (Maximum 2)</label>
+                <label class="file-label" for="trailersInput">
+                    Click or drag your video
+                    <input id="trailersInput" name="Trailers" type="file" accept="video/*" multiple style="display:none;" />
+                </label>
+
+                <div id="trailerGrid" class="preview-grid" aria-live="polite">
+                    @if (Model.Media != null)
+                    {
+                        foreach (var m in Model.Media.Where(x => x.MediaType == "video").OrderBy(x => x.SortOrder))
+                        {
+                            <div class="preview-item" data-existing="true" data-src="@m.MediaUrl">
+                                <video src="@Url.Content(m.MediaUrl)" controls></video>
+                                <button type="button" class="preview-remove-btn" title="Remove">✖</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Detail -->
+        <div class="section-wrapper">
+            <span class="section-badge">Game Detail</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Detail Description</label>
+                <textarea class="form-textarea" name="DetailDescription" placeholder="maximum about 1000 words">@Model.Description</textarea>
+
+                <label class="small-gap">Upload Game ZIP File (replace existing)</label>
+                <input class="form-input" type="file" name="GameZip" accept=".zip" />
+            </div>
+        </div>
+
+        <!-- Price & Publish -->
+        <div class="section-wrapper">
+            <span class="section-badge">Price & Publish</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fixed">
+                <label>Sold Price *</label>
+                <input class="form-input" name="Price" type="number" value="@Model.Price" placeholder="Enter a number" />
+
+                <div class="checkbox-wrapper">
+                    <label class="checkbox-label"><input type="checkbox" name="IsFree" @(Model.Price == 0 ? "checked" : "") /> Be Free</label>
+                </div>
+            </div>
+        </div>
+
+        <p class="section-hint">Edit the fields above and submit to update your game. Media you remove here must be handled server-side (not implemented in this view).</p>
+
+        <div class="button-submit">
+            <button type="submit" class="dashboard-report-btn">Update Game</button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+}

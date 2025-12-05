@@ -655,6 +655,8 @@ public class Payment
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public List<Purchase> Purchases { get; set; } = new();
+
+    public PaymentPurposeType Purpose {  get; set; }
 }
 
 public class Game

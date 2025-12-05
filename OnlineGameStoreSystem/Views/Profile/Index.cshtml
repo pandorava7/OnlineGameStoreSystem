@@ -157,7 +157,17 @@
             @Html.AntiForgeryToken()
         </div>
 
-
+        <!-- Developer action button: if user is a developer go to console, otherwise link to developer application -->
+        <div style="margin-top:12px;">
+            @if (Model.IsDeveloper)
+            {
+                <a class="btn-primary" asp-controller="Developer" asp-action="Developer">Developer Console</a>
+            }
+            else
+            {
+                <a class="btn-primary" asp-controller="Developer" asp-action="DeveloperRegister">Apply as Developer</a>
+            }
+        </div>
     </nav>
 </div>
 

@@ -1,0 +1,44 @@
+@model OnlineGameStoreSystem.Models.ViewModels.SalesDetailViewModel
+@{
+    ViewData["Title"] = "Developer Console >> Sales Detail";
+}
+
+<link rel="stylesheet" href="~/css/Developer/developer.css" />
+
+<main class="main-content">
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">Developer Console >> Sales Detail</h1>
+
+        <table class="sales-table sales-detail-table">
+            <thead>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>Title</th>
+                    <th class="text-center">Sales</th>
+                    <th class="text-center">Gross</th>
+                    <th class="text-center">Platform fee</th>
+                    <th class="text-center">Net</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var it in Model.Items)
+                {
+                    <tr>
+                        <td class="thumb-cell">
+                            <img src="@Url.Content(it.ThumbnailUrl)" alt="@it.Title thumbnail" class="game-thumb-img" />
+                        </td>
+                        <td>@it.Title</td>
+                        <td class="text-center">@it.SalesCount</td>
+                        <td class="text-center">RM @it.Gross.ToString("N2")</td>
+                        <td class="text-center">RM @it.PlatformFee.ToString("N2")</td>
+                        <td class="text-center">RM @it.Net.ToString("N2")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="back-btn-container">
+            <a class="btn-outline" href="@Url.Action("Developer", "Developer")">Back</a>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,128 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="/css/Developer/developer.css" />
+
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Developer Console >> Publish Your Game</h1>
+    <p class="dashboard-subtitle">Fill in the information below and submit your game for review.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <!-- Basic Info -->
+        <div class="section-wrapper">
+            <span class="section-badge">Basic Info</span>
+            <p class="section-hint">Provide basic meta for your game</p>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Game Title *</label>
+                <input class="form-input" name="Title" placeholder="Enter game title" required />
+
+                <label>Tags (Minimum 1, Maximum 10)</label>
+                <div class="tag-list">
+                    <div class="tag-chip">RPG</div>
+                    <div class="tag-chip">Open World</div>
+                    <button type="button" class="tag-add-btn">+</button>
+                    <input class="form-input tag-search" placeholder="Search tag..." />
+                </div>
+
+                <label class="small-gap">Short Description</label>
+                <textarea class="form-textarea" name="ShortDescription" placeholder="maximum about 30 words"></textarea>
+            </div>
+        </div>
+
+        <!-- Media Upload -->
+        <div class="section-wrapper">
+            <span class="section-badge">Media Upload</span>
+        </div>
+
+        <!-- three columns in a single row: Thumbnail | Preview Images | Trailers -->
+        <div class="form-row">
+            <!-- left: thumbnail -->
+            <div class="form-col-fixed">
+                <label>Thumbnail *</label>
+                <div class="upload-row">
+                    <label id="thumbPreviewContainer" class="file-label thumb-dropzone" for="thumbnailInput" aria-live="polite">
+                        <span class="upload-placeholder">Click or drag your image</span>
+
+                        <input id="thumbnailInput" name="Thumbnail" type="file" accept="image/*" style="display:none;" />
+
+                    </label>
+                </div>
+            </div>
+
+            <!-- middle: preview images -->
+            <div class="form-col-fluid">
+                <label>Preview Images (Maximum 8)</label>
+                <label class="dashed-dropzone" for="previewImagesInput">
+                    Click or drag your image
+                    <input id="previewImagesInput" name="PreviewImages" type="file" accept="image/*" multiple style="display:none;" />
+                </label>
+
+                <div id="previewGrid" class="preview-grid" aria-live="polite">
+                    <!-- JS will inject preview <div class="preview-item"> elements here -->
+                </div>
+            </div>
+
+            <!-- right: trailers -->
+            <div class="form-col-fixed">
+                <label class="small-gap">Trailer Videos (Maximum 2)</label>
+                <label class="file-label" for="trailersInput">
+                    Click or drag your video
+                    <input id="trailersInput" name="Trailers" type="file" accept="video/*" multiple style="display:none;" />
+                </label>
+
+                <div id="trailerGrid" class="preview-grid" aria-live="polite">
+                    <!-- JS will inject preview <div class="preview-item"> (video) elements here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Detail -->
+        <div class="section-wrapper">
+            <span class="section-badge">Game Detail</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fluid">
+                <label>Detail Description</label>
+                <textarea class="form-textarea" name="DetailDescription" placeholder="maximum about 1000 words"></textarea>
+
+                <label class="small-gap">Upload Game ZIP File *</label>
+                <input class="form-input" type="file" name="GameZip" accept=".zip" />
+            </div>
+        </div>
+
+        <!-- Price & Publish -->
+        <div class="section-wrapper">
+            <span class="section-badge">Price & Publish</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col-fixed">
+                <label>Sold Price *</label>
+                <input class="form-input" name="Price" type="number" placeholder="Enter a number" />
+
+                <div class="checkbox-wrapper">
+                    <label class="checkbox-label"><input type="checkbox" name="IsFree" /> Be Free</label>
+                </div>
+            </div>
+        </div>
+
+        <p class="section-hint">Your game will be submitted to the administrator for review. Once the review is approved, you will receive a notification and your game will be officially released.</p>
+
+        <div class="button-submit">
+            <button type="submit" class="dashboard-report-btn">Submit For Review</button>
+        </div>
+    </form>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section scripts {
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+}

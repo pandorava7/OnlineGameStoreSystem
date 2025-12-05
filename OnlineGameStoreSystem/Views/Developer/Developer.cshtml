@@ -1,0 +1,138 @@
+﻿@using OnlineGameStoreSystem.Models.ViewModels
+@model DeveloperDashboardViewModel
+@{
+    ViewData["Title"] = "Developer";
+}
+<link rel="stylesheet" href="~/css/Developer/developer.css" />
+
+<!-- .dashboard-container -->
+    <main class="main-content">
+        <div class="dashboard-container">
+            <div class="dashboard-title">Welcome Back, Developer !</div>
+            <div class="dashboard-subtitle">Here's your performance overview.</div>
+    <div class="dashboard-chart-section">
+        <div class="dashboard-controls">
+            <label>Zoom</label>
+            <button class="btn active" data-hours="48">48 hours</button>
+            <button class="btn" data-hours="168">1 week</button>
+            <button class="btn" data-hours="720">1 month</button>
+            <button class="btn" data-hours="8760">1 year</button>
+            <button class="btn" data-hours="0">max</button>
+
+            <label style="margin-left:24px;">Data Type</label>
+            <button class="btn active" data-type="all">All</button>
+            <button class="btn" data-type="sales">Sales</button>
+            <button class="btn" data-type="revenue">Revenue</button>
+            <button class="btn" data-type="exposure">Exposure</button>
+        </div>
+        <div class="dashboard-legend">
+            <span><span class="legend-dot exposure"></span>Exposure</span>
+            <span><span class="legend-dot sales"></span>Sales</span>
+            <span><span class="legend-dot revenue"></span>Revenue</span>
+        </div>
+        <div class="dashboard-chart">
+            <canvas id="devStatsChart" height="260"></canvas>
+        </div>
+        <a class="dashboard-report-btn" href="@Url.Action("GenerateReport","Developer")">Generate report file</a>
+    </div>
+        <div class="dashboard-summary-row">
+            <div class="dashboard-summary-box">
+                <div class="dashboard-summary-title">Summary (All time)</div>
+                <ul class="dashboard-summary-list">
+                    <li>Exposure <span class="up">+@Model.TotalExposure</span></li>
+                    <li>Sales <span class="up">@Model.TotalSales</span></li>
+                    <li>Revenue <span class="up">RM @Model.TotalRevenue.ToString("N2")</span></li>
+                </ul>
+            </div>
+            <div class="dashboard-summary-box">
+                <div class="dashboard-summary-value">@Model.TotalDownloads</div>
+                <div class="dashboard-summary-label">Total Downloads</div>
+            </div>
+            <div class="dashboard-summary-box">
+                <div class="dashboard-summary-value">@Model.TotalLikes</div>
+                <div class="dashboard-summary-label">Total Likes</div>
+            </div>
+            <div class="dashboard-summary-box">
+                <div class="dashboard-summary-value">@Model.TotalReviews</div>
+                <div class="dashboard-summary-label">Total Reviews</div>
+            </div>
+        </div>
+
+        <div class="dashboard-revenue-section">
+            <div class="dashboard-revenue-box">
+                <div class="dashboard-revenue-title">Your Revenue</div>
+                <div class="dashboard-revenue-value">Net Revenue RM @Model.NetRevenue.ToString("N2")</div>
+
+                <div style="margin-top:12px;">
+                    <a class="dashboard-report-btn" href="@Url.Action("SalesDetail", "Developer")">Sales Detail</a>
+                </div>
+            </div>
+            <div class="dashboard-revenue-box">
+                <div class="dashboard-revenue-title">Total Gross Revenue</div>
+                <div class="dashboard-revenue-desc">Total Amount of all sales = <b>RM @Model.TotalRevenue.ToString("N2")</b></div>
+            </div>
+        </div>
+    <!-- Game List Section -->
+    <div class="game-list-section">
+        <div class="game-list-header">
+            <h3 class="game-list-title">Game List</h3>
+            <a class="publish-btn" href="@Url.Action("DeveloperUploadGame","Developer")">Publish New Game</a>
+        </div>
+
+        @if (Model?.Games != null && Model.Games.Count > 0)
+        {
+            foreach (var g in Model.Games)
+            {
+                <div class="game-item">
+                    <div class="game-item-top">Published at @g.ReleaseDate.ToString("yyyy/MM/dd")&nbsp;&nbsp;&nbsp;&nbsp; Updated at @g.UpdatedAt.ToString("yyyy/MM/dd")</div>
+                    <div class="game-item-body">
+                        <div class="game-thumb">
+                            <img src="@Url.Content(g.ThumbnailUrl)" alt="thumb" style="width:100%;height:100%;object-fit:cover;border-radius:4px;" />
+                        </div>
+                        <div class="game-info">
+                            <div class="game-title">@g.Title</div>
+                            <div class="meta-row">
+                                <div class="meta-item"><span class="heart">❤</span> <span class="meta-text" style="color:#e94e88;">@String.Format("{0}% Like Rate", g.LikeRate)</span></div>
+                                <div class="meta-item"><span class="chart">📈</span> <span class="meta-text" style="color:#3eeaff;">@g.SalesCount Sales</span></div>
+                            </div>
+                            <div class="meta-row">
+                                <div class="meta-item"><span class="eye">👁️</span> <span class="meta-text" style="color:#b6ff3e;">@($"~{g.SalesCount * 200} player saw this game")</span></div>
+                            </div>
+                            <div class="status">Status: @g.Status</div>
+                            <div class="game-actions">
+                                    <a class="btn-outline" href="@Url.Action("DeveloperGameDetail", "Developer", new { id = g.Id })">View in Store</a>
+                                    <a class="btn-primary" href="@Url.Action("DeveloperEditGame", "Developer", new { id = g.Id })">Update Game</a>
+                                    <a class="btn-primary" href="@Url.Action("Analysis", "Developer", new { id = g.Id })">Analysis</a>
+                                <form asp-controller="Developer" asp-action="DeleteGame" method="post"
+                                        onsubmit="return confirm('Remove this game? This action cannot be undone.');"
+                                        style="display:inline;margin-left:6px;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@g.Id" />
+                                    <button type="submit" class="btn-outline">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="game-item">
+                <div class="game-item-body">
+                    <div class="game-info">
+                        <div class="game-title">No games found</div>
+                        <p class="section-hint">You haven't published any games yet. Click "Publish New Game" to get started.</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+</main>
+
+@section scripts {
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+}

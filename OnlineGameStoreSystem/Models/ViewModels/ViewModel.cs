@@ -137,7 +137,8 @@ public class CreatePostViewModel
 
 #region 搜索界面
 
-public class SearchPageVM {
+public class SearchPageVM
+{
     public string SearchTerm { get; set; } = "";
     public List<SearchResultVM> Results { get; set; } = new List<SearchResultVM>();
 }
@@ -156,11 +157,11 @@ public class SearchResultVM
 
 #endregion
 
-#region
+#region GameLibrary
 
 public class GameLibraryViewModel
 {
-    public string Title { get; set;  } = null!;
+    public string Title { get; set; } = null!;
     public string ThumbnailUrl { get; set; } = null!;
     public DateTime PurchasedDate { get; set; }
     public int RequireMB { get; set; }
@@ -176,5 +177,19 @@ public class GameLibraryViewModel
         }
     }
 }
+
+#endregion
+
+#region Support
+
+public class PurchaseItemVM
+{
+    public DateTime PurchaseDate { get; set; }
+    public List<string> Items { get; set; } = new List<string>();
+    public string PurchasePurpose { get; set; } = string.Empty;
+    public string PaymentMethod { get; set; } = string.Empty;
+    public decimal Total { get; set; }
+}
+
 
 #endregion
