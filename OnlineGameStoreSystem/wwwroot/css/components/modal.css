@@ -54,6 +54,7 @@
 
 .modal-message {
     margin-bottom: 20px;
+    white-space: pre-wrap; /* 支持 \n 换行 */
     font-size: 16px;
 }
 

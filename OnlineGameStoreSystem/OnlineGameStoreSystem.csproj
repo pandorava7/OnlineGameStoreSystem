@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\css\layout\" />
+    <Folder Include="wwwroot\images\Profile\" />
   </ItemGroup>
 
   <ItemGroup>

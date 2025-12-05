@@ -53,18 +53,16 @@ namespace OnlineGameStoreSystem.Models.ViewModels
         // User Details
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Username is required.")]
-        [StringLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
+        [Required(ErrorMessage = "Gamer Tag is required.")]
+        [StringLength(50, ErrorMessage = "Gamer Tag cannot exceed 50 characters.")]
         public string Username { get; set; } = null!;
 
         [Url(ErrorMessage = "Invalid URL format.")]
         public string? AvatarUrl { get; set; }
-        // NEW: Property to receive the uploaded file
+        // NEW: 用于接收上传的文件
         public IFormFile? NewAvatarFile { get; set; }
-        // Property to display the *current* avatar data size (optional, for demo)
-        public int CurrentAvatarDataSize { get; set; }
 
-        [StringLength(500, ErrorMessage = "Summary cannot exceed 500 characters.")]
+        [StringLength(500, ErrorMessage = "User Description cannot exceed 500 characters.")]
         public string? Summary { get; set; }
 
         // Favorite Tags

@@ -4,10 +4,9 @@
     if (!toggle || !tokenInput) return;
 
     const token = tokenInput.value;
-
-    // 读取数据库状态
     let isPublic = toggle.dataset.public === 'True';
 
+    // 更新开关 UI
     const updateUI = () => {
         const handle = toggle.querySelector('.switch-handle');
         if (isPublic) {
@@ -19,27 +18,59 @@
         }
     };
 
-    updateUI(); // 初始化
+    updateUI();
 
+    // 封装确认弹窗
+    const confirmPrivacyChange = (onConfirm) => {
+        if (typeof Modal.close === 'function') Modal.close();
+
+        Modal.show({
+            message: "Are you sure you want to make your profile private?\n(Other users will not be able to see your profile.)",
+            buttons: [
+                {
+                    text: "Cancel",
+                    type: "secondary-btn",
+                    onClick: () => console.log("Cancel clicked")
+                },
+                {
+                    text: "Confirm",
+                    type: "primary-btn",
+                    onClick: () => {
+                        if (typeof onConfirm === "function") onConfirm();
+                    }
+                }
+            ]
+        });
+    };
+
+    // 点击开关
     toggle.addEventListener('click', () => {
-        const confirmChange = confirm("Are you sure you want to change your profile privacy settings?");
-        if (!confirmChange) return;
+        confirmPrivacyChange(async () => {
+            // 切换状态（前端 UI）
+            isPublic = !isPublic;
+            updateUI();
 
-        isPublic = !isPublic; // 切换状态
-        updateUI();
+            try {
+                const res = await fetch('/Profile/UpdatePrivacy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({ isPublic })
+                });
 
-        fetch('/Profile/UpdatePrivacy', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': token
-            },
-            body: JSON.stringify({ isPublic })
-        })
-            .catch(() => {
-                alert("Update failed");
-                isPublic = !isPublic; // 回滚
+                if (!res.ok) throw new Error("Update failed");
+
+                // 成功后刷新页面
+                location.reload();
+
+            } catch (err) {
+                console.error(err);
+                alert("Update failed, please try again.");
+                isPublic = !isPublic; // 回滚状态
                 updateUI();
-            });
+            }
+        });
     });
 });

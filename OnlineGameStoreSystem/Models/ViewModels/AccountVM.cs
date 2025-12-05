@@ -75,4 +75,12 @@ namespace OnlineGameStoreSystem.Models.ViewModels
 
     }
     #endregion
+
+    #region Account setting
+    public class ManageEmailViewModel
+    {
+        // This property will hold the current email address to display
+        public string CurrentEmail { get; set; } = null!;
+    }
+    #endregion
 }

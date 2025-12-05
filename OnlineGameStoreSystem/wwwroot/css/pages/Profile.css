@@ -33,6 +33,7 @@
     height: 120px;
     object-fit: cover;
     border-radius: 50%; /* 圆形头像，可选 */
+    border: 3px solid var(--primary-color);
 }
 
 .profile-right {
@@ -108,11 +109,12 @@
 .tag {
     display: inline-block;
     padding: 6px 14px;
-    background: #f0f0f0;
+    background-color: var(--bg-surface);
     border-radius: 999px; /* 让它变成椭圆 / pill shape */
     font-size: 14px;
-    color: #333;
-    border: 1px solid #ccc;
+    color: white;
+    font-weight:bold;
+    border: 2px solid var(--primary-color);
     /* Small min-width to ensure oval shape */
     min-width: 50px;
     /* 自动加上 @ 的效果 */
@@ -125,7 +127,7 @@
         content: "@";
         position: absolute;
         left: 8px;
-        color: #555;
+        color: white;
     }
 /* -------------------------------------- */
 /* 评论区 Slider 样式 (与固定像素的游戏库布局统一) */
@@ -306,7 +308,7 @@ h1.Tags {
     position: relative;
     display: flex;
     align-items: center;
-    width: 80%;
+    width: 95%;
     margin-bottom: 20px;
 }
 

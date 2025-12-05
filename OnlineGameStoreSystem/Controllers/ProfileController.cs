@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting; // 需要注入 IWebHostEnvironment
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Models;
 using OnlineGameStoreSystem.Models.ViewModels;
+using System.IO; // Required for file operations
 using System.Security.Claims;
 
 namespace OnlineGameStoreSystem.Controllers
@@ -10,11 +13,14 @@ namespace OnlineGameStoreSystem.Controllers
     {
         private readonly DB db;
         private readonly IHttpContextAccessor http;
+        private readonly IWebHostEnvironment _webHostEnvironment; // 注入环境服务
 
-        public ProfileController(DB context, IHttpContextAccessor accessor)
+        public ProfileController(DB context, IHttpContextAccessor accessor, 
+            IWebHostEnvironment webHostEnvironment)
         {
             db = context;
             http = accessor;
+            _webHostEnvironment = webHostEnvironment; // 接收注入
         }
 
         #region Profile Index Page
@@ -133,6 +139,9 @@ namespace OnlineGameStoreSystem.Controllers
             }
 
             db.SaveChanges();
+            // 设置 TempData
+            TempData["FlashMessage"] = dto.IsPublic ? "Profile is now public!" : "Profile is now private!";
+            TempData["FlashMessageType"] = "success"; // success / error / info
             return Ok(new { pref.PublicProfile });
         }
 
@@ -143,128 +152,183 @@ namespace OnlineGameStoreSystem.Controllers
         #endregion
 
         #region Edit Profile Page
-        //public IActionResult EditProfile()
-        //{
-        //    var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
-            
-        //    if (string.IsNullOrEmpty(userIdString))
-        //    {
-                
-        //        return RedirectToAction("Login", "Account");
-        //    }
+        public IActionResult EditProfile()
+        {                                           // 1. 从 Claims 中获取 UserId 字符串
+            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
 
-          
-        //    int userId;
-        //    if (!int.TryParse(userIdString, out userId))
-        //    {
-        //        return StatusCode(500, "User ID claim format error.");
-        //    }
+            // 2. 检查是否登入或 Claim 是否存在
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                // 未登入 → 返回登入页
+                return RedirectToAction("Login", "Account");
+            }
 
-
-
-           
-        //    var user = db.Users
-        //        .Include(u => u.FavouriteTags)
-        //        .ThenInclude(ft => ft.Tag)
-        //        .FirstOrDefault(u => u.Id == userId); 
-        //    if (user == null)
-        //    {
-               
-        //        return NotFound();
-        //    }         
-        //    var allTags = db.Tags.ToList(); 
-
-            
-        //    var viewModel = new EditProfileViewModel
-        //    {
-        //        Id = user.Id,
-        //        Username = user.Username,
-        //        AvatarUrl = user.AvatarUrl,
-        //        Summary = user.Summary,
-        //        AvailableTags = allTags,
-        //        SelectedTagIds = user.FavouriteTags.Select(ft => ft.TagId).ToList()
-        //        // 检查数据库中是否有头像数据，并获取其大小
-        //    CurrentAvatarDataSize = user.AvatarData != null ? user.AvatarData.Length : 0
-        //    };
-
-        //    return View(viewModel);
-        //}
-
-        
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult EditProfile(EditProfileViewModel model)
-        //{
-         
-            
-        //    var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
-        //    if (string.IsNullOrEmpty(userIdString))
-        //    {
-        //        return RedirectToAction("Login", "Account");
-        //    }
-
-           
-        //    int currentUserId;
-        //    if (!int.TryParse(userIdString, out currentUserId))
-        //    {
-        //        return StatusCode(500, "User ID claim format error.");
-        //    }
-            
+            // 3. 尝试解析 UserId 字符串
+            int userId;
+            if (!int.TryParse(userIdString, out userId))
+            {
+                // 如果解析失败，说明 Claim 格式不正确
+                return StatusCode(500, "User ID claim format error.");
+            }
+            // --- GetUserId Logic Combined End ---
 
 
-          
-        //    if (model.Id != currentUserId)
-        //    {
-        //        return Forbid(); // 返回 403 Forbidden
-        //    }
+            // 4. Fetch User data and their current favorite tags synchronously
+            // 同步获取用户数据和他们当前的收藏标签
+            var user = db.Users // 假设 db 替换为 _dbContext
+                .Include(u => u.FavouriteTags)
+                .ThenInclude(ft => ft.Tag)
+                .FirstOrDefault(u => u.Id == userId); // 使用 FirstOrDefault() 同步方法
 
-            
-        //    var userToUpdate = db.Users
-        //        .Include(u => u.FavouriteTags)
-        //        .FirstOrDefault(u => u.Id == model.Id); // 使用 FirstOrDefault() 同步方法
+            if (user == null)
+            {
+                // 用户不存在，返回 Not Found
+                return NotFound();
+            }
 
-        //    if (userToUpdate == null)
-        //    {
-        //        return NotFound();
-        //    }
+            // 5. Fetch ALL available tags synchronously
+            var allTags = db.Tags.ToList(); // 使用 ToList() 同步方法
 
-        //    if (ModelState.IsValid)
-        //    {
-                
-        //        userToUpdate.Username = model.Username;
-        //        userToUpdate.AvatarUrl = model.AvatarUrl;
-        //        userToUpdate.Summary = model.Summary;
-        //        userToUpdate.UpdatedAt = DateTime.UtcNow;
+            // 6. Map entities to ViewModel
+            var viewModel = new EditProfileViewModel
+            {
+                Id = user.Id,
+                Username = user.Username,
+                AvatarUrl = user.AvatarUrl,
+                Summary = user.Summary,
+                AvailableTags = allTags,
+                SelectedTagIds = user.FavouriteTags.Select(ft => ft.TagId).ToList(),
+            };
 
-        //        // 7. Handle FavoriteTags (The many-to-many relationship management)
-        //        // 处理收藏标签的多对多关系
+            return View(viewModel);
+        }
 
-        //        // a. Remove existing tags that are no longer selected
-        //        var tagsToRemove = userToUpdate.FavouriteTags
-        //            .Where(ft => !model.SelectedTagIds.Contains(ft.TagId))
-        //            .ToList();
-        //        db.FavouriteTags.RemoveRange(tagsToRemove);
 
-        //        // b. Add new tags that were selected
-        //        var existingTagIds = userToUpdate.FavouriteTags.Select(ft => ft.TagId).ToList();
-        //        var tagsToAdd = model.SelectedTagIds
-        //            .Where(id => !existingTagIds.Contains(id))
-        //            .Select(id => new FavouriteTags { UserId = userToUpdate.Id, TagId = id })
-        //            .ToList();
-        //        db.FavouriteTags.AddRange(tagsToAdd);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProfile(EditProfileViewModel model) // 1. 更改为异步方法
+        {
+            // 1. 获取当前登录用户的 ID 字符串
+            // 假设 http 变量引用了注入的 _httpContextAccessor
+            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
 
-        //        // 8. Save changes to the database synchronously
-        //        db.SaveChanges(); // 使用 SaveChanges() 同步方法
+            // 2. 检查是否登入
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                // 未登入 → 返回登入页
+                return RedirectToAction("Login", "Account");
+            }
 
-        //        // 9. Redirect on success (Message in English)
-        //        TempData["SuccessMessage"] = "Profile updated successfully!"; //===========================================
-        //        return RedirectToAction("EditProfile");
-        //    }
+            // 3. 解析当前登录用户的 ID
+            int currentUserId;
+            if (!int.TryParse(userIdString, out currentUserId))
+            {
+                return StatusCode(500, "User ID claim format error.");
+            }
 
-        //    // If ModelState is invalid, re-fetch all tags to display them again
-        //    model.AvailableTags = db.Tags.ToList();
-        //    return View(model);
-        //}
+            // 4. ***关键安全检查***
+            // 确保提交的 ID 与当前登录用户的 ID 一致，防止越权操作。
+            if (model.Id != currentUserId)
+            {
+                return Forbid(); // 返回 403 Forbidden
+            }
+
+
+            // 5. 使用经过安全验证的 ID (currentUserId) 查询要更新的用户
+            var userToUpdate = db.Users
+                .Include(u => u.FavouriteTags)
+                .FirstOrDefault(u => u.Id == currentUserId); // 修正点：使用 currentUserId
+
+            if (userToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                // --- 文件上传处理 (调用 SaveImageAsync) ---
+                if (model.NewAvatarFile != null)
+                {
+                    try
+                    {
+                        // 1. **获取旧头像 URL**
+                        var oldAvatarUrl = userToUpdate.AvatarUrl;
+
+                        // 2. 调用异步方法保存新头像
+                        string newAvatarUrl = await FileHelper.SaveImageAsync(
+                            model.NewAvatarFile,
+                            folder: "images/Profile",
+                            maxFileSizeMB: 2
+                        );
+
+                        if (!string.IsNullOrEmpty(newAvatarUrl))
+                        {
+                            // 3. 更新数据库中的 AvatarUrl
+                            userToUpdate.AvatarUrl = newAvatarUrl;
+
+                            // 4. **删除旧头像文件逻辑**
+                            if (!string.IsNullOrEmpty(oldAvatarUrl) &&
+                                !oldAvatarUrl.Equals("/images/avatar_default.png", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // 组合 wwwroot 路径和旧头像的相对 URL
+                                var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, oldAvatarUrl.TrimStart('/'));
+
+                                // 检查文件是否存在，并且确保它不在默认头像路径
+                                if (System.IO.File.Exists(oldFilePath))
+                                {
+                                    System.IO.File.Delete(oldFilePath);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // 文件验证错误处理
+                        ModelState.AddModelError("NewAvatarFile", ex.Message);
+                        model.AvailableTags = db.Tags.ToList();
+                        return View(model);
+                    }
+                }
+                // --- 文件上传处理结束 ---
+
+
+                // 5. Update basic user properties
+                userToUpdate.Username = model.Username;
+                userToUpdate.Summary = model.Summary;
+                userToUpdate.UpdatedAt = DateTime.UtcNow;
+
+                // 6. Handle FavoriteTags (与之前逻辑相同)
+                // ... (标签移除和添加逻辑) ...
+                var selectedTagIds = model.SelectedTagIds ?? new List<int>();
+
+                // a. 移除不再选中的标签
+                var tagsToRemove = userToUpdate.FavouriteTags
+                    .Where(ft => !selectedTagIds.Contains(ft.TagId))
+                    .ToList();
+                db.FavouriteTags.RemoveRange(tagsToRemove);
+
+                // b. 添加新选中的标签
+                var existingTagIds = userToUpdate.FavouriteTags.Select(ft => ft.TagId).ToList();
+                var tagsToAdd = selectedTagIds
+                    .Where(id => !existingTagIds.Contains(id))
+                    .Select(id => new FavouriteTags { UserId = userToUpdate.Id, TagId = id })
+                    .ToList();
+                db.FavouriteTags.AddRange(tagsToAdd);
+
+                // 7. Save changes to the database synchronously
+                db.SaveChanges();
+                await db.SaveChangesAsync();
+
+                TempData["FlashMessage"] = "Profile Updated Successfully";
+                TempData["FlashMessageType"] = "success";
+                return RedirectToAction("Index");
+            }
+
+            // If ModelState is invalid, re-fetch all tags
+            // 必须重新加载标签，否则 View 中的多选框会丢失标签列表
+            model.AvailableTags = db.Tags.ToList();
+            return View(model);
+        }
         #endregion
     }
 

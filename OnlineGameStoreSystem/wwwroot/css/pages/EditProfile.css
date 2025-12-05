@@ -1,33 +1,261 @@
-﻿.EditProfile{
-     font-size: 2rem;
+﻿
+/* --- 2. 标题样式 --- */
+.EditProfile {
+    font-size: 2rem;
     font-weight: 800;
     color: var(--text-light);
     text-align: center;
     margin-bottom: var(--spacing-lg);
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: var(--spacing-sm);
-    display: inline-block; /* 让边框只在文本下方 */
+    display: inline-block;
     margin: 0 auto var(--spacing-lg) auto;
 }
 
+
+/* --- 1. 编辑容器样式 (Flex 容器) --- */
 .edit {
+    display: flex; /* 启用 Flexbox */
     width: 80%;
-    align-items: flex-start;
-    gap: 1rem;
+    max-width: 1000px;
+    /* 左右两栏之间的间距 */
+/*    gap: var(--spacing-lg, 1.5rem);*/
     background-color: var(--bg-surface);
     border-radius: var(--border-radius);
-    padding: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    /* 确保两栏顶部对齐 */
+    align-items: flex-start;
+}
+
+/* --- 2. 左侧栏：头像上传 (30% 比例) --- */
+.left-column {  
+    flex: 0 0 30%;   
+}
+
+/* --- 3. 右侧栏：文本输入 (70% 比例) --- */
+.right-column {
+    flex: 1;
+}
+
+/* --- 4. 头像预览样式 --- */
+.edit #avatarPreview {
+    /* 保持尺寸和圆角 */
+    margin-left: 15px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    margin-bottom: var(--spacing-sm, 0.5rem); /* 头像和上传框之间留点间距 */
+    border: 3px solid var(--primary-color);
+}
+
+.form-label{
+    font-weight:bold;
+}
+
+
+/* --- 5. 文件上传部分 (确保宽度适中) --- */
+.left-column .form-group {
+    width: 100%;
+    max-width: 250px; /* 限制文件输入框的宽度 */
+}
+
+/* --- 6. 输入框/文本区域样式 (保持美化) --- */
+.edit input:not([type="file"]),
+.edit textarea {
+    width: 100%;
+    padding: 14px 12px;
+    border-radius: 8px;
+    border: 2px solid #444;
+    background-color: #202024;
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.25s ease-in-out;
+}
+
+/* --- 7. 响应式调整 (小屏幕时垂直堆叠) --- */
+@media (max-width: 768px) {
+    .edit {
+        flex-direction: column; /* 小屏幕时垂直堆叠 */
+        /* 移除 align-items，让内容自然对齐 */
+        align-items: stretch;
+    }
+
+    .left-column {
+        /* 恢复自动宽度，并移除最小高度和垂直居中 */
+        flex: auto;
+        min-height: auto;
+        /* 堆叠后，让头像区内容居中 */
+        align-items: center;
+        margin-bottom: var(--spacing-lg, 1.5rem);
+    }
+
+    .right-column {
+        flex: auto; /* 恢复自动宽度 */
+    }
+}
+
+/* 隐藏原始文件输入框 */
+.hidden-file-input {
+    /* 浏览器兼容性隐藏 */
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+/* 美化自定义上传按钮 */
+.custom-upload-btn {
+    /* 使用您的深色主题样式 */
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: var(--primary-color, #007bff); /* 使用主题色或默认蓝色 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s;
+    border: 2px solid white;
+}
+
+    .custom-upload-btn:hover {
+        background-color: var(--accent-color); /* 悬停颜色 */
+    }
+
+/* 确保标签和按钮垂直对齐 */
+.custom-file-upload {
+    /* 仅用于调整内部间距或对齐 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/*favorite tags*/
+.Tags {   
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: var(--spacing-sm);
+    display: inline-block;
+    margin-top:50px;
+}
+
+/* --- 1. Flexbox 容器：实现横向排列和换行 --- */
+.tag-flex-container {
+    justify-content: center;
+    /* 替换了 .d-flex 的样式 */
+    width: 85%;
+    max-width: 1000px;
+    /* === 核心：启用 Flexbox 和换行 === */
+    display: flex;
+    flex-wrap: wrap; /* 允许标签在超出容器宽度时换行 */
+    gap: var(--spacing-sm, 100rem); /* 标签之间的间距 */
+    /* 其他外观样式 */
+    background-color: var(--bg-surface);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg, 1.5rem);
     box-shadow: 0 4px 20px var(--shadow-color);
     border: 1px solid var(--border-color);
 }
 
-    .edit input {
-        width: 100%;
-        padding: 14px 12px;
-        border-radius: 8px;
-        border: 2px solid #444; /* 默认深灰边线 */
-        background-color: #202024; /* 深色背景 */
-        color: #ffffff;
-        font-size: 15px;
-        transition: all 0.25s ease-in-out; /* 平滑过渡 */
+/* --- 2. 标签项 (tag-item)：控制每行 5 个 --- */
+.tag-item {
+    margin-left:15px;
+    margin-bottom:15px;
+    /* 核心计算：100% / 5 = 20%。减去 gap 间距 */
+    /* calc(20% - (4 * gap) / 5) 是更精确的公式，但 for 5x5 layout with wrap, 
+       稍小于 20% 即可确保换行。*/
+    flex: 0 0 calc(20% - 10px); /* 确保它横向占 1/5 空间，并留出间隙 */
+    box-sizing: border-box;
+}
+
+
+/* --- 3. 隐藏原生的复选框 --- */
+.tag-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* --- 4. 标签的椭圆形外观和粉色字体 (tag-pill) --- */
+.tag-pill {
+    /* 确保标签填满 tag-item 容器 */
+    display: block;
+    width: 110%;
+    cursor: pointer;
+    text-align: center;
+    /* 字体和颜色 */
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    /* 椭圆形背景 */
+    background-color: var(--bg-surface) #1a1a1e;
+    padding: 8px 12px;
+    border-radius: 50px; /* 关键：创建椭圆形效果 */
+    border: 2px solid var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+
+
+.tag-checkbox + .tag-pill:hover {
+    background-color: var(--primary-color);
+}
+
+.tag-checkbox + .tag-pill:active {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    transform: scale(0.97); /* optional: add slight press effect */
+}
+    /* --- 5. 选中状态的样式 --- */
+    .tag-checkbox:checked + .tag-pill {
+        background-color: var(--primary-color);
+        color: var(--text-dark, #000000);
+        border-color: white;
+
     }
+
+
+
+/* --- 6. 响应式调整 --- */
+@media (max-width: 768px) {
+    .tag-flex-container {
+        /* 小屏幕时减少间距 */
+        gap: 0.5rem;
+    }
+
+    .tag-item {
+        /* 小屏幕时改为 3 列 (约 33.33%) */
+        flex: 0 0 calc(33.33% - 8px);
+    }
+}
+
+.text{
+    font-weight:bold;
+}
+
+.btn1{
+    border-radius: 6px;
+    background-color: var(--primary-color);
+    border: 2px solid white;
+    margin-left:50vw;
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+.btn1:hover{
+    background-color:var(--accent-color);
+}
+
+.input-validation-error {
+    border: 2px solid red !important;
+    box-shadow: 0 0 1px red;
+}
+
