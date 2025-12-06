@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Extensions;
+using OnlineGameStoreSystem.Models;
 using System;
 
 public class SearchController : Controller
@@ -21,6 +22,7 @@ public class SearchController : Controller
             .Include(g => g.Tags).ThenInclude(gt => gt.Tag)
             .Include(g => g.Reviews)
             .Include(g => g.Developer)
+            .Where(g => g.Status == GameStatus.Published)
             .AsQueryable();
 
         // ---------------- 搜索词 ----------------

@@ -1,6 +1,79 @@
 ﻿@{
     Layout = "_AdminLayout";
 }
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<OnlineGameStoreSystem.Models.ViewModels.GameReleaseReviewVM>
 
 <div class="admin-container">
+    <h1 class="panel-title">@ViewData["Title"]</h1>
+    <p class="panel-description">@ViewData["Description"]</p>
+
+    <div class="search-box">
+        <form method="get" action="/Admin/GameReleaseReview">
+            <input id="searchInput"
+                   name="search"
+                   type="text"
+                   placeholder="Search by title or developer name..."
+                   value="@Context.Request.Query["search"]"
+                   aria-label="search-input">
+
+            <button type="submit" class="primary-btn">Search</button>
+        </form>
+    </div>
+
+
+    <div class="panel">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>GameId</th>
+                    <th>GameTitle</th>
+                    <th>DeveloperName</th>
+                    <th>ReleaseDate</th>
+                    <th class="action-col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <!-- Approve 表单 -->
+                <form id="approveGameForm" asp-controller="Admin" asp-action="ApproveGame" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input id="approveGameId" type="hidden" name="gameId" value="" />
+                    <input id="approveGameStatus" type="hidden" name="approve" value="true" />
+                </form>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.GameId</td>
+                        <td>@item.Title</td>
+                        <td>@item.DeveloperName</td>
+                        <td>@item.CreatedAt</td>
+
+                        <td class="action-col">
+                            <div class="button-group">
+                                <a asp-controller="Admin" asp-action="GameReview" asp-route-gameId="@item.GameId" class="button secondary-btn">Review</a>
+
+                                <form id="deleteUserForm" method="post" asp-controller="Admin" , asp-action="DeleteUser">
+                                    <input type="hidden" name="id" id="deleteUserId" />
+                                </form>
+
+                                <button data-game-id="@item.GameId" type="submit" class="primary-btn approve-game-btn">Approve</button>
+                                <button data-game-id="@item.GameId" type="submit" class="danger-btn remove-game-btn">Remove</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel-pager">
+        @Html.PagedListPager(
+        Model,
+        page => Url.Action("GameReleaseView", new { page }),
+                PagedListRenderOptions.ClassicPlusFirstAndLast
+                )
+    </div>
 </div>

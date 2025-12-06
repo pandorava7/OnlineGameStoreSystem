@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineGameStoreSystem.Models;
 using System;
 
 namespace OnlineGameStoreSystem.Services;
@@ -23,6 +24,7 @@ public class RecommendationService
         var games = await _context.Games
             .Include(g => g.Tags)
             .ThenInclude(gt => gt.Tag)
+            .Where(g => g.Status == GameStatus.Published)
             .ToListAsync();
 
         var wishlist = await _context.Wishlists
@@ -64,7 +66,7 @@ public class RecommendationService
                 .ToList() ?? new List<string>();
             var tagMatch = gameTags.Intersect(userTags).Count();
 
-            if (interestTags.Count > 0)
+            if (interestTags != null && interestTags.Count > 0)
                 score += ((double)tagMatch / interestTags.Count) * TagMatchWeight;
 
             // 3. 浏览次数分数（归一化）
@@ -153,6 +155,7 @@ public class RecommendationService
             .Include(g => g.Media)
             .Include(g => g.Tags)
                 .ThenInclude(gt => gt.Tag)
+            .Where(g => g.Status == GameStatus.Published)
             .ToListAsync();
 
         categories.Add(new GameCategoryViewModel
@@ -178,6 +181,7 @@ public class RecommendationService
             .Include(g => g.Media)
             .Include(g => g.Tags)
                 .ThenInclude(gt => gt.Tag)
+            .Where(g => g.Status == GameStatus.Published)
             .ToListAsync();
 
         categories.Add(new GameCategoryViewModel
@@ -205,6 +209,7 @@ public class RecommendationService
                   .Include(g => g.Media)
                   .Include(g => g.Tags)
                       .ThenInclude(gt => gt.Tag)
+                  .Where(g => g.Status == GameStatus.Published)
                   .ToListAsync();
 
             categories.Add(new GameCategoryViewModel

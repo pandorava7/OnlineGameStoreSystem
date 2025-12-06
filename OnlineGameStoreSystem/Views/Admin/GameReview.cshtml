@@ -1,0 +1,228 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+@model OnlineGameStoreSystem.Models.ViewModels.GameReviewVM
+
+<style>
+    .admin-container {
+        max-width: 1000px;
+        margin: 24px auto;
+        padding: 18px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .panel-title {
+        font-size: 1.25rem;
+        margin-bottom: 16px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 18px;
+        align-items: start;
+    }
+
+    .card {
+        border: 1px solid #e6e6e6;
+        padding: 12px;
+        border-radius: 6px;
+        background: #1F1F1F;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .thumb {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #f0f0f0;
+        display: block;
+    }
+
+    .meta-row {
+        margin-bottom: 12px;
+    }
+
+    .badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        background: #eef2ff;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        color: #2b3b8a;
+    }
+
+    .preview-list {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+
+        .preview-list img {
+            width: 140px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+    .video-item {
+        margin-top: 8px;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .small-muted {
+        color: #666;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="admin-container">
+    <h1 class="panel-title">User &gt;&gt; Game Release Review &gt;&gt; Reviewing</h1>
+
+    <div class="grid">
+        <div class="card">
+            <div class="meta-row">
+                <span class="meta-label">Thumbnail</span>
+                @if (!string.IsNullOrWhiteSpace(Model.ThumbnailUrl))
+                {
+                    <img src="@Url.Content(Model.ThumbnailUrl)" alt="Thumbnail" class="thumb" />
+                }
+                else
+                {
+                    <div class="thumb" style="display:flex;align-items:center;justify-content:center;color:#999;">No thumbnail</div>
+                }
+            </div>
+
+            <div class="meta-row">
+                <span class="meta-label">Preview Images</span>
+                @if (Model.PreviewUrls != null && Model.PreviewUrls.Length > 0)
+                {
+                    <div class="preview-list">
+                        @foreach (var u in Model.PreviewUrls)
+                        {
+                            <img src="@Url.Content(u ?? "")" alt="preview" />
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="small-muted">No Preview Image</div>
+                }
+            </div>
+
+            <div class="meta-row">
+                <span class="meta-label">Videos</span>
+                @if (Model.VideoUrls != null && Model.VideoUrls.Length > 0)
+                {
+                    @foreach (var v in Model.VideoUrls)
+                    {
+                        <div class="video-item">
+                            <video src="@Url.Content(v ?? "")" controls preload="metadata" style="width:100%;max-height:220px;border:1px solid #ddd;border-radius:4px;">
+                                Your browser is not support video view
+                            </video>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="small-muted">No video</div>
+                }
+            </div>
+        </div>
+
+        <div>
+            <div class="card" style="margin-bottom:12px;">
+                <div class="meta-row">
+                    <label>Game ID</label>
+                    <input class="readonly-input" readonly value="@Model.GameId" />
+                </div>
+
+                <div class="meta-row">
+                    <label>Title</label>
+                    <input class="readonly-input" readonly value="@Model.Title" />
+                </div>
+
+                <div class="meta-row">
+                    <label>Developer</label>
+                    <input class="readonly-input" readonly value="@Model.DeveloperName" />
+                </div>
+
+                <div class="meta-row">
+                    <label>Price</label>
+                    <input class="readonly-input" readonly value="@Model.Price.ToString("C")" />
+                </div>
+
+                <div class="meta-row">
+                    <label>Created At</label>
+                    <input class="readonly-input" readonly value="@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")" />
+                </div>
+
+                <div class="meta-row">
+                    <label>Tags</label>
+                    @if (Model.Tags != null && Model.Tags.Length > 0)
+                    {
+                        <div class="badges">
+                            @foreach (var t in Model.Tags)
+                            {
+                                <span class="badge">@t</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="small-muted">No tag</div>
+                    }
+                </div>
+            </div>
+
+            <div class="card">
+                <label>Description</label>
+                <textarea class="readonly-textarea" rows="10" readonly>@Model.Description</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <!-- Approve 按钮 -->
+        <button type="button"
+                class="primary-btn approve-game-btn"
+                data-game-id="@Model.GameId">
+            Approve
+        </button>
+
+        <!-- Remove 按钮 -->
+        <button type="button"
+                class="danger-btn remove-game-btn"
+                data-game-id="@Model.GameId">
+            Remove
+        </button>
+    </div>
+
+    <!-- 全局隐藏提交表单（JS 会控制内容） -->
+    <form id="approveGameForm"
+          asp-controller="Admin"
+          asp-action="ApproveGame"
+          method="post"
+          style="display:none;">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" id="approveGameId" name="gameId" />
+        <input type="hidden" id="approveGameStatus" name="approve" />
+    </form>
+</div>

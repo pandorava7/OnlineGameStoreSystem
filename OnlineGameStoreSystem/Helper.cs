@@ -100,6 +100,17 @@ public static class ModelStateHelper
     }
 }
 
+public static class ConsoleHelper
+{
+    public static void WriteRed(string message)
+    {
+        var previousColor = Console.ForegroundColor; // 保存原本的颜色
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(message);
+        Console.ForegroundColor = previousColor; // 恢复颜色
+    }
+}
+
 #region Login Authentication function 
 public class SecurityHelper
 {
