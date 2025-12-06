@@ -18,3 +18,25 @@ public class StatusManageVM
     [Required]
     public string Status { get; set; } = string.Empty;
 }
+
+public class GameReleaseReviewVM
+{
+    public int GameId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string DeveloperName { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+}
+
+public class GameReviewVM
+{
+    public int GameId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string DeveloperName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public string? ThumbnailUrl {  get; set; } = string.Empty;
+    public string[] PreviewUrls { get; set; } = new string[0];
+    public string[] VideoUrls { get; set;  } = new string[0];
+    public string[] Tags { get; set;  } = new string[0];
+}

@@ -35,7 +35,7 @@ builder.Services.AddAuthentication("MyCookieAuth")
     {
         options.LoginPath = "/Account/Login";   // 未登录自动跳转
         options.LogoutPath = "/Account/Logout";
-        options.ExpireTimeSpan = TimeSpan.FromDays(1);       
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);       
         options.SlidingExpiration = true; // 让 Cookie 在用户“继续活动时自动延长时间”
     });
 

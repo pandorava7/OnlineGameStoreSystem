@@ -4,7 +4,7 @@
     position: relative;
     border-radius: 14px;
     background: var(--color-bg);
-    zoom: 120%;
+    zoom: 110%;
 }
 
 /* 新增的视口容器：负责裁剪图片 */
@@ -166,7 +166,7 @@
 /* dots */
 .carousel-dots {
     position: absolute;
-    bottom: -75px;
+    bottom: -40px;
     width: 100%;
     text-align: center;
 }
