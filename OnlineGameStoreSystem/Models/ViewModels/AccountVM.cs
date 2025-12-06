@@ -77,10 +77,40 @@ namespace OnlineGameStoreSystem.Models.ViewModels
     #endregion
 
     #region Account setting
-    public class ManageEmailViewModel
+    public class ChangeEmailViewModel
     {
-        // This property will hold the current email address to display
+        // Property to display the current email (optional, but helpful for the user)
         public string CurrentEmail { get; set; } = null!;
+
+        [Required(ErrorMessage = "Please enter your new email address.")]
+        [EmailAddress(ErrorMessage = "The email address is not in a valid format.")]
+        [Display(Name = "New Email")]
+        public string NewEmail { get; set; } = null!;
+
+        // **ConfirmNewEmail property has been removed**
     }
     #endregion
-}
+
+    #region Update password
+    public class UpdatePasswordVM
+    {
+        [Required(ErrorMessage = "! Current Password is required")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Current Password")]
+        public string OldPassword { get; set; } = null!;
+
+        [Required(ErrorMessage = "! Password is required")]
+        [DataType(DataType.Password)]
+        [StringLength(12, MinimumLength = 8, ErrorMessage = "! Password must be between 8 and 12 characters")]
+        [RegularExpression(@"^[A-Z][A-Za-z0-9!@#$%^&*()_+=-]{7,11}$",
+        ErrorMessage = "! Password must start with a capital letter and be 8–12 characters long")]
+        public string NewPassword { get; set; } = null!;
+
+        // Confirm password field, required, must match the NewPassword field
+        [Required(ErrorMessage = "! Please confirm your password")]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "! Passwords do not match")]
+        public string ConfirmPassword { get; set; } = null!;
+    }
+        #endregion
+    }

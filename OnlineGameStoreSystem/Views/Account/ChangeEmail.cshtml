@@ -1,0 +1,34 @@
+﻿@model OnlineGameStoreSystem.Models.ViewModels.ChangeEmailViewModel
+
+@{
+    ViewData["Title"] = "Change Email Address";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="login-container">
+
+    <div class="back-text" onclick="history.back()">
+        <span class="arrow"><</span>
+        <span class="back-word">Back</span>
+    </div>
+
+    <h2>@ViewData["Title"]</h2>
+
+    <form asp-controller="Account" asp-action="ChangeEmail" method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <input type="hidden" asp-for="CurrentEmail" />
+        <div class="form-group">
+            <label asp-for="NewEmail">New Email Address:</label>
+            <input asp-for="NewEmail" />
+            <span asp-validation-for="NewEmail" style="color:red"></span>
+        </div>
+
+        <button type="submit" class="login-btn" >Update Email</button>
+    </form>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/Account/account.css" asp-append-version="true" />
+}
