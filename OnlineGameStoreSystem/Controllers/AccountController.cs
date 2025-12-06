@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Models;
 using OnlineGameStoreSystem.Models.ViewModels;
+using System.Net;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace OnlineGameStoreSystem.Controllers
 {
@@ -15,14 +18,17 @@ namespace OnlineGameStoreSystem.Controllers
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly IEmailSender _emailSender;
         private readonly SecurityHelper hp;
+        private readonly IHttpContextAccessor http;
 
         #region bridge
-        public AccountController(DB _db, IEmailSender EmailSender, SecurityHelper helper)
+        public AccountController(DB _db, IEmailSender EmailSender, SecurityHelper helper,
+            IHttpContextAccessor accessor)
         {
             db = _db;
             _passwordHasher = new PasswordHasher<User>();
             _emailSender =  EmailSender;
             hp = helper;
+            http = accessor;
         }
         #endregion 
 
@@ -48,6 +54,20 @@ namespace OnlineGameStoreSystem.Controllers
                 return View(model);
             }
 
+            // 🔒 新增账号状态判断
+            if (user.Status == "deleted")
+            {
+                ModelState.AddModelError("Password", "This account has been deleted and cannot log in.");
+                return View(model);
+            }
+
+            if (user.Status == "banned")
+            {
+                ModelState.AddModelError("Password", "This account has been banned. Please contact support.");
+                return View(model);
+            }
+
+            // 登录
             await hp.SignIn(user, model.RememberMe);
 
             TempData["FlashMessage"] = "Login successfully.";
@@ -316,5 +336,210 @@ namespace OnlineGameStoreSystem.Controllers
         }
         #endregion
 
+
+        #region account settings
+        // 1. 显示当前邮箱和链接的 Action (EmailSettings.cshtml)
+        public IActionResult AccountSetting()
+        {
+            // 从 Claims 取 UserId
+            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+                return RedirectToAction("Login", "Account"); // 未登入 → 返回登入页
+
+            int userId = int.Parse(userIdString);
+
+            // 找到当前登入的 user
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            // 创建 ViewModel
+            var viewModel = new ChangeEmailViewModel
+            {
+                CurrentEmail = user.Email // 获取当前邮箱
+            };
+
+            return View(viewModel);
+        }
+        #endregion
+
+        #region Change Email
+        public IActionResult ChangeEmail()
+        {
+            // 从 Claims 取 UserId
+            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdString))
+                return RedirectToAction("Login", "Account"); // 未登入 → 返回登入页
+            int userId = int.Parse(userIdString);
+            // 找到当前登入的 user
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var viewModel = new ChangeEmailViewModel
+            {
+                CurrentEmail = user!.Email,
+                NewEmail = user.Email // <-- 将 Current Email 设置为 NewEmail 字段的初始值
+            };
+
+            return View(viewModel);
+        }
+
+        //--------------------------------------------------------------
+        // ChangeEmail Action (POST - Processes the form submission)
+        //--------------------------------------------------------------
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangeEmail(ChangeEmailViewModel model)
+        {
+            // 从 Claims 取 UserId
+            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdString))
+                return RedirectToAction("Login", "Account"); // 未登入 → 返回登入页
+            int userId = int.Parse(userIdString);
+            // 找到当前登入的 user
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Set CurrentEmail back into the model if validation fails
+            model.CurrentEmail = user!.Email;
+
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, return to the view with errors
+                return View(model);
+            }
+
+            // 1. Check if the new email is already taken or is the same as the current email
+            if (model.NewEmail != user.Email)
+            {
+                // 检查新邮箱是否已被占用 (同步查找)
+                var existingUser = db.Users.FirstOrDefault(u => u.Email == model.NewEmail && u.Id != user.Id);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("NewEmail", "This email address is already in use by another account.");
+                    return View(model);
+                }
+            }
+            else
+            {              
+                // 如果用户提交了相同的邮箱
+                ModelState.AddModelError("NewEmail", "Your email address is already set to this value.");
+                return View(model);
+            }
+
+            // 2. Update the database
+            user.Email = model.NewEmail;
+            db.SaveChanges(); // **Save the changes to the database**
+
+            // Success: Redirect to a settings page
+            TempData["FlashMessage"] = "Your email address has been successfully updated!";
+            TempData["FlashMessageType"] = "success";
+            return RedirectToAction("AccountSetting", "Account");
+        }
+        #endregion
+
+        #region Update Password
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        //--------------------------------------------------------------
+        // ChangePassword Action (POST - Processes the form submission)
+        //--------------------------------------------------------------
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangePassword(UpdatePasswordVM model)
+        {
+            // 从 Claims 取 UserId
+            var userIdString = http.HttpContext!.User.FindFirst("UserId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+                return RedirectToAction("Login", "Account"); // 未登入 → 返回登入页
+
+            int userId = int.Parse(userIdString);
+
+            // 找到当前登入的 user
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // 1. Verify Current Password (验证旧密码是否正确)
+            var result = _passwordHasher.VerifyHashedPassword(user!, user!.PasswordHash, model.OldPassword);
+
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("OldPassword", "! The current password entered is incorrect.");
+                return View(model);
+            }
+
+            // 2. Check if New Password is the same as Old Password (新密码不能与旧密码相同)
+            if (_passwordHasher.VerifyHashedPassword(user!, user.PasswordHash, model.NewPassword) == PasswordVerificationResult.Success)
+            {
+                ModelState.AddModelError("NewPassword", "! New password cannot be the same as the old password.");
+                return View(model);
+            }
+
+            // 3. Hash and update New Password
+            user.PasswordHash = _passwordHasher.HashPassword(user!, model.NewPassword);
+            db.SaveChanges();
+
+            // Success: Redirect with a success message
+            TempData["FlashMessage"] = "Your password has been successfully changed!";
+            TempData["FlashMessageType"] = "success";
+            return RedirectToAction("AccountSetting", "Account");
+        }
+
+
+        #endregion
+
+        #region Delete Account
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var userIdString = HttpContext.User.FindFirst("UserId")?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+                return Unauthorized();
+
+            int userId = int.Parse(userIdString);
+
+            var user = db.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+                return NotFound();
+
+            // Soft delete
+            user.Status = "deleted";
+            user.UpdatedAt = DateTime.UtcNow;
+            db.SaveChanges();
+
+            // logout using your helper
+            await hp.SignOut();
+
+            TempData["FlashMessage"] = "Account deleted successfully.";
+            TempData["FlashMessageType"] = "success";
+
+            return RedirectToAction("Index", "Home");
+        }
+        #endregion
     }
 }

@@ -2,3 +2,45 @@
     ViewData["Title"] = "Account Settings";
 }
 
+<div class="settings-container">
+
+    <div class="back-text" onclick="history.back()">
+        <span class="arrow"><</span>
+        <span class="back-word">Back</span>
+    </div>
+
+    <div class="email">
+        <p>Current Email Address:</p>
+        <strong>@Model.CurrentEmail</strong>
+    </div>
+    
+
+    <div class="btn1">
+        <p>
+            @Html.ActionLink("Change My email", "ChangeEmail", "Account")
+        </p>
+
+        <p>
+            @Html.ActionLink("Change Password", "ChangePassword", "Account")
+        </p>
+    </div>
+
+
+    <form id="deleteAccountForm" method="post" asp-controller="Account" asp-action="DeleteAccount" style="display:none;">
+        @Html.AntiForgeryToken()
+    </form>
+
+    <p class="Delete">
+        <a href="#" id="deleteAccountBtn">Delete Account</a>
+    </p>
+
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/account/accountSettings.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/account/account.css" asp-append-version="true" />
+}
+
+@section Scripts{
+    <script src="~/js/functions/DeleteAccount.js"></script>
+}

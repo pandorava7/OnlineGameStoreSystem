@@ -1,0 +1,94 @@
+﻿.settings-container {
+    background-color: #1a1c1f;
+    padding: 30px 20px;
+    border-radius: 20px;
+    width: 400px;
+    border: 1px solid #555;
+    margin: 9vw auto 9vw auto; /* 上 50px，水平居中，下 50px */
+    position: relative;
+    top: -30px;
+}
+
+.email{
+    text-align:center;
+    margin-top:20px;
+}
+
+    .email p{
+        margin:0;
+    }
+
+    .email strong {
+        color: var(--primary-color);
+    }
+
+.btn1 {
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+    margin-top:30px;
+   
+    /* 如果内容太多才会出现滚动条 */
+    /*overflow-y: auto;*/
+    /* Firefox scrollbar */
+/*    scrollbar-color: #666 transparent;*/
+    /* Chrome / Edge / Safari scrollbar */
+/*    scrollbar-width: thin;*/
+}
+
+    .btn1 p {
+        border : 1px solid white;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+
+        .btn1 p:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn1 p a {
+            color: inherit; /* 让 a 继承 p 的文字颜色 */
+        }
+
+.Delete {
+    border: 1px solid red;
+    margin-top: 30px;
+    padding: 10px;
+    text-align: center;
+    max-width: 150px; /* 最大宽度 */
+    margin: 30px auto 0; /* 上间距 30px，水平居中 */
+    box-sizing: border-box; /* padding 包含在宽度里 */
+    border-radius: 10px;
+    margin-bottom:20px;
+}
+
+    .Delete a {
+        color: red;
+    }
+
+    .Delete:hover {
+        background-color: red;
+        border: 1px solid white;
+    }
+
+        .Delete:hover a {
+            color: inherit; /* 文字随父元素 hover 变化 */
+        }
+
+/*    .btn1::-webkit-scrollbar {
+        width: 6px;
+    }*/
+
+/*    .btn1::-webkit-scrollbar-track {
+        background: transparent;
+    }
+*/
+/*    .btn1::-webkit-scrollbar-thumb {
+        background: #666;
+        border-radius: 10px;
+    }*/
+
