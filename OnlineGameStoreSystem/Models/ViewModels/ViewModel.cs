@@ -184,6 +184,7 @@ public class GameLibraryViewModel
 
 public class PurchaseItemVM
 {
+    public int PaymentId { get; set; }
     public DateTime PurchaseDate { get; set; }
     public List<string> Items { get; set; } = new List<string>();
     public string PurchasePurpose { get; set; } = string.Empty;
@@ -191,5 +192,23 @@ public class PurchaseItemVM
     public decimal Total { get; set; }
 }
 
+public class PurchaseDetailVM
+{
+    public int PaymentId { get; set; }
+    public string TransactionId { get; set; } = string.Empty ;
+
+    public string PaymentMethod { get; set; } = string.Empty;
+    public DateTime PurchaseDate { get; set; }
+    public List<PurchaseItem> PurchaseItems { get; set; } = new List<PurchaseItem>();
+    public decimal Subtotal { get; set; }   
+    public decimal Discount { get; set; }
+    public decimal Total { get; set; }
+}
+
+public class PurchaseItem
+{
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+}
 
 #endregion

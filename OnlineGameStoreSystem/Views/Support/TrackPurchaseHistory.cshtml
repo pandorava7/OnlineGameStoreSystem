@@ -38,7 +38,7 @@
                     <tr>
                         <td>@item.PurchaseDate</td>
                         <td>
-                            @foreach(var i in @item.Items)
+                            @foreach (var i in @item.Items)
                             {
                                 // print all the item name
                                 <span>@i</span>
@@ -48,18 +48,18 @@
                             <div class="type-container">
                                 <p class="purpose">@item.PurchasePurpose</p>
                                 <p class="method">@item.PaymentMethod</p>
-                            </div>    
+                            </div>
                         </td>
                         <td>@item.Total</td>
 
                         <td class="action-col">
                             <div class="button-group">
-                                <a asp-controller="Admin" asp-action="EditUser" asp-route-id="test" class="button secondary-btn">Edit</a>
+                                <a asp-controller="Support" asp-action="ViewPurchaseDetail" asp-route-paymentId="@item.PaymentId" class="button primary-btn">View Detail</a>
 
-                                <form id="deleteUserForm" method="post" asp-controller="Admin" , asp-action="DeleteUser">
-                                    <input type="hidden" name="id" id="deleteUserId" />
+                                @* <form id="viewDetailPurchaseForm" method="post" asp-controller="Support" , asp-action="ViewPurchaseDetail">
+                                    <input type="hidden" name="id" id="viewDetailPurchaseId" />
                                 </form>
-                                <button id="delUserBtn" data-user-id="test" class="danger-btn">Delete</button>
+                                <button id="viewPurchaseDetailBtn" data-user-id="@item.PurchaseId" class="danger-btn">View Detail</button> *@
                             </div>
                         </td>
                     </tr>
@@ -92,5 +92,5 @@
 }
 
 @section Scripts {
-    @* <script src="~/js/components/category.js" asp-append-version="true"></script> *@
+   <script src="~/js/pages/support.js" asp-append-version="true"></script>
 }

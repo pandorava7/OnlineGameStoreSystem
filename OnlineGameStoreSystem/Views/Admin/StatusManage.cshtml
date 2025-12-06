@@ -13,10 +13,10 @@
         <form method="get" action="/Admin/StatusManage">
             <input id="searchInput"
                    name="search"
-            type="text"
-            placeholder="Search by name..."
-            value="@Context.Request.Query["search"]"
-            aria-label="search-input">
+                   type="text"
+                   placeholder="Search by name..."
+                   value="@Context.Request.Query["search"]"
+                   aria-label="search-input">
 
             <button type="submit" class="primary-btn">Search</button>
         </form>
@@ -40,7 +40,12 @@
                 {
                     <tr>
                         <td>@item.UserId</td>
-                        <td>@item.UserName</td>
+                        <td>
+                            <div class="flex-row" style="gap: 5px">
+                                <img src="@item.AvatarUrl" />
+                                @item.UserName
+                            </div>
+                        </td>
                         <td>@item.UserEmail</td>
                         <td>@item.Status</td>
 
@@ -48,7 +53,7 @@
                             <div class="button-group">
                                 <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@item.UserId" class="button secondary-btn">Edit</a>
 
-                                <form id="deleteUserForm" method="post" asp-controller="Admin", asp-action="DeleteUser">
+                                <form id="deleteUserForm" method="post" asp-controller="Admin" , asp-action="DeleteUser">
                                     <input type="hidden" name="id" id="deleteUserId" />
                                 </form>
                                 <button id="delUserBtn" data-user-id="@item.UserId" class="danger-btn">Delete</button>

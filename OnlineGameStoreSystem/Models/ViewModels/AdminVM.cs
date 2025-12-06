@@ -7,6 +7,8 @@ public class StatusManageVM
 {
     public int UserId { get; set; }
 
+    public string AvatarUrl { get; set; } = string.Empty;
+
     [Required]
     [StringLength(50)]
     public string UserName { get; set; } = string.Empty;
@@ -39,4 +41,19 @@ public class GameReviewVM
     public string[] PreviewUrls { get; set; } = new string[0];
     public string[] VideoUrls { get; set;  } = new string[0];
     public string[] Tags { get; set;  } = new string[0];
+}
+
+public class GameManagementVM
+{
+    public int GameId { get; set; }
+    public string? ThumbnailUrl { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string DeveloperName { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string[] Tags { get; set; } = new string[0];
+    public string Status {  get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+
+    // 目前没有updated at属性
+    //public DateTime UpdatedAt { get; set; }
 }

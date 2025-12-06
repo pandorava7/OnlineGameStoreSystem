@@ -33,7 +33,8 @@ public class SupportController : Controller
             case "track-purchase-history":
                 return RedirectToAction("TrackPurchaseHistory");
 
-
+            case "refund-request":
+                return RedirectToAction("RefundRequest");
 
 
             case "feedback-submit":
@@ -67,6 +68,7 @@ public class SupportController : Controller
             {
                 // if this payment is registration, just create new list for that
                 // if this is not registration, take purchase gamaes name to list
+                PaymentId = p.Id,
                 Items = p.Purpose == PaymentPurposeType.DeveloperRegistration 
                     ? new List<string> { "Registration fee" }
                      : p.Purchases.
@@ -89,5 +91,45 @@ public class SupportController : Controller
         ViewData["UserName"] = user.Username;
 
         return View(vm);
+    }
+
+    public IActionResult ViewPurchaseDetail(int paymentId)
+    {
+        var payment = _db.Payments.Find(paymentId);
+        if (payment == null)
+            return NotFound("payment not found");
+
+        decimal subtotal = payment.Purchases.Sum(p => p.PriceAtPurchase);
+        decimal total = payment.Amount;
+        decimal discount = total - subtotal;
+
+        var vm = new PurchaseDetailVM
+        {
+            PaymentId = payment.Id,
+            PaymentMethod = payment.PaymentMethod.ToString(),
+            PurchaseDate = payment.CreatedAt,
+            TransactionId = payment.TransactionId,
+            PurchaseItems = payment.Purpose == PaymentPurposeType.DeveloperRegistration
+                    ? new List<PurchaseItem> { new PurchaseItem { Name = "Registration Fee", Price = SystemConstants.RegistrationFee } }
+                     : payment.Purchases
+                        .Select(p => new PurchaseItem
+                        {
+                            Name = p.Game.Title,
+                            Price = p.PriceAtPurchase
+                        })
+                        .ToList(),
+            Subtotal = subtotal,
+            Discount = discount,
+            Total = total,
+        };
+
+        return View(vm);
+    }
+
+    public IActionResult RefundRequest()
+    {
+
+
+        return View();
     }
 }

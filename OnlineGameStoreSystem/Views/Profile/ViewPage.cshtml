@@ -5,8 +5,8 @@
 
 <!-- 左边：用户资料 -->
 <div class="profile-content">
-
-    <h1 class="User-Profile">User Profile</h1>
+     
+    <h1 class="User-Profile">@Model.Username's Profile</h1>
     <div class="profile-header">
         <div class="profile-left">
             <img class="profile-avatar"
@@ -24,8 +24,8 @@
                 <span class="badge badge-info">Developer</span>
             }
 
-            <p>
-                User Description:
+            <p class="user-description">
+                <strong>User Description:</strong>
                 <span class="user-summary">
                     @(string.IsNullOrEmpty(Model.Summary) ? "Empty" : Model.Summary)
                 </span>

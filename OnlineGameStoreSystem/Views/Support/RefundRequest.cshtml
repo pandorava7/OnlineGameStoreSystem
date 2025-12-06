@@ -1,0 +1,22 @@
+﻿<div class="container">
+    <div class="refund-container">
+        <p class="title">Please enter the reason why you want to make a refund?</p>
+        <form asp-controller="Support" asp-action="RefundRequest" method="post">
+            <textarea name="reason"></textarea>
+            <p>Your refund request and reason will be submitted to the administrator for review. Once the request is approved, you will receive a notification about yout refund status.</p>
+            <button class="primary-btn">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/support.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/admin.css" asp-append-version="true" />
+
+}
+
+@section Scripts {
+   <script src="~/js/pages/support.js" asp-append-version="true"></script>
+}

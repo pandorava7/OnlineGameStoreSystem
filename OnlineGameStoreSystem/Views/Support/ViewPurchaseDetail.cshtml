@@ -1,0 +1,51 @@
+﻿@model PurchaseDetailVM
+
+<div class="container">
+    <div class="purchase-detail-card">
+        <div class="detail">
+            <p class="transaction-id">Transaction ID: @Model.TransactionId</p>
+            <p class="payment-method">Payment Method: @Model.PaymentMethod</p>
+            <p class="date">Purchased: @Model.PurchaseDate.ToString("MMM dd, yyyy @ h:mmtt")</p>
+        </div>
+       
+        <div class="items">
+            @foreach (var item in Model.PurchaseItems)
+            {
+                <p class="item">@item.Name - @item.Price</p>
+            }
+        </div>
+        <div class="checkout-card">
+           <span class="line"></span>
+           <div class="left">
+                <p>Subtotal</p>
+                <p>Discount</p>
+                <p>Total</p>
+           </div>
+           <div class="right">
+                <p>@Model.Subtotal</p>
+                <p>- @Model.Discount</p>
+                <p>@Model.Total</p>
+           </div>
+        </div>
+    </div>
+
+    <div class="card-group" style="gap: 0;">
+        <p style="color: var(--primary-color)">What issue are you having with this purchase?</p>
+        <a class="question-card" asp-controller="Support" asp-action="RedirectByQuestion" asp-route-question="refund-request">
+            I would like a refund
+        </a>
+    </div>
+</div>
+
+
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/support.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/admin.css" asp-append-version="true" />
+
+}
+
+@section Scripts {
+    <script src="~/js/pages/support.js" asp-append-version="true"></script>
+}

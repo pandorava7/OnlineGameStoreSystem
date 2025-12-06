@@ -37,12 +37,13 @@
 }
 
 .profile-right {
-    margin-top:25px;
-    margin-left:20px;
-    flex: 1; /* 占据剩余空间 */
+    margin-top: 25px;
+    margin-left: 20px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    min-width: 0; /* 💡 关键：允许子元素收缩 */
 }
 
     .profile-right h2 {
@@ -55,10 +56,20 @@
         color: var(--primary-color);
     }
 
-    .profile-right .user-summary {
+.user-description {
+    margin: 0.25rem 0;
+    line-height: 1.5;
+}
+
+    .user-description .user-summary {
+        display: block;
         font-style: italic;
         color: var(--text-light);
+        white-space: normal;
+        overflow-wrap: break-word;
+        margin-top: 0.25rem;
     }
+
 
     .profile-right p {
         margin: 0.25rem 0;

@@ -41,6 +41,7 @@ public class AdminController : Controller
             .Select(u => new StatusManageVM
             {
                 UserId = u.Id,
+                AvatarUrl = string.IsNullOrEmpty(u.AvatarUrl) == false ? u.AvatarUrl : "avatar_default.png",
                 UserName = u.Username,
                 UserEmail = u.Email,
                 Status = u.Status,
@@ -188,10 +189,10 @@ public class AdminController : Controller
             return NotFound("Game is not found");
         }
 
-        if(game.Status != GameStatus.Pending)
-        {
-            return BadRequest("This game is already being removed or released");
-        }
+        if(game.Status == GameStatus.Removed)
+            return BadRequest("This game is already being removed");
+        if (approve == true && game.Status == GameStatus.Published)
+            return BadRequest("This game is already being published");
 
         ConsoleHelper.WriteRed("Approve: " + approve);
         game.Status = approve ? GameStatus.Published : GameStatus.Removed;
@@ -204,9 +205,42 @@ public class AdminController : Controller
         return RedirectToAction("GameReleaseReview");
     }
 
-    public IActionResult GameManagement()
+    public IActionResult GameManagement(string? search, int? page)
     {
-        return View();
+        int pageSize = 5;
+        int pageNumber = page ?? 1;
+
+        var query = _db.Games
+            .Include(g => g.Developer)
+            .Include(g=> g.Media)
+            .Include(g=>g.Tags)
+                .ThenInclude(gt => gt.Tag)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(g => g.Title.Contains(search) || g.Developer.Username.Contains(search));
+        }
+
+        var vm = query
+            .Select(g => new GameManagementVM
+            {
+                GameId = g.Id,
+                ThumbnailUrl = g.Media.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault(),
+                Title = g.Title,
+                DeveloperName = g.Developer.Username,
+                Price = g.Price,
+                Tags = g.Tags.Select(gt => gt.Tag.Name).ToArray(),
+                Status = g.Status.ToString(),
+                CreatedAt = g.CreatedAt,
+            })
+            .OrderBy(g => g.CreatedAt)
+            .ToPagedList(pageNumber, pageSize);
+
+        ViewData["Title"] = "Game >> Game Management";
+        ViewData["Description"] = "This page is for game management, view the information for each game and provide function to manage them.";
+
+        return View(vm);
     }
 
     public IActionResult RefundHandling()
