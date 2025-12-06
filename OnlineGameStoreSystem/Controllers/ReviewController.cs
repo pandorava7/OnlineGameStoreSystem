@@ -63,6 +63,7 @@ public class ReviewController : Controller
                 c.Content,
                 c.CreatedAt,
                 c.LikeCount,
+                AuthorId = c.UserId,
                 AuthorName = c.User.Username,
                 AuthorAvatarUrl = c.User.AvatarUrl,
 

@@ -72,4 +72,22 @@ namespace OnlineGameStoreSystem.Models.ViewModels
         public List<Tag> AvailableTags { get; set; } = new List<Tag>();
     }
     #endregion
+
+    #region Public Profile
+    public class PublicProfileViewModel
+    {
+        public string AvatarUrl { get; set; } = null!;
+        public string Username { get; set; } = null!;
+        public string Summary { get; set; } = null!;
+        public bool IsDeveloper { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public List<Tag> FavoriteTags { get; set; } = new();
+        public List<ReviewItem> UserReviews { get; set; } = new();
+        public List<PurchasedGameVM> PurchasedGames { get; set; } = new();
+
+        public bool PublicProfile { get; set; } = true; // 只读 Privacy 信息
+    }
+    #endregion
+
 }

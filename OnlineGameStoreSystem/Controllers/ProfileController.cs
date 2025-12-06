@@ -15,7 +15,7 @@ namespace OnlineGameStoreSystem.Controllers
         private readonly IHttpContextAccessor http;
         private readonly IWebHostEnvironment _webHostEnvironment; // 注入环境服务
 
-        public ProfileController(DB context, IHttpContextAccessor accessor, 
+        public ProfileController(DB context, IHttpContextAccessor accessor,
             IWebHostEnvironment webHostEnvironment)
         {
             db = context;
@@ -65,25 +65,25 @@ namespace OnlineGameStoreSystem.Controllers
                 })
                 .ToList();
 
-        var purchasedGames = db.Purchases
-        .Where(p => p.UserId == userId && p.Status == PurchaseStatus.Completed)
-        .Join(
-            db.Games,
-            p => p.GameId,
-            g => g.Id,
-            (p, g) => new PurchasedGameVM
-            {
-                GameId = g.Id,
-                Title = g.Title,
-                CoverUrl = g.Media
-                    .OrderBy(m => m.SortOrder)
-                    .Select(m => m.MediaUrl)
-                    .FirstOrDefault() ?? "/img/no-cover.png",
-                PriceAtPurchase = p.PriceAtPurchase,
-                PurchasedAt = p.Payment.CreatedAt
-            }
-        )
-        .ToList();
+            var purchasedGames = db.Purchases
+            .Where(p => p.UserId == userId && p.Status == PurchaseStatus.Completed)
+            .Join(
+                db.Games,
+                p => p.GameId,
+                g => g.Id,
+                (p, g) => new PurchasedGameVM
+                {
+                    GameId = g.Id,
+                    Title = g.Title,
+                    CoverUrl = g.Media
+                        .OrderBy(m => m.SortOrder)
+                        .Select(m => m.MediaUrl)
+                        .FirstOrDefault() ?? "/img/no-cover.png",
+                    PriceAtPurchase = p.PriceAtPurchase,
+                    PurchasedAt = p.Payment.CreatedAt
+                }
+            )
+            .ToList();
 
             var prefs = db.UserPreferences.FirstOrDefault(p => p.UserId == userId);
             if (prefs == null)
@@ -107,8 +107,8 @@ namespace OnlineGameStoreSystem.Controllers
                 CreatedAt = user.CreatedAt,
                 FavoriteTags = favTags,
                 UserReviews = reviews,
-                PurchasedGames = purchasedGames,   
-                 UserPreferences = prefs
+                PurchasedGames = purchasedGames,
+                UserPreferences = prefs
             };
 
 
@@ -330,6 +330,121 @@ namespace OnlineGameStoreSystem.Controllers
             return View(model);
         }
         #endregion
+
+        #region Public ViewProfile
+        public IActionResult ViewPage(int userId)
+        {
+            // 获取当前登录用户 ID，如果未登录则 null
+            int? currentUserId = null;
+            var claim = HttpContext.User.FindFirst("UserId");
+            if (claim != null)
+                currentUserId = int.Parse(claim.Value);
+
+            if (currentUserId == null)
+            {
+                TempData["FlashMessage"] = "Please login first to view profiles.";
+                TempData["FlashMessageType"] = "error";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // 查询用户和相关数据
+            var user = db.Users
+                .Include(u => u.Preferences)
+                .Include(u => u.FavouriteTags)
+                .Include(u => u.Reviews)
+                .ThenInclude(r => r.Game)
+                .ThenInclude(g => g.Media)
+                .Include(u => u.Purchases)
+                .ThenInclude(p => p.Game)
+                .ThenInclude(g => g.Media)
+                .FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+                return NotFound();
+
+            var prefs = user.Preferences ?? new UserPreferences
+            {
+                UserId = user.Id,
+                PublicProfile = true
+            };
+
+            // 非本人且资料私密 → 提示并返回上一页或首页
+            if (currentUserId != user.Id && !prefs.PublicProfile)
+            {
+                TempData["FlashMessage"] = "This user has set their profile to private.";
+                TempData["FlashMessageType"] = "error";
+
+                string referer = Request.Headers["Referer"].ToString();
+                if (!string.IsNullOrEmpty(referer))
+                    return Redirect(referer);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            // 如果是本人，则直接显示自己的 Profile 页面
+            if (currentUserId == user.Id)
+            {
+                // 可以选择返回 owner 的 Profile View，也可以直接重用这个页面
+                return RedirectToAction("Index", "Profile"); // 假设你的 owner 页面是 ProfileController.Index
+            }
+
+            // 安全构建 ViewModel
+            var vm = new PublicProfileViewModel
+            {
+                AvatarUrl = user.AvatarUrl ?? "/images/avatar_default.png",
+                Username = user.Username,
+                Summary = user.Summary ?? "",
+                IsDeveloper = user.IsDeveloper,
+                CreatedAt = user.CreatedAt,
+                // 找 Favorite Tags
+                FavoriteTags = db.FavouriteTags
+                             .Where(f => f.UserId == userId)
+                             .Select(f => f.Tag)
+                             .ToList(),
+
+                UserReviews = db.Reviews
+                .Where(r => r.UserId == userId)
+                .Include(r => r.Game)
+                .ThenInclude(g => g.Media)
+                .OrderByDescending(c => c.CreatedAt)
+                .Select(r => new ReviewItem
+                {
+                    GameId = r.Game.Id,
+                    GameTitle = r.Game.Title,
+                    CoverUrl = r.Game.Media
+                        .Where(m => m.MediaType == "thumb")
+                        .OrderBy(m => m.SortOrder)
+                        .Select(m => m.MediaUrl)
+                        .FirstOrDefault() ?? "/images/default-cover.jpg",
+                    Content = r.Content ?? "",
+                    CreatedAt = r.CreatedAt
+                })
+                .ToList(),
+
+                PurchasedGames = db.Purchases
+                .Where(p => p.UserId == userId && p.Status == PurchaseStatus.Completed)
+                .Join(
+                    db.Games,
+                    p => p.GameId,
+                    g => g.Id,
+                    (p, g) => new PurchasedGameVM
+                    {
+                        GameId = g.Id,
+                        Title = g.Title,
+                        CoverUrl = g.Media
+                            .OrderBy(m => m.SortOrder)
+                            .Select(m => m.MediaUrl)
+                            .FirstOrDefault() ?? "/img/no-cover.png",
+                        PriceAtPurchase = p.PriceAtPurchase,
+                        PurchasedAt = p.Payment.CreatedAt
+                    }
+                )
+                .ToList()
+            };
+
+            return View(vm);
+        }
+        #endregion 
     }
 
 }

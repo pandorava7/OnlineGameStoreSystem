@@ -161,7 +161,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             div.innerHTML = `
                 <div class="user-info">
-                    <img src="${r.authorAvatarUrl || '/images/avatar_default.png'}" class="author-avatar" />
+                    <a href="/Profile/ViewPage?userId=${r.userId}">
+                        <img src="${r.authorAvatarUrl || '/images/avatar_default.png'}" class="author-avatar" />
+                    </a>
+
                     <div class="right">
                         <div class="review-header" style="display:flex; justify-content:space-between; align-items:center;">
                             <span class="author-name">${r.authorName}</span>

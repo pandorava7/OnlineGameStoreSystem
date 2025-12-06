@@ -82,7 +82,7 @@ public class CommunityController : Controller
                     Content = c.Content,
                     AuthorName = c.User.Username,
                     AuthorAvatarUrl = c.User.AvatarUrl ?? "",
-                    CreatedAt = c.CreatedAt
+                    CreatedAt = c.CreatedAt,              
                 })
                 .ToList()
         };
