@@ -1,74 +1,74 @@
 ﻿
-    document.addEventListener("DOMContentLoaded", () => {
-        const main = document.getElementById("gd-main-media");
-        const thumbs = document.getElementById("gd-thumbs");
+document.addEventListener("DOMContentLoaded", () => {
+    const main = document.getElementById("gd-main-media");
+    const thumbs = document.getElementById("gd-thumbs");
 
-        let mediaItems = [];
-        let currentIndex = 0;
-        let timer = null;
+    let mediaItems = [];
+    let currentIndex = 0;
+    let timer = null;
 
-        // 收集所有媒体
-        document.querySelectorAll(".gd-thumb").forEach(btn => {
-            mediaItems.push({ type: btn.dataset.type, src: btn.dataset.src });
-        });
-        if (mediaItems.length === 0) return;
-
-        function clearTimer() {
-            if (timer) {
-                clearTimeout(timer);
-                timer = null;
-            }
-        }
-
-        function renderMedia(index) {
-            clearTimer(); // 先清除旧定时器
-            currentIndex = index;
-            main.innerHTML = "";
-            const item = mediaItems[index];
-
-            if (item.type === "video") {
-                const video = document.createElement("video");
-                video.src = item.src;
-                video.autoplay = true;
-                video.controls = true;
-                main.appendChild(video);
-
-                // 视频播放完再切换到下一媒体
-                video.onended = () => nextMedia();
-            } else {
-                const img = document.createElement("img");
-                img.src = item.src;
-                main.appendChild(img);
-
-                // 图片轮播 3 秒后切换
-                timer = setTimeout(() => nextMedia(), 3000);
-            }
-        }
-
-        function nextMedia() {
-            currentIndex = (currentIndex + 1) % mediaItems.length;
-            renderMedia(currentIndex);
-        }
-
-        // 缩略图点击立即跳转
-        thumbs.addEventListener("click", e => {
-            const btn = e.target.closest(".gd-thumb");
-            if (!btn) return;
-            const index = parseInt(btn.dataset.index);
-            renderMedia(index);
-        });
-
-        // 启动轮播
-        // 找到第一个视频索引
-        let firstVideoIndex = mediaItems.findIndex(item => item.type === "video");
-        if (firstVideoIndex !== -1) {
-            // 先播放视频
-            renderMedia(firstVideoIndex);
-        } else {
-            // 没有视频，播放第一个图片
-            renderMedia(0);
-        }
+    // 收集所有媒体
+    document.querySelectorAll(".gd-thumb").forEach(btn => {
+        mediaItems.push({ type: btn.dataset.type, src: btn.dataset.src });
     });
+    if (mediaItems.length === 0) return;
+
+    function clearTimer() {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    }
+
+    function renderMedia(index) {
+        clearTimer(); // 先清除旧定时器
+        currentIndex = index;
+        main.innerHTML = "";
+        const item = mediaItems[index];
+
+        if (item.type === "video") {
+            const video = document.createElement("video");
+            video.src = item.src;
+            video.autoplay = true;
+            video.controls = true;
+            main.appendChild(video);
+
+            // 视频播放完再切换到下一媒体
+            video.onended = () => nextMedia();
+        } else {
+            const img = document.createElement("img");
+            img.src = item.src;
+            main.appendChild(img);
+
+            // 图片轮播 3 秒后切换
+            timer = setTimeout(() => nextMedia(), 3000);
+        }
+    }
+
+    function nextMedia() {
+        currentIndex = (currentIndex + 1) % mediaItems.length;
+        renderMedia(currentIndex);
+    }
+
+    // 缩略图点击立即跳转
+    thumbs.addEventListener("click", e => {
+        const btn = e.target.closest(".gd-thumb");
+        if (!btn) return;
+        const index = parseInt(btn.dataset.index);
+        renderMedia(index);
+    });
+
+    // 启动轮播
+    // 找到第一个视频索引
+    let firstVideoIndex = mediaItems.findIndex(item => item.type === "video");
+    if (firstVideoIndex !== -1) {
+        // 先播放视频
+        renderMedia(firstVideoIndex);
+    } else {
+        // 没有视频，播放第一个图片
+        renderMedia(0);
+    }
+});
 
 
 
@@ -341,3 +341,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // 页面加载时获取评论
     loadReviews();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const addToCartBtn = document.getElementById('btnAddToCart');
+    // 添加到购物车按钮事件
+    addToCartBtn.addEventListener('click', async () => {
+        const gameid = addToCartBtn.dataset.gameId;
+        await addToCart(gameid);
+    });
+
+});
+
+// =====================
+// 添加到购物车（服务器）
+// =====================
+async function addToCart(gameId) {
+    const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
+        method: 'POST'
+    });
+
+    console.log(res.success);
+
+    const result = await res.json();
+    if (result.success) {
+        showTemporaryMessage("Added to your cart", "success");
+
+        // 更新购物车徽章
+        await CartAPI.loadCartFromServer();
+    }
+}
