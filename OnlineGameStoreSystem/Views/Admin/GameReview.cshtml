@@ -98,7 +98,7 @@
     <div class="grid">
         <div class="card">
             <div class="meta-row">
-                <span class="meta-label">缩略图（Thumbnail）</span>
+                <span class="meta-label">Thumbnail</span>
                 @if (!string.IsNullOrWhiteSpace(Model.ThumbnailUrl))
                 {
                     <img src="@Url.Content(Model.ThumbnailUrl)" alt="Thumbnail" class="thumb" />
@@ -110,7 +110,7 @@
             </div>
 
             <div class="meta-row">
-                <span class="meta-label">预览图（Preview Images）</span>
+                <span class="meta-label">Preview Images</span>
                 @if (Model.PreviewUrls != null && Model.PreviewUrls.Length > 0)
                 {
                     <div class="preview-list">
@@ -122,26 +122,26 @@
                 }
                 else
                 {
-                    <div class="small-muted">没有预览图</div>
+                    <div class="small-muted">No Preview Image</div>
                 }
             </div>
 
             <div class="meta-row">
-                <span class="meta-label">视频（Videos）</span>
+                <span class="meta-label">Videos</span>
                 @if (Model.VideoUrls != null && Model.VideoUrls.Length > 0)
                 {
                     @foreach (var v in Model.VideoUrls)
                     {
                         <div class="video-item">
                             <video src="@Url.Content(v ?? "")" controls preload="metadata" style="width:100%;max-height:220px;border:1px solid #ddd;border-radius:4px;">
-                                您的浏览器不支持 video 标签。
+                                Your browser is not support video view
                             </video>
                         </div>
                     }
                 }
                 else
                 {
-                    <div class="small-muted">没有视频</div>
+                    <div class="small-muted">No video</div>
                 }
             </div>
         </div>
@@ -186,7 +186,7 @@
                     }
                     else
                     {
-                        <div class="small-muted">无标签</div>
+                        <div class="small-muted">No tag</div>
                     }
                 </div>
             </div>
