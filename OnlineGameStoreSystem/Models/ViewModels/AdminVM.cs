@@ -81,7 +81,43 @@ public class TrackPurchaseVM
     public decimal Price { get; set; }
     public string PaymentPurpose { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = string.Empty;
-    public int UserId{ get; set; }
-    public string AvatarUrl { get; set;} = string.Empty;
+    public int UserId { get; set; }
+    public string AvatarUrl { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+}
+
+public class PostManagementVM
+{
+    public int PostId { get; set; }
+    public string PostTitle { get; set; } = string.Empty;
+    public DateTime PostDate { get; set; }
+    public int UserId { get; set; }
+    public string AvatarUrl { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+
+}
+
+public class CommentManagementVM
+{
+    public int PostId { get; set; }
+    public string PostTitle { get; set; } = string.Empty;
+    public int CommentId { get; set; }
+    public string CommentContent { get; set; } = string.Empty;
+    public DateTime CommentDate { get; set; }
+    public int UserId { get; set; }
+    public string AvatarUrl { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+}
+
+public class GameReviewManagementVM
+{
+    public int GameId { get; set; }
+    public string GameTitle { get; set; } = string.Empty;
+    public string? GameThumbnailUrl {  get; set; } = string.Empty;
+    public int ReviewId { get; set; }
+    public string ReviewContent {  get; set; } = string.Empty;
+    public DateTime ReviewDate { get; set; }
+    public int UserId { get; set; }
+    public string AvatarUrl { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
 }

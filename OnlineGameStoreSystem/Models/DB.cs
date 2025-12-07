@@ -508,6 +508,7 @@ public class Review
 
     public int LikeCount { get; set; }
     public List<ReviewLike> Likes { get; set; } = new List<ReviewLike>();
+    public ActiveStatus Status { get; set; }
 }
 
 public class Notification
@@ -549,6 +550,7 @@ public class Post
     public ICollection<PostLike> Likes { get; set; } = new List<PostLike>();
     public int LikeCount { get; set; }
     public List<Comment> Comments { get; set; } = new();
+    public ActiveStatus Status {  get; set; }
 }
 
 public class PostLike
@@ -617,6 +619,7 @@ public class Comment
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public int LikeCount { get; set; }
     public List<CommentLike> Likes { get; set; } = new List<CommentLike>();
+    public ActiveStatus Status { get; set; }
 }
 
 public class Purchase

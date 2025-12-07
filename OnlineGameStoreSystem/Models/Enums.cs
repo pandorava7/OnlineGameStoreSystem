@@ -1,5 +1,11 @@
 namespace OnlineGameStoreSystem.Models
 {
+    public enum ActiveStatus
+    {
+        Active,
+        Banned,
+    }
+
     public enum LikeableType
     {
         Review,

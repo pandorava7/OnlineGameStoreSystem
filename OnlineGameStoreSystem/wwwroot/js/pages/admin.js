@@ -68,3 +68,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Remove buttons
+    const removePostBtns = document.querySelectorAll(".remove-post-btn");
+    removePostBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const postId = btn.getAttribute('data-post-id');
+                document.getElementById('removePostId').value = postId;
+                document.getElementById('removePostForm').submit();
+            }, "Confirm the removal of this post?");
+        });
+    });
+
+    // Remove buttons
+    const removeCommentBtns = document.querySelectorAll(".remove-comment-btn");
+    removeCommentBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const commentId = btn.getAttribute('data-comment-id');
+                document.getElementById('removeCommentId').value = commentId;
+                document.getElementById('removeCommentForm').submit();
+            }, "Confirm the removal of this comment?");
+        });
+    });
+
+    //// Remove buttons
+    const removeReviewBtns = document.querySelectorAll(".remove-review-btn");
+    removeReviewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const reviewId = btn.getAttribute('data-review-id');
+                document.getElementById('removeReviewId').value = reviewId;
+                document.getElementById('removeReviewForm').submit();
+            }, "Confirm the removal of this review?");
+        });
+    });
+});

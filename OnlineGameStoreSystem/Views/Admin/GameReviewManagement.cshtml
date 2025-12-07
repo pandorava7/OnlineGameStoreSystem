@@ -1,6 +1,102 @@
 ﻿@{
     Layout = "_AdminLayout";
 }
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<OnlineGameStoreSystem.Models.ViewModels.GameReviewManagementVM>
 
 <div class="admin-container">
+    <h1 class="panel-title">@ViewData["Title"]</h1>
+    <p class="panel-description">@ViewData["Description"]</p>
+
+    <!-- Search -->
+    <div class="search-box">
+        <form method="get" action="/Admin/GameReviewManagement">
+            <input id="searchInput"
+                   name="search"
+                   type="text"
+                   placeholder="Search by user..."
+                   value="@Context.Request.Query["search"]"
+                   aria-label="search-input">
+
+            <button type="submit" class="primary-btn">Search</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>ReviewId</th>
+                    <th>User</th>
+                    <th>Game</th>
+                    <th>Review</th>
+                    <th>Review Date</th>
+                    <th class="action-col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <!-- Hidden remove form -->
+                <form id="removeReviewForm" asp-controller="Admin" asp-action="RemoveGameReview" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input id="removeReviewId" type="hidden" name="reviewId" value="" />
+                </form>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ReviewId</td>
+
+                        <td>
+                            <a class="flex-row" style="gap: 5px"
+                               asp-controller="Profile"
+                               asp-action="ViewPage"
+                               asp-route-userId="@item.UserId">
+                                <img src="@item.AvatarUrl" class="avatar" />
+                                <span>@item.UserName</span>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a class="flex-row" style="gap: 10px"
+                               asp-controller="Home"
+                               asp-action="GameDetail"
+                               asp-route-name="@item.GameTitle.Replace(" ", "_")">
+
+                                <img src="@item.GameThumbnailUrl"
+                                     class="avatar"
+                                     style="width:45px;height:45px;object-fit:cover;border-radius:6px;" />
+
+                                <span>@item.GameTitle</span>
+                            </a>
+                        </td>
+
+                        <td>@item.ReviewContent</td>
+
+                        <td>@item.ReviewDate.ToString("yyyy-MM-dd HH:mm")</td>
+
+                        <td class="action-col">
+                            <div class="button-group">
+                                <button data-review-id="@item.ReviewId"
+                                        type="submit"
+                                        class="danger-btn remove-review-btn">
+                                    Remove
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel-pager">
+        @Html.PagedListPager(
+        Model,
+        page => Url.Action("GameReviewManagement", new { page }),
+                PagedListRenderOptions.ClassicPlusFirstAndLast
+                )
+    </div>
 </div>

@@ -384,19 +384,147 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    public IActionResult PostManagement()
+    public IActionResult PostManagement(string? search, int? page)
     {
-        return View();
+        int pageSize = 5;
+        int pageNumber = page ?? 1;
+
+        var query = _db.Posts
+            .Include(r => r.User)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(g => g.User.Username.Contains(search));
+        }
+
+        var vm = query
+            .Select(p => new PostManagementVM
+            {
+                PostId = p.Id,
+                PostTitle = p.Title,
+                PostDate = p.CreatedAt,
+                UserId = p.UserId,
+                AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
+                UserName = p.User.Username,
+            })
+            .OrderBy(p => p.PostDate)
+            .ToPagedList(pageNumber, pageSize);
+
+        ViewData["Title"] = "Community >> Post Management";
+        ViewData["Description"] = "This page is for view and manage the posts of community.";
+
+        return View(vm);
     }
 
-    public IActionResult CommentManagement()
+    public IActionResult RemovePost(int postId)
     {
-        return View();
+        var post = _db.Posts.Find(postId);
+        if (post == null)
+            return NotFound("post not found");
+
+        post.Status = ActiveStatus.Banned;
+        _db.SaveChanges();
+
+        return RedirectToAction("PostManagement");
     }
 
-    public IActionResult GameReviewManagement()
+    public IActionResult CommentManagement(string? search, int? page)
     {
-        return View();
+        int pageSize = 5;
+        int pageNumber = page ?? 1;
+
+        var query = _db.Comments
+            .Include(c => c.Post)
+            .Include(r => r.User)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(g => g.User.Username.Contains(search));
+        }
+
+        var vm = query
+            .Select(p => new CommentManagementVM
+            {
+                PostId = p.Post.Id,
+                PostTitle = p.Post.Title,
+                CommentId = p.Id,
+                CommentContent = p.Content,
+                CommentDate = p.CreatedAt,
+                UserId = p.UserId,
+                AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
+                UserName = p.User.Username,
+            })
+            .OrderBy(p => p.CommentDate)
+            .ToPagedList(pageNumber, pageSize);
+
+        ViewData["Title"] = "Community >> Comment Management";
+        ViewData["Description"] = "This page is for view and manage the comments of each post.";
+
+        return View(vm);
+    }
+
+    public IActionResult RemoveComment(int commentId)
+    {
+        var comment = _db.Comments.Find(commentId);
+        if (comment == null)
+            return NotFound("comment not found");
+
+        comment.Status = ActiveStatus.Banned;
+        _db.SaveChanges();
+
+        return RedirectToAction("CommentManagement");
+    }
+
+    public IActionResult GameReviewManagement(string? search, int? page)
+    {
+        int pageSize = 5;
+        int pageNumber = page ?? 1;
+
+        var query = _db.Reviews
+            .Include(r => r.Game)
+            .ThenInclude(g=>g.Media)
+            .Include(r => r.User)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(g => g.User.Username.Contains(search));
+        }
+
+        var vm = query
+            .Select(r => new GameReviewManagementVM
+            {
+                ReviewId = r.Id,
+                ReviewContent = r.Content ?? "",
+                ReviewDate = r.CreatedAt,
+                GameId = r.GameId,
+                GameThumbnailUrl = r.Game.Media.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault(),
+                GameTitle = r.Game.Title,
+                UserId = r.UserId,
+                AvatarUrl = string.IsNullOrEmpty(r.User.AvatarUrl) == false ? r.User.AvatarUrl : "/images/avatar_default.png",
+                UserName = r.User.Username,
+            })
+            .OrderBy(p => p.ReviewDate)
+            .ToPagedList(pageNumber, pageSize);
+
+        ViewData["Title"] = "Community >> Game Review Management";
+        ViewData["Description"] = "This page is for view and manage the game review of each game.";
+
+        return View(vm);
+    }
+
+    public IActionResult RemoveGameReview(int reviewId)
+    {
+        var review = _db.Reviews.Find(reviewId);
+        if (review == null)
+            return NotFound("review not found");
+
+        review.Status = ActiveStatus.Banned;
+        _db.SaveChanges();
+
+        return RedirectToAction("GameReviewManagement");
     }
 
     public IActionResult CommunityStatistics()
