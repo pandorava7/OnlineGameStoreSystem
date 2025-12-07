@@ -153,13 +153,14 @@ public class AdminController : Controller
     public IActionResult GameReview(int gameId)
     {
         var game = _db.Games
-            .Include(g=> g.Media)
+            .Include(g => g.Media)
             .Include(g => g.Developer)
             .Include(g => g.Tags)
-                .ThenInclude(gt=>gt.Tag)
-            .Where(g=> g.Id == gameId)
+                .ThenInclude(gt => gt.Tag)
+            .Where(g => g.Id == gameId)
             .FirstOrDefault();
-        if (game == null) {
+        if (game == null)
+        {
             return NotFound("Game not found");
         }
 
@@ -172,8 +173,8 @@ public class AdminController : Controller
             Description = game.Description,
             Price = game.Price,
             Tags = game.Tags.Select(gt => gt.Tag.Name).ToArray(),
-            ThumbnailUrl = game.Media.FirstOrDefault(gm=>gm.MediaType=="thumb")?.MediaUrl,
-            PreviewUrls = game.Media.Where(gm=>gm.MediaType=="image").Select(gm=>gm.MediaUrl).ToArray(),
+            ThumbnailUrl = game.Media.FirstOrDefault(gm => gm.MediaType == "thumb")?.MediaUrl,
+            PreviewUrls = game.Media.Where(gm => gm.MediaType == "image").Select(gm => gm.MediaUrl).ToArray(),
             VideoUrls = game.Media.Where(gm => gm.MediaType == "video").Select(gm => gm.MediaUrl).ToArray(),
             CreatedAt = game.CreatedAt,
         };
@@ -185,12 +186,12 @@ public class AdminController : Controller
     {
         // 更新游戏状态
         var game = _db.Games.Find(gameId);
-        if(game == null)
+        if (game == null)
         {
             return NotFound("Game is not found");
         }
 
-        if(game.Status == GameStatus.Removed)
+        if (game.Status == GameStatus.Removed)
             return BadRequest("This game is already being removed");
         if (approve == true && game.Status == GameStatus.Published)
             return BadRequest("This game is already being published");
@@ -213,8 +214,8 @@ public class AdminController : Controller
 
         var query = _db.Games
             .Include(g => g.Developer)
-            .Include(g=> g.Media)
-            .Include(g=>g.Tags)
+            .Include(g => g.Media)
+            .Include(g => g.Tags)
                 .ThenInclude(gt => gt.Tag)
             .AsQueryable();
 
@@ -253,7 +254,7 @@ public class AdminController : Controller
         var query = _db.Purchases
             .Include(r => r.User)
             .Include(r => r.Payment)
-            .Where(r=>r.Status == PurchaseStatus.Refunding)
+            .Where(r => r.Status == PurchaseStatus.Refunding)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(search))
@@ -298,7 +299,7 @@ public class AdminController : Controller
         _db.SaveChanges();
 
         TempData["FlashMessage"] = approve ? "Successfully to refund this purchase." : "Reject the refund request of this purchase.";
-        TempData["FlashMessageType"] = approve ? "success": "info";
+        TempData["FlashMessageType"] = approve ? "success" : "info";
 
         return RedirectToAction("RefundHandling");
     }
@@ -308,9 +309,79 @@ public class AdminController : Controller
         return View();
     }
 
-    public IActionResult TrackPurchase()
+    public IActionResult TrackPurchase(string? search, int? page)
     {
-        return View();
+        int pageSize = 5;
+        int pageNumber = page ?? 1;
+
+        var query = _db.Payments
+            .Include(r => r.User)
+            .Include(p => p.Purchases)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(g => g.User.Username.Contains(search));
+        }
+
+        var vm = query
+            .Select(p => new TrackPurchaseVM
+            {
+                PaymentId = p.Id,
+                PurchaseDate = p.CreatedAt,
+                Status = p.Status.ToString(),
+                PaymentPurpose = p.Purpose.ToString(),
+                PaymentMethod = p.PaymentMethod.ToString(),
+                Price = p.Amount,
+                UserId = p.UserId,
+                AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
+                UserName = p.User.Username,
+            })
+            .OrderBy(p => p.PurchaseDate)
+            .ToPagedList(pageNumber, pageSize);
+
+        ViewData["Title"] = "Purchase >> Track Purchase";
+        ViewData["Description"] = "This page is for tracking all the purchase record, see the detail of each payment and purchase.";
+
+        return View(vm);
+    }
+
+    public IActionResult PurchaseDetailList(int paymentId)
+    {
+        var payment = _db.Payments
+            .Include(p => p.Purchases)
+                .ThenInclude(p => p.Game)
+            .FirstOrDefault(p => p.Id == paymentId);
+
+        if (payment == null)
+            return NotFound("payment not found");
+
+        decimal subtotal = payment.Purchases.Sum(p => p.PriceAtPurchase);
+        decimal total = payment.Amount;
+        decimal discount = total - subtotal;
+
+        var vm = new PurchaseDetailVM
+        {
+            PaymentId = payment.Id,
+            PaymentMethod = payment.PaymentMethod.ToString(),
+            PurchaseDate = payment.CreatedAt,
+            TransactionId = payment.TransactionId,
+            PurchaseItems = payment.Purpose == PaymentPurposeType.DeveloperRegistration
+                    ? new List<PurchaseItem> { new PurchaseItem { Name = "Registration Fee", Price = SystemConstants.RegistrationFee } }
+                     : payment.Purchases
+                        .Select(p => new PurchaseItem
+                        {
+                            PurchaseId = p.Id,
+                            Name = p.Game.Title,
+                            Price = p.PriceAtPurchase
+                        })
+                        .ToList(),
+            Subtotal = subtotal,
+            Discount = discount,
+            Total = total,
+        };
+
+        return View(vm);
     }
 
     public IActionResult PostManagement()

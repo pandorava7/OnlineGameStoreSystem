@@ -113,6 +113,7 @@ public class SupportController : Controller
                      : payment.Purchases
                         .Select(p => new PurchaseItem
                         {
+                            PurchaseId = p.Id,
                             Name = p.Game.Title,
                             Price = p.PriceAtPurchase
                         })

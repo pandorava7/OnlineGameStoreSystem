@@ -75,10 +75,13 @@ public class RefundHandlingVM
 
 public class TrackPurchaseVM
 {
-    public int PurchaseId { get; set; }
+    public int PaymentId { get; set; }
     public DateTime PurchaseDate { get; set; }
     public string Status { get; set; } = string.Empty;
     public decimal Price { get; set; }
+    public string PaymentPurpose { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = string.Empty;
-
+    public int UserId{ get; set; }
+    public string AvatarUrl { get; set;} = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 }

@@ -208,6 +208,7 @@ public class PurchaseDetailVM
 
 public class PurchaseItem
 {
+    public int PurchaseId { get; set; } 
     public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; }
 }
