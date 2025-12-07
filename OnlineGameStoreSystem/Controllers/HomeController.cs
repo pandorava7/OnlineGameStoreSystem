@@ -66,93 +66,6 @@ public class HomeController : Controller
         return View(homeViewModel);
     }
 
-    //public async Task<IActionResult Index()
-    //{
-    //    var userId = User.GetUserId();
-
-    //    var recommendedGames = await _recommendationService.GetRecommendedGames(userId);
-
-    //    //var categories = new List<GameCategoryViewModel>()
-    //    //{
-    //    //    new GameCategoryViewModel {
-    //    //        Title = "Free to Play",
-    //    //        Slug = "free-to-play",
-    //    //        Games = new List<GameViewModel> {
-    //    //            new GameViewModel { Title = "Cyberpunk2077", CoverUrl="/images/example/cyberpunk2077.png", Price=0 },
-    //    //            new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Wuthering Waves", CoverUrl="/images/example/WutheringWaves.png", Price=0 },
-    //    //            new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/hollow knight.png", Price=0 },
-    //    //            new GameViewModel { Title = "Clair Obscur: Expedition 33", CoverUrl="/images/example/Expedition33.png", Price=0 },
-    //    //            new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Silksong", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //            new GameViewModel { Title = "Hollow Knight", CoverUrl="/images/example/silksong.png", Price=0 },
-    //    //        }
-    //    //    },
-
-    //    //    new GameCategoryViewModel {
-    //    //        Title = "RPG Games",
-    //    //        Slug = "rpg",
-    //    //        Games = new List<GameViewModel> {
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //            new GameViewModel { Title="RPG A", CoverUrl="/images/example/silksong.png", Price=59 },
-    //    //            new GameViewModel { Title="RPG B", CoverUrl="/images/example/silksong.png", Price=79 },
-    //    //        }
-    //    //    }
-    //    //};
-
-
-    //    var topGamesBySales = db.Games
-    //        .Include(g => g.Media)
-    //        .Include(g => g.Tags)
-    //            .ThenInclude(gt => gt.Tag)
-    //        .Select(g => new
-    //        {
-    //            Game = g,
-    //            SalesCount = g.Purchases.Count(p => p.Status == PurchaseStatus.Completed)
-    //        })
-    //        .OrderByDescending(x => x.SalesCount)
-    //        .Take(10)
-    //        .ToList();
-
-    //    var homeViewModel = new HomeViewModel
-    //    {
-    //        topGamesBySales = topGamesBySales.Select(x => new TopGameViewModel
-    //        {
-    //            Title = x.Game.Title,
-    //            ThumbnailUrl = x.Game.Media
-    //                .Where(m => m.MediaType == "thumb")
-    //                .Select(m => m.MediaUrl)
-    //                .FirstOrDefault() ?? string.Empty,
-    //            ImageUrls = x.Game.Media
-    //                .Where(m => m.MediaType == "image")
-    //                .Select(m => m.MediaUrl)
-    //                .ToList(),
-    //            TagName = x.Game.Tags
-    //                .Select(gt => gt.Tag.Name)
-    //                .ToList()
-    //        }).ToList(),
-
-    //        //Categories = categories
-    //    };
-
-    //    return View(homeViewModel);
-    //}
-
     [Route("cart")]
     public IActionResult ShoppingCart()
     {
@@ -214,7 +127,7 @@ public class HomeController : Controller
         if (game == null)
         {
             // Game not found, return 404
-            return NotFound();
+            return NotFound("game not found");
         }
 
         var gameDetailViewModel = new GameDetailViewModel

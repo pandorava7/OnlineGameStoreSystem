@@ -136,6 +136,7 @@ public class AdminController : Controller
             .Select(g => new GameReleaseReviewVM
             {
                 GameId = g.Id,
+                DeveloperId = g.DeveloperId,
                 DeveloperName = g.Developer.Username,
                 Title = g.Title,
                 CreatedAt = g.CreatedAt,
@@ -228,6 +229,7 @@ public class AdminController : Controller
                 GameId = g.Id,
                 ThumbnailUrl = g.Media.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault(),
                 Title = g.Title,
+                DeveloperId = g.Developer.Id,
                 DeveloperName = g.Developer.Username,
                 Price = g.Price,
                 Tags = g.Tags.Select(gt => gt.Tag.Name).ToArray(),

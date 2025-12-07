@@ -52,10 +52,20 @@
                     <tr>
                         <td>@item.GameId</td>
                         <td>
-                            <img class="game-management-video" src="@item.ThumbnailUrl" />
+                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@item.Title.Replace('_',' ')">
+                                <img class="game-management-video" src="@item.ThumbnailUrl" />
+                            </a>
                         </td>
-                        <td>@item.Title</td>
-                        <td>@item.DeveloperName</td>
+                        <td>
+                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@item.Title.Replace('_', ' ')">
+                                @item.Title
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-controller="Profile" asp-action="ViewPage" asp-route-userId="@item.DeveloperId">
+                                @item.DeveloperName
+                            </a>
+                        </td>
                         <td>RM @item.Price</td>
                         <td class="tags">
                             @foreach (var tag in item.Tags)

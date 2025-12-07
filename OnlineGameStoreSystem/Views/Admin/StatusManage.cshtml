@@ -41,9 +41,11 @@
                     <tr>
                         <td>@item.UserId</td>
                         <td>
-                            <div class="flex-row" style="gap: 5px">
-                                <img class="avatar" src="@item.AvatarUrl" />
-                                @item.UserName
+                            <div>
+                                <a class="flex-row" style="gap: 5px" asp-controller="Profile" asp-action="ViewPage" asp-route-userId="@item.UserId">
+                                    <img src="@item.AvatarUrl" class="avatar" />
+                                    <span>@item.UserName</span>
+                                </a>
                             </div>
                         </td>
                         <td>@item.UserEmail</td>

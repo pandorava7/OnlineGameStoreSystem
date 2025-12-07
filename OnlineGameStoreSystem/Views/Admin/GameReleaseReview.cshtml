@@ -48,7 +48,11 @@
                     <tr>
                         <td>@item.GameId</td>
                         <td>@item.Title</td>
-                        <td>@item.DeveloperName</td>
+                        <td>
+                            <a asp-controller="Profile" asp-action="ViewPage" asp-route-userId="@item.DeveloperId">
+                                @item.DeveloperName
+                            </a>
+                        </td>
                         <td>@item.CreatedAt</td>
 
                         <td class="action-col">

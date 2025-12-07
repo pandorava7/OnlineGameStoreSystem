@@ -25,6 +25,7 @@ public class GameReleaseReviewVM
 {
     public int GameId { get; set; }
     public string Title { get; set; } = string.Empty;
+    public int DeveloperId { get; set; }
     public string DeveloperName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
 }
@@ -37,10 +38,10 @@ public class GameReviewVM
     public string Description { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string? ThumbnailUrl {  get; set; } = string.Empty;
+    public string? ThumbnailUrl { get; set; } = string.Empty;
     public string[] PreviewUrls { get; set; } = new string[0];
-    public string[] VideoUrls { get; set;  } = new string[0];
-    public string[] Tags { get; set;  } = new string[0];
+    public string[] VideoUrls { get; set; } = new string[0];
+    public string[] Tags { get; set; } = new string[0];
 }
 
 public class GameManagementVM
@@ -48,10 +49,11 @@ public class GameManagementVM
     public int GameId { get; set; }
     public string? ThumbnailUrl { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
+    public int DeveloperId { get; set; }
     public string DeveloperName { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public string[] Tags { get; set; } = new string[0];
-    public string Status {  get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
 
     // 目前没有updated at属性
@@ -65,8 +67,18 @@ public class RefundHandlingVM
     public string AvatarUrl { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
     public int RefundGameId { get; set; }
-    public string RefundGameName { get; set;} = string.Empty;
+    public string RefundGameName { get; set; } = string.Empty;
     public DateTime PurchaseDate { get; set; }
     public DateTime RefundRequestDate { get; set; }
-    public string RefundReason {  get; set; } = string.Empty;
+    public string RefundReason { get; set; } = string.Empty;
+}
+
+public class TrackPurchaseVM
+{
+    public int PurchaseId { get; set; }
+    public DateTime PurchaseDate { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public string PaymentMethod { get; set; } = string.Empty;
+
 }

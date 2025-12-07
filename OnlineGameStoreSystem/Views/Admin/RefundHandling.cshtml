@@ -53,14 +53,18 @@
                         <td>@item.PurchaseId</td>
 
                         <td>
-                            <div class="flex-row" style="gap: 5px">
-                                <img src="@item.AvatarUrl" class="avatar" />
-                                <span>@item.UserName</span>
+                            <div >
+                                <a class="flex-row" style="gap: 5px" asp-controller="Profile" asp-action="ViewPage" asp-route-userId="@item.UserId">
+                                    <img src="@item.AvatarUrl" class="avatar" />
+                                    <span>@item.UserName</span>
+                                </a>
                             </div>
                         </td>
 
                         <td>
-                            <span>@item.RefundGameName</span>
+                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@item.RefundGameName.Replace('_',' ')">
+                                <span>@item.RefundGameName</span>
+                            </a>
                             <br />
                             <small>ID: @item.RefundGameId</small>
                         </td>
