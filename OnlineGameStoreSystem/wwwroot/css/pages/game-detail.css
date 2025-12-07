@@ -405,25 +405,29 @@
 
 /* 星级评分 */
 /* 默认星星 */
-#star-box span {
+.star-box span {
     font-size: 30px;
     cursor: pointer;
     transition: color 0.2s;
     color: #aaa;
 }
 
+.star-box.small span{
+    font-size: 14px;
+}
+
     /* hover 时（active） */
-    #star-box span.active {
+    .star-box span.active {
         color: var(--accent-color2); /* 悬停颜色 */
     }
 
     /* 点击确定后的颜色（selected） */
-    #star-box span.selected {
+    .star-box span.selected {
         color: var(--primary-color); /* 你的品牌主色 */
     }
 
     /* 点击动画 core */
-    #star-box span.pop {
+    .star-box span.pop {
         animation: star-pop 0.4s ease-out;
         position: relative;
     }

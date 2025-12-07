@@ -142,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderReviews(reviews, currentUserId) {
         reviewContainer.innerHTML = '';
         reviews.forEach(r => {
-            console.log(r.id)
             const div = document.createElement('div');
             div.className = 'review-item';
 
@@ -155,9 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 判断是否显示删除按钮
             const showDelete = r.userId == currentUserId;
-            console.log(r.userId);
             // 判断是否点过赞
             const likedClass = r.isLiked ? "liked" : "";
+            // 获取评星
+            const rating = r.rating;
 
             div.innerHTML = `
                 <div class="user-info">
@@ -166,6 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </a>
 
                     <div class="right">
+                        <div class="star-box small">
+                            ${Array.from({ length: 5 }, (_, i) => `
+                                <span class="${i < r.rating ? 'selected' : ''}" data-v="${i + 1}">★</span>
+                            `).join('')}
+                        </div>
                         <div class="review-header" style="display:flex; justify-content:space-between; align-items:center;">
                             <span class="author-name">${r.authorName}</span>
                         </div>
@@ -308,7 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(`/Review/GetByGame?gameId=${gameId}`);
         const data = await res.json();
         const { reviews, currentUserId } = data;
-        console.log(reviews)
         renderReviews(reviews, currentUserId);
 
     }
@@ -320,6 +324,10 @@ document.addEventListener('DOMContentLoaded', () => {
             showTemporaryMessage('Review cannot be empty', 'error')
             return;
         }
+        const starBox = document.getElementById("star-box");
+        const rating = starBox.querySelectorAll('.selected').length;
+
+        console.log(rating)
 
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -329,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'RequestVerificationToken': token
             },
-            body: `gameId=${gameId}&content=${encodeURIComponent(text)}`
+            body: `gameId=${gameId}&content=${encodeURIComponent(text)}&rating=${rating}`
         });
 
         if (res.ok) {
@@ -337,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await loadReviews(); // 重新加载评论
         } else {
             const msg = await res.text();
-            showTemporaryMessage(msg + 'failed to review', 'error')
+            showTemporaryMessage(msg + ', failed to review', 'error')
         }
     });
 
@@ -359,12 +367,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // 添加到购物车（服务器）
 // =====================
 async function addToCart(gameId) {
-    console.log(gameId);
     const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
         method: 'POST'
     });
-
-    console.log(res.success);
 
     const result = await res.json();
     if (result.success) {

@@ -115,6 +115,7 @@ public class GameReviewManagementVM
     public string GameTitle { get; set; } = string.Empty;
     public string? GameThumbnailUrl {  get; set; } = string.Empty;
     public int ReviewId { get; set; }
+    public int ReviewRating { get; set; }
     public string ReviewContent {  get; set; } = string.Empty;
     public DateTime ReviewDate { get; set; }
     public int UserId { get; set; }

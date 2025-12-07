@@ -27,6 +27,7 @@ public class CommunityController : Controller
             Posts = db.Posts
                 .Include(p => p.User)
                 .Include(p => p.Likes)
+                .Where(p => p.Status == ActiveStatus.Active)
                 .Select(p => new CommunityPostViewModel
                 {
                     Id = p.Id,

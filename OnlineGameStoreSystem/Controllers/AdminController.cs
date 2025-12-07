@@ -497,6 +497,7 @@ public class AdminController : Controller
             .Select(r => new GameReviewManagementVM
             {
                 ReviewId = r.Id,
+                ReviewRating = r.Rating,
                 ReviewContent = r.Content ?? "",
                 ReviewDate = r.CreatedAt,
                 GameId = r.GameId,

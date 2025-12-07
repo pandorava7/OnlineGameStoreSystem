@@ -73,7 +73,15 @@
                             </a>
                         </td>
 
-                        <td>@item.ReviewContent</td>
+                        <td class="flex-column" style="align-items:flex-start">
+                            <div class="star-box small">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <span class="@(i < item.ReviewRating ? "selected" : "")">★</span>
+                                }
+                            </div>
+                            @item.ReviewContent
+                        </td>
 
                         <td>@item.ReviewDate.ToString("yyyy-MM-dd HH:mm")</td>
 
@@ -100,3 +108,8 @@
                 )
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/game-detail.css" asp-append-version="true" />
+
+}

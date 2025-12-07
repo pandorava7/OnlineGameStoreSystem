@@ -19,7 +19,7 @@ public class ReviewController : Controller
     // 添加评论
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Add(int gameId, string content)
+    public async Task<IActionResult> Add(int gameId, string content, int rating)
     {
         if (string.IsNullOrWhiteSpace(content))
             return BadRequest("Content cannot be empty");
@@ -27,6 +27,9 @@ public class ReviewController : Controller
         var game = await db.Games.FindAsync(gameId);
         if (game == null)
             return NotFound("Game is not exist");
+
+        if (rating <= 0 || rating > 5)
+            return BadRequest("please make sure rating between 1 ~ 5");
 
         var userId = User.GetUserId();
 
@@ -36,7 +39,7 @@ public class ReviewController : Controller
             UserId = userId,
             Content = content,
             CreatedAt = DateTime.UtcNow,
-            Rating = 5
+            Rating = rating
         };
 
         db.Reviews.Add(review);
@@ -63,6 +66,7 @@ public class ReviewController : Controller
                 c.Content,
                 c.CreatedAt,
                 c.LikeCount,
+                c.Rating,
                 AuthorId = c.UserId,
                 AuthorName = c.User.Username,
                 AuthorAvatarUrl = c.User.AvatarUrl,
