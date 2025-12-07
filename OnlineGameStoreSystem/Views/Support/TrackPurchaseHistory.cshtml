@@ -12,7 +12,7 @@
             <input id="searchInput"
                    name="search"
                    type="text"
-                   placeholder="Search by name..."
+                   placeholder="Search by payment type..."
                    value="@Context.Request.Query["search"]"
                    aria-label="search-input">
 
@@ -71,7 +71,7 @@
     <div class="panel-pager">
         @Html.PagedListPager(
         Model,
-        page => Url.Action("StatusManage", new { page }),
+        page => Url.Action("TrackPurchaseHistory", new { page }),
                 PagedListRenderOptions.ClassicPlusFirstAndLast
                 )
     </div>

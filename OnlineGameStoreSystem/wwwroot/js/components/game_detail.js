@@ -359,6 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // 添加到购物车（服务器）
 // =====================
 async function addToCart(gameId) {
+    console.log(gameId);
     const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
         method: 'POST'
     });
@@ -371,5 +372,9 @@ async function addToCart(gameId) {
 
         // 更新购物车徽章
         await CartAPI.loadCartFromServer();
+    }
+    else {
+
+        showTemporaryMessage(result.message, "error");
     }
 }

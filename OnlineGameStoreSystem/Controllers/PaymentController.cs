@@ -147,6 +147,7 @@ public class PaymentController : Controller
             Amount = totalAmount,
             PaymentMethod = selectedPaymentMethod.Value,
             TransactionId = Guid.NewGuid().ToString(),
+            Purpose = PaymentPurposeType.Purchase,
             Status = PaymentStatus.Pending
         };
 

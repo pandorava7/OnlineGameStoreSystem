@@ -31,7 +31,7 @@
 
     <div class="card-group" style="gap: 0;">
         <p style="color: var(--primary-color)">What issue are you having with this purchase?</p>
-        <a class="question-card" asp-controller="Support" asp-action="RedirectByQuestion" asp-route-question="refund-request">
+        <a class="question-card" asp-controller="Support" asp-action="RefundRequest" asp-route-paymentId="@Model.PaymentId">
             I would like a refund
         </a>
     </div>

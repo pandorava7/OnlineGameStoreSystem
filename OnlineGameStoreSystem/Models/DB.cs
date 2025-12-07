@@ -635,6 +635,8 @@ public class Purchase
     public decimal PriceAtPurchase { get; set; }
 
     public PurchaseStatus Status { get; set; } = PurchaseStatus.Pending;
+    public string? RefundReason { get; set; }
+    public DateTime RefundRequestedAt { get; set; }
 }
 
 public class Payment

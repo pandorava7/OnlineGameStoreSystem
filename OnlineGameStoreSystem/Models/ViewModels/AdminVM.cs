@@ -57,3 +57,16 @@ public class GameManagementVM
     // 目前没有updated at属性
     //public DateTime UpdatedAt { get; set; }
 }
+
+public class RefundHandlingVM
+{
+    public int PurchaseId { get; set; }
+    public int UserId { get; set; }
+    public string AvatarUrl { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+    public int RefundGameId { get; set; }
+    public string RefundGameName { get; set;} = string.Empty;
+    public DateTime PurchaseDate { get; set; }
+    public DateTime RefundRequestDate { get; set; }
+    public string RefundReason {  get; set; } = string.Empty;
+}

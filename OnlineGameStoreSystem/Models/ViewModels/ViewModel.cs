@@ -1,4 +1,5 @@
 ﻿#region 主页VM
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 public class HomeViewModel
@@ -209,6 +210,22 @@ public class PurchaseItem
 {
     public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; }
+}
+
+public class RefundPurchaseItemVM
+{
+    public int PurchaseId { get; set; }
+    public string? GameThumbnailUrl { get; set; } = string.Empty;
+    public string GameTitle { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+}
+
+public class RefundPaymentVM
+{
+    public int PaymentId { get; set; }
+    public decimal TotalAmount { get; set; }
+    public List<RefundPurchaseItemVM> Purchases { get; set; } = new();
+    public string? Reason { get; set; }
 }
 
 #endregion

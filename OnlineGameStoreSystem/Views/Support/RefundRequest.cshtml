@@ -1,12 +1,36 @@
-﻿<div class="container">
-    <div class="refund-container">
-        <p class="title">Please enter the reason why you want to make a refund?</p>
-        <form asp-controller="Support" asp-action="RefundRequest" method="post">
-            <textarea name="reason"></textarea>
+﻿@model RefundPaymentVM
+
+<div class="container">
+    <form asp-controller="Support" asp-action="RefundRequest" method="post">
+        <input type="hidden" name="paymentId" value="@Model.PaymentId" />
+        <div class="refund-container">
+            <span class="text-danger">@Html.ValidationSummary()</span>
+            <div class="refund-select-container">
+                <p class="title">Select the item that you want to refund</p>
+                <div class="card-group">
+                    @foreach (var item in Model.Purchases)
+                    {
+                        <div class="item-card flex-row">
+                            <div class="flex-row" style="gap: 10px">
+                                <img src="@item.GameThumbnailUrl" />
+                                <div class="flex-column">
+                                    <p class="game-title">@item.GameTitle</p>
+                                    <p class="game-price">RM @item.Price</p>
+                                </div>
+                            </div>
+                            
+                            <input class="checkbox" type="checkbox" name="selectedPurchaseIds" value="@item.PurchaseId" />
+                        </div>
+                    }
+                </div>
+            </div>
+            <p class="title">Please enter the reason why you want to make a refund?</p>
+
+            <textarea name="reason">@Model.Reason</textarea>
             <p>Your refund request and reason will be submitted to the administrator for review. Once the request is approved, you will receive a notification about yout refund status.</p>
             <button class="primary-btn">Submit</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 
@@ -18,5 +42,5 @@
 }
 
 @section Scripts {
-   <script src="~/js/pages/support.js" asp-append-version="true"></script>
+    <script src="~/js/pages/support.js" asp-append-version="true"></script>
 }

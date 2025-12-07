@@ -38,3 +38,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// confirm refund approve and reject
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Approve refund buttons
+    const approveRefundBtns = document.querySelectorAll(".approve-refund-btn");
+    approveRefundBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const purchaseId = btn.getAttribute('data-purchase-id');
+                document.getElementById('refundPurchaseId').value = purchaseId;
+                document.getElementById('refundApproveStatus').value = true; // Approve = true
+                document.getElementById('refundActionForm').submit();
+            }, "Confirm approving this refund request?");
+        });
+    });
+
+    // Reject refund buttons
+    const rejectRefundBtns = document.querySelectorAll(".reject-refund-btn");
+    rejectRefundBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const purchaseId = btn.getAttribute('data-purchase-id');
+                document.getElementById('refundPurchaseId').value = purchaseId;
+                document.getElementById('refundApproveStatus').value = false; // Reject = false
+                document.getElementById('refundActionForm').submit();
+            }, "Confirm rejecting this refund request?");
+        });
+    });
+});

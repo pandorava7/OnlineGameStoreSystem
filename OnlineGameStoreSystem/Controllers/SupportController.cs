@@ -33,10 +33,6 @@ public class SupportController : Controller
             case "track-purchase-history":
                 return RedirectToAction("TrackPurchaseHistory");
 
-            case "refund-request":
-                return RedirectToAction("RefundRequest");
-
-
             case "feedback-submit":
                 return RedirectToAction("FeedbackSubmit");
 
@@ -47,7 +43,7 @@ public class SupportController : Controller
     [Authorize]
     public IActionResult TrackPurchaseHistory(string? search, int? page)
     {
-        int pageSize = 1;
+        int pageSize = 10;
         int pageNumber = page ?? 1;
 
         var query = _db.Payments
@@ -59,7 +55,10 @@ public class SupportController : Controller
 
         if (!string.IsNullOrEmpty(search))
         {
-            query = query.Where(p => p.Purpose.ToString().Contains(search));
+            query = query
+                .AsEnumerable() // 切换到内存 LINQ
+                .Where(p => p.Purpose.ToString().ToLower().Contains(search.ToLower()))
+                .AsQueryable();
         }
 
         var vm = query
@@ -69,7 +68,7 @@ public class SupportController : Controller
                 // if this payment is registration, just create new list for that
                 // if this is not registration, take purchase gamaes name to list
                 PaymentId = p.Id,
-                Items = p.Purpose == PaymentPurposeType.DeveloperRegistration 
+                Items = p.Purpose == PaymentPurposeType.DeveloperRegistration
                     ? new List<string> { "Registration fee" }
                      : p.Purchases.
                      Select(purchase => purchase.Game.Title.ToString())
@@ -126,10 +125,92 @@ public class SupportController : Controller
         return View(vm);
     }
 
-    public IActionResult RefundRequest()
+    public IActionResult RefundRequest(int paymentId)
     {
+        var payment = _db.Payments
+            .Include(p => p.Purchases)
+                .ThenInclude(pu => pu.Game)
+                    .ThenInclude(g => g.Media)
+            .FirstOrDefault(p => p.Id == paymentId);
 
+        if (payment == null)
+            return NotFound("payment not found");
 
-        return View();
+        var vm = new RefundPaymentVM
+        {
+            PaymentId = payment.Id,
+            TotalAmount = payment.Amount,
+            Purchases = payment.Purchases.Select(p => new RefundPurchaseItemVM
+            {
+                PurchaseId = p.Id,
+                GameThumbnailUrl = p.Game.Media.FirstOrDefault(gm => gm.MediaType == "thumb")?.MediaUrl,
+                GameTitle = p.Game.Title,
+                Price = p.PriceAtPurchase
+            }).ToList(),
+            Reason = ""
+        };
+
+        return View(vm);
     }
+
+    [HttpPost]
+    public IActionResult RefundRequest(string reason, int[] selectedPurchaseIds, int paymentId)
+    {
+        // 重新加载 Payment 和 Purchases
+        var payment = _db.Payments
+            .Include(p => p.Purchases)
+                .ThenInclude(pu => pu.Game)
+                    .ThenInclude(g => g.Media)
+            .FirstOrDefault(p => p.Id == paymentId);
+
+        if (payment == null)
+            return NotFound("payment not found");
+
+        var vm = new RefundPaymentVM
+        {
+            PaymentId = payment.Id,
+            TotalAmount = payment.Amount,
+            Purchases = payment.Purchases.Select(p => new RefundPurchaseItemVM
+            {
+                PurchaseId = p.Id,
+                GameThumbnailUrl = p.Game.Media.FirstOrDefault(gm => gm.MediaType == "thumb")?.MediaUrl,
+                GameTitle = p.Game.Title,
+                Price = p.PriceAtPurchase
+            }).ToList(),
+            Reason = reason
+        };
+
+        if (selectedPurchaseIds == null || selectedPurchaseIds.Length == 0)
+        {
+            ModelState.AddModelError("select", "Please select at least one item to refund.");
+            return View(vm);
+        }
+
+        if(string.IsNullOrEmpty(reason))
+        {
+            ModelState.AddModelError("reason", "Please write your reason.");
+            return View(vm);
+        }
+
+        // 处理退款逻辑
+        foreach (var purchaseId in selectedPurchaseIds)
+        {
+            var purchase = _db.Purchases.Find(purchaseId);
+            if (purchase != null)
+            {
+                // 标记Purchase为正在退款，此Purchase将会移交给管理员审核
+                purchase.Status = PurchaseStatus.Refunding;
+                purchase.RefundReason = reason;
+                purchase.RefundRequestedAt = DateTime.Now;
+            }
+        }
+
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = "Refund request submitted successfully.";
+        TempData["FlashMessageType"] = "success";
+        return RedirectToAction("TrackPurchaseHistory");
+    }
+
+
 }

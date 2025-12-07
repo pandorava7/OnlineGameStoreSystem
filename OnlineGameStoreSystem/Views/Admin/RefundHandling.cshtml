@@ -1,6 +1,105 @@
 ﻿@{
     Layout = "_AdminLayout";
 }
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<OnlineGameStoreSystem.Models.ViewModels.RefundHandlingVM>
 
 <div class="admin-container">
+    <h1 class="panel-title">@ViewData["Title"]</h1>
+    <p class="panel-description">@ViewData["Description"]</p>
+
+    <!-- Search -->
+    <div class="search-box">
+        <form method="get" action="/Admin/RefundHandling">
+            <input id="searchInput"
+                   name="search"
+                   type="text"
+                   placeholder="Search by user..."
+                   value="@Context.Request.Query["search"]"
+                   aria-label="search-input">
+
+            <button type="submit" class="primary-btn">Search</button>
+        </form>
+    </div>
+
+
+    <div class="panel">
+        <table class="panel-table">
+            <thead>
+                <tr>
+                    <th>PurchaseId</th>
+                    <th>User</th>
+                    <th>Game</th>
+                    <th>Purchase Date</th>
+                    <th>Request Date</th>
+                    <th>Reason</th>
+                    <th class="action-col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <!-- Approve / Reject POST form -->
+                <form id="refundActionForm" asp-controller="Admin" asp-action="HandleRefund" method="post" style="display:none;">
+                    @Html.AntiForgeryToken()
+                    <input id="refundPurchaseId" type="hidden" name="purchaseId" />
+                    <input id="refundApproveStatus" type="hidden" name="approve" />
+                </form>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.PurchaseId</td>
+
+                        <td>
+                            <div class="flex-row" style="gap: 5px">
+                                <img src="@item.AvatarUrl" class="avatar" />
+                                <span>@item.UserName</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span>@item.RefundGameName</span>
+                            <br />
+                            <small>ID: @item.RefundGameId</small>
+                        </td>
+
+                        <td>@item.PurchaseDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@item.RefundRequestDate.ToString("yyyy-MM-dd HH:mm")</td>
+
+                        <td>
+                            <span class="reason-text">
+                                @(
+                                                            item.RefundReason.Length > 30
+                                                            ? item.RefundReason.Substring(0, 30) + "..."
+                                                            : item.RefundReason
+                                                            )
+                            </span>
+                        </td>
+
+                        <td class="action-col">
+                            <div class="button-group">
+                                <button data-purchase-id="@item.PurchaseId" type="button" class="primary-btn approve-refund-btn">
+                                    Approve
+                                </button>
+
+                                <button data-purchase-id="@item.PurchaseId" type="button" class="danger-btn reject-refund-btn">
+                                    Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel-pager">
+        @Html.PagedListPager(
+        Model,
+        page => Url.Action("RefundHandling", new { page }),
+                PagedListRenderOptions.ClassicPlusFirstAndLast
+                )
+    </div>
 </div>

@@ -61,7 +61,7 @@ public class CartController : Controller
             return Json(new { success = false, message = "User not found" });
 
         // 查找用户现有的购物车
-        var cart = await db.ShoppingCarts.FirstOrDefaultAsync(c => c.UserId == userId);
+        var cart = await db.ShoppingCarts.Include(sp=>sp.Items).FirstOrDefaultAsync(c => c.UserId == userId);
 
         // 如果购物车不存在，则创建
         if (cart == null)
@@ -82,6 +82,13 @@ public class CartController : Controller
         if (alreadyPurchased)
         {
             return Json(new { success = false, message = "You already own this game" });
+        }
+
+        // 检查用户是否已经添加到购物车
+        bool alreadyAddToCart = cart.Items.Any(cart => cart.GameId == gameId);
+        if (alreadyAddToCart)
+        {
+            return Json(new { success = false, message = "You already add this game to your cart" });
         }
 
         // 添加商品到购物车

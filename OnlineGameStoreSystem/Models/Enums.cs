@@ -24,6 +24,7 @@ namespace OnlineGameStoreSystem.Models
         Pending,
         Completed,
         Failed,
+        Refunding,
         Refunded
     }
 

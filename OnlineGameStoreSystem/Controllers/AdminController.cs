@@ -41,7 +41,7 @@ public class AdminController : Controller
             .Select(u => new StatusManageVM
             {
                 UserId = u.Id,
-                AvatarUrl = string.IsNullOrEmpty(u.AvatarUrl) == false ? u.AvatarUrl : "avatar_default.png",
+                AvatarUrl = string.IsNullOrEmpty(u.AvatarUrl) == false ? u.AvatarUrl : "/images/avatar_default.png",
                 UserName = u.Username,
                 UserEmail = u.Email,
                 Status = u.Status,
@@ -243,9 +243,62 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    public IActionResult RefundHandling()
+    public IActionResult RefundHandling(string? search, int? page)
     {
-        return View();
+        int pageSize = 5;
+        int pageNumber = page ?? 1;
+
+        var query = _db.Purchases
+            .Include(r => r.User)
+            .Include(r => r.Payment)
+            .Where(r=>r.Status == PurchaseStatus.Refunding)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(g => g.User.Username.Contains(search));
+        }
+
+        var vm = query
+            .Select(p => new RefundHandlingVM
+            {
+                PurchaseId = p.Id,
+                PurchaseDate = p.Payment.CreatedAt,
+                UserId = p.UserId,
+                AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
+                UserName = p.User.Username,
+                RefundGameId = p.GameId,
+                RefundGameName = p.Game.Title,
+                RefundReason = p.RefundReason ?? "no reason",
+                RefundRequestDate = p.RefundRequestedAt,
+            })
+            .OrderBy(p => p.RefundRequestDate)
+            .ToPagedList(pageNumber, pageSize);
+
+        ViewData["Title"] = "Purchase >> Refund Handling";
+        ViewData["Description"] = "This page is for refund handling, review the reason from user and approve/reject the refund request.";
+
+        return View(vm);
+    }
+
+    public IActionResult HandleRefund(int purchaseId, bool approve)
+    {
+        // 更新游戏状态
+        var purchase = _db.Purchases.Find(purchaseId);
+        if (purchase == null)
+            return NotFound("Purchase is not found");
+
+        if (purchase.Status != PurchaseStatus.Refunding)
+            return BadRequest("This purchase is not valid for refund, the status is: " + purchase.Status.ToString());
+
+        ConsoleHelper.WriteRed("Approve: " + approve);
+        purchase.Status = approve ? PurchaseStatus.Refunded : PurchaseStatus.Completed;
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = approve ? "Successfully to refund this purchase." : "Reject the refund request of this purchase.";
+        TempData["FlashMessageType"] = approve ? "success": "info";
+
+        return RedirectToAction("RefundHandling");
     }
 
     public IActionResult WebsiteStatistics()

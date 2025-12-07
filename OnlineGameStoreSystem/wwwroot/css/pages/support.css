@@ -1,24 +1,61 @@
-﻿.purchase-detail-card {
+﻿.refund-select-container {
+    background: var(--bg-surface);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+    .refund-select-container .item-card {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .refund-select-container .item-card img {
+            width: 200px;
+        }
+
+        .refund-select-container .item-card .game-title {
+            font-size: 24px;
+            align-self: flex-start;
+        }
+
+        .refund-select-container .item-card .game-price {
+            font-size: 18px;
+            align-self: flex-start;
+        }
+
+        .refund-select-container .item-card .checkbox {
+            transform: scale(1.5); /* 1.5 倍大小 */
+        }
+
+
+
+
+.purchase-detail-card {
     background-color: var(--bg-surface);
     padding: 10px 20px;
     border-radius: 20px;
     margin-bottom: 20px;
 }
 
-    .purchase-detail-card .detail{
+    .purchase-detail-card .detail {
         margin-bottom: 15px;
     }
 
-    .purchase-detail-card .detail * {
-        margin: 0;
-    }
-
-        .purchase-detail-card .items .item{
-            color: var(--primary-color);
-            font-weight:bold;
+        .purchase-detail-card .detail * {
+            margin: 0;
         }
 
-.checkout-card{
+    .purchase-detail-card .items .item {
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+
+.checkout-card {
     display: flex;
     flex-direction: row;
     position: relative;
@@ -34,7 +71,7 @@
     }
 
 
-    .checkout-card p{
+    .checkout-card p {
         margin: 0;
     }
 
@@ -56,21 +93,21 @@
             color: var(--primary-color);
         }
 
-.refund-container{
+.refund-container {
     width: 60%;
     margin: 0 auto;
 }
 
-    .refund-container textarea{
+    .refund-container textarea {
         width: 100%;
         height: 200px !important;
     }
 
 
-    .container {
-        width: 1000px;
-        margin: 40px auto;
-    }
+.container {
+    width: 1000px;
+    margin: 40px auto;
+}
 
 .page-title {
     font-size: 32px;
@@ -101,16 +138,16 @@
     padding: 20px 20px;
 }
 
-.type-container{
+.type-container {
     display: flex;
     flex-direction: column;
 }
 
-.type-container *{
-    margin: 0px;
-}
+    .type-container * {
+        margin: 0px;
+    }
 
-.type-container .method {
-    color: darkgray;
-    font-size: 14px;
-}
+    .type-container .method {
+        color: darkgray;
+        font-size: 14px;
+    }
