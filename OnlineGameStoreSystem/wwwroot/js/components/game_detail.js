@@ -361,25 +361,53 @@ document.addEventListener('DOMContentLoaded', () => {
         await addToCart(gameid);
     });
 
+    const addToWishlistBtn = document.getElementById('btnAddToWishlist');
+    // 添加到购物车按钮事件
+    addToWishlistBtn.addEventListener('click', async () => {
+        const gameid = addToWishlistBtn.dataset.gameId;
+        await addToWishlist(gameid);
+    });
 });
 
 // =====================
 // 添加到购物车（服务器）
 // =====================
 async function addToCart(gameId) {
-    const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
-        method: 'POST'
-    });
+    confirmMessage(async () => {
+        const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
+            method: 'POST'
+        });
 
-    const result = await res.json();
-    if (result.success) {
-        showTemporaryMessage("Added to your cart", "success");
+        const result = await res.json();
+        if (result.success) {
+            showTemporaryMessage("Added to your cart", "success");
 
-        // 更新购物车徽章
-        await CartAPI.loadCartFromServer();
-    }
-    else {
+            // 更新购物车徽章
+            await CartAPI.loadCartFromServer();
+        }
+        else {
 
-        showTemporaryMessage(result.message, "error");
-    }
+            showTemporaryMessage(result.message, "error");
+        }
+    }, "Confirm add to your cart?");
+}
+
+async function addToWishlist(gameId) {
+    confirmMessage(async  () => {
+        const res = await fetch(`/Wishlist/AddItem?gameId=${gameId}`, {
+            method: 'POST'
+        });
+
+        const result = await res.json();
+        if (result.success) {
+            showTemporaryMessage("Added to your wishlist", "success");
+
+            // 更新购物车徽章
+            //await CartAPI.loadCartFromServer();
+        }
+        else {
+            showTemporaryMessage(result.message, "error");
+        }
+    }, "Confirm add to your wishlist?");
+    
 }

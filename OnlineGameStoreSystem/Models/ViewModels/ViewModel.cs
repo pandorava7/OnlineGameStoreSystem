@@ -230,3 +230,21 @@ public class RefundPaymentVM
 }
 
 #endregion
+
+#region Wishlist
+
+public class WishlistItemVM
+{
+    public int WishlistId { get; set; }
+    public int GameId { get; set; }   
+    public string Title { get; set; } = string.Empty;
+    public string ThumbnailUrl { get; set; } = string.Empty;
+    public decimal Price { get; set; }      
+}
+
+public class WishlistVM
+{
+    public List<WishlistItemVM> Items { get; set; } = new();
+}
+
+#endregion

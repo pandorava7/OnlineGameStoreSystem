@@ -70,7 +70,7 @@ public class HomeController : Controller
     public IActionResult ShoppingCart()
     {
         // 1. 获取当前用户的 ID (假设是 1)
-        int userId = 1;
+        int userId = User.GetUserId();
 
         // 2. 从数据库获取该用户的购物车
         var cart = db.ShoppingCarts.FirstOrDefault(c => c.UserId == userId);
@@ -242,7 +242,29 @@ public class HomeController : Controller
         return View(games);
     }
 
+    public IActionResult Wishlist()
+    {
+        var userId = User.GetUserId();
 
+        var wishlist = db.Wishlists.Where(w => w.UserId == userId).Include(w=>w.Game);
+
+        var vm = new WishlistVM
+        {
+            Items = wishlist.Select(w => new WishlistItemVM
+            {
+                WishlistId = w.Id,
+                GameId = w.GameId,
+                Price = w.Game.Price,
+                Title = w.Game.Title,
+                ThumbnailUrl = w.Game.Media
+                    .Where(m => m.MediaType == "thumb")
+                    .Select(m => m.MediaUrl)
+                    .FirstOrDefault() ?? string.Empty,
+            }).ToList()
+        };
+
+        return View(vm);
+    }
 
 
 
