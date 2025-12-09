@@ -617,3 +617,60 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+$(document).ready(function () {
+    // 缓存选择器
+    var $countrySelect = $('#CountrySelect');
+    var $stateContainer = $('#StateContainer');
+    var $stateSelect = $('#State');
+
+    // 定义切换显示状态的函数
+    function toggleStateField() {
+        // 检查选中的值是否为 'Malaysia'
+        if ($countrySelect.val() === 'Malaysia') {
+            $stateContainer.slideDown(200); // 慢速显示
+        } else {
+            $stateContainer.slideUp(200);   // 慢速隐藏
+
+            // 【重要】隐藏时清空 State 的值，防止提交无效数据或触发错误的后端验证
+            $stateSelect.val('');
+        }
+    }
+
+    // 1. 页面加载时执行一次 (处理浏览器回退或默认值)
+    toggleStateField();
+
+    // 2. 当 Country 下拉列表改变时，执行切换函数
+    $countrySelect.on('change', function () {
+        toggleStateField();
+    });
+});
+
+// 当页面完全加载后执行
+$(document).ready(function () {
+    // 告诉 Select2 库将 ID 为 'StateDropdown' 的元素转换为可搜索的浮动列表
+    $('#StateDropdown').select2();
+});
+
+$(document).ready(function () {
+    // ... (其他 Select2 或初始化代码) ...
+
+    // 监听支付按钮的点击事件
+    $('.btn-payment-option').on('click', function () {
+
+        var $clickedButton = $(this);
+        var targetId = $clickedButton.data('target');
+        var paymentValue = $clickedButton.data('value');
+
+        // a. 切换按钮 active 样式
+        $('.btn-payment-option').removeClass('active');
+        $clickedButton.addClass('active');
+
+        // b. 🔴 切换详情容器的显示状态 (使用 .toggleClass('hidden'))
+        $('.method-details').addClass('hidden'); // 先隐藏所有详情
+        $(targetId).removeClass('hidden');       // 再显示目标详情
+
+        // c. 更新隐藏字段的值
+        $('#HiddenPaymentMethod').val(paymentValue);
+    });
+});
