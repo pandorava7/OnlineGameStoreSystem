@@ -5,8 +5,8 @@
 
             confirmDownloadGame(async () => {
                 const link = document.createElement('a');
-                link.href = '/download/example.zip'; // 安装包路径
-                link.download = 'example.zip'; // 下载时的文件名
+                link.href = '/download/example.zip'; // Zip file path
+                link.download = 'example.zip'; // file name when download
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

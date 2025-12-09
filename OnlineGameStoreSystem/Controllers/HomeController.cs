@@ -29,7 +29,7 @@ public class HomeController : Controller
 
         var recommendedGames = await _recommendationService.GetRecommendedGames(userId);
 
-        // 推荐服务保证 5 个，所以直接取 GameId
+        // Get the recommend top 5 games
         var top5GameIds = recommendedGames
             .Select(r => r.GameId)
             .ToList();

@@ -40,22 +40,22 @@ public class RecommendationService
         //                                .Where(v => v.UserId == userId)
         //                                .ToListAsync();
 
-        // 计算每个游戏的推荐分数
+        // Calculate score for each game
         var result = new List<RecommendedGameDto>();
 
         foreach (var game in games)
         {
-            // 最多五个（前五个）
+            // maximum is 5
             if (result.Count >= 5)
                 break;
 
             double score = 0;
 
-            // 1. 愿望单分数
+            // 1. wishlist score
             if (wishlist.Contains(game.Id))
                 score += 1 * WishlistWeight;
 
-            // 2. 标签匹配（示例：交集标签数 / 用户兴趣标签总数）
+            // 2. tag match and give score
             var gameTags = game.Tags?
                 .Where(t => t.Tag != null && t.Tag.Name != null)
                 .Select(t => t.Tag.Name)
@@ -69,11 +69,11 @@ public class RecommendationService
             if (interestTags != null && interestTags.Count > 0)
                 score += ((double)tagMatch / interestTags.Count) * TagMatchWeight;
 
-            // 3. 浏览次数分数（归一化）
+            // 3. view count score
             //var view = viewRecords.FirstOrDefault(v => v.GameId == game.GameId)?.ViewCount ?? 0;
             //score += NormalizeView(view) * ViewCountWeight;
 
-            // 4. 全局热度（也要归一化）
+            // 4. global hot score
             //score += NormalizeHot(game.GlobalViews) * GlobalHotWeight;
 
             result.Add(new RecommendedGameDto
@@ -84,7 +84,7 @@ public class RecommendationService
             });
         }
 
-        // 按推荐分数排序
+        // sort by score
         return result.OrderByDescending(r => r.Score).ToList();
     }
 

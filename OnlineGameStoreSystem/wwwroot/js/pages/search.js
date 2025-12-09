@@ -108,7 +108,7 @@
         const val = tagInput.value.trim(); if (!val) return; const found = ALL_TAGS.find(t => t.toLowerCase() === val.toLowerCase()); addTag(found || val);
     });
 
-    // ----------------- 搜索触发（示例） -----------------
+    // ----------------- Search Trigger -----------------
     const mainSearchInput = document.getElementById('searchInput');
     const mainSearchBtn = document.getElementById('searchSubmit');
 
@@ -117,7 +117,7 @@
         const params = new URLSearchParams();
 
         if (term) params.set('term', term);
-        // 价格
+        // price
         params.set('price', priceLabels[Number(priceRange.value)]);
         // toggles
         params.set('hideFree', document.getElementById('hideFreeSwitch').classList.contains('on'));
@@ -126,10 +126,10 @@
         params.set('hideWishlist', document.getElementById('hideWishlistSwitch').classList.contains('on'));
         if (activeTags.length) params.set('tags', activeTags.join(','));
 
-        // 示例：跳转到 /Search?.... （如需用 API 获取结果，可改为 fetch）
+        // Do searching query
         const url = '/Search?' + params.toString();
         console.log('search url ->', url);
-         window.location.href = url; // 取消注释以实际跳转
+        window.location.href = url;
     }
     mainSearchBtn.addEventListener('click', doSearch);
     mainSearchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { doSearch(); } });

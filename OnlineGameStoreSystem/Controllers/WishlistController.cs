@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Extensions;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 
 namespace OnlineGameStoreSystem.Controllers;
 
+[Authorize]
 public class WishlistController : Controller
 {
     private readonly DB db;

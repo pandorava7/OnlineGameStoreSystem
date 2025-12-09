@@ -342,14 +342,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (res.ok) {
             reviewContent.value = '';
-            await loadReviews(); // 重新加载评论
+            await loadReviews(); 
         } else {
             const msg = await res.text();
             showTemporaryMessage(msg + ', failed to review', 'error')
         }
     });
 
-    // 页面加载时获取评论
     loadReviews();
 });
 

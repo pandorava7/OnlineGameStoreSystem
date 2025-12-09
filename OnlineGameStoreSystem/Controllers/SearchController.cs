@@ -25,14 +25,14 @@ public class SearchController : Controller
             .Where(g => g.Status == GameStatus.Published)
             .AsQueryable();
 
-        // ---------------- 搜索词 ----------------
+        // ---------------- Search query ----------------
         if (!string.IsNullOrWhiteSpace(term))
         {
             string t = term.ToLower();
             query = query.Where(g => g.Title.ToLower().Contains(t) || g.Developer.Username.ToLower().Contains(t));
         }
 
-        // ---------------- 价格 ----------------
+        // ---------------- Price ----------------
         if (!string.IsNullOrWhiteSpace(price) && price != "Any Price")
         {
             decimal upper = price switch
@@ -47,7 +47,7 @@ public class SearchController : Controller
             query = query.Where(g => (g.DiscountPrice ?? g.Price) <= upper);
         }
 
-        // ---------------- 开关 ----------------
+        // ---------------- Toggle ----------------
         if (hideFree)
             query = query.Where(g => (g.DiscountPrice ?? g.Price) > 0);
         if (onlyDiscount)
@@ -57,14 +57,14 @@ public class SearchController : Controller
         if (hideWishlist)
             query = query.Where(g => !_db.Wishlists.Any(w => w.UserId == currentUserId && w.GameId == g.Id));
 
-        // ---------------- 标签 ----------------
+        // ---------------- Tag ----------------
         if (!string.IsNullOrWhiteSpace(tags))
         {
             var tagList = tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim().ToLower()).ToList();
             query = query.Where(g => g.Tags.Any(gt => tagList.Contains(gt.Tag.Name.ToLower())));
         }
 
-        // ---------------- 投影结果 ----------------
+        // ---------------- Result ----------------
         var vm = new SearchPageVM
         {
             SearchTerm = term ?? "",
