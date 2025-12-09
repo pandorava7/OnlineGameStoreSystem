@@ -16,7 +16,7 @@ public class CartController : Controller
         db = context;
     }
 
-    // 获取购物车商品列表
+    // Get Cart Item List
     [HttpGet]
     public async Task<IActionResult> GetItems()
     {
