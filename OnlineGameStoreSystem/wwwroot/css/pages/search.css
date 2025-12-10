@@ -1,6 +1,6 @@
 ﻿.search-container {
     width: 1000px;
-    margin: 0 auto;
+    margin: 40px auto;
     display: flex;
     gap: 20px;
 }
