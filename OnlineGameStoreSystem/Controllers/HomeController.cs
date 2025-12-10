@@ -216,9 +216,9 @@ public class HomeController : Controller
                                     .OrderByDescending(p => p.Payment.CreatedAt)
                                     .Select(p => p.Payment.CreatedAt)
                                     .FirstOrDefault()),
-            "like rate" => ascending
-                ? query.OrderBy(g => g.Likes.Count == 0 ? 0 : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count)
-                : query.OrderByDescending(g => g.Likes.Count == 0 ? 0 : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count),
+            //"like rate" => ascending
+            //    ? query.OrderBy(g => g.Likes.Count == 0 ? 0 : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count)
+            //    : query.OrderByDescending(g => g.Likes.Count == 0 ? 0 : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count),
             _ => query.OrderBy(g => g.Title)
         };
 

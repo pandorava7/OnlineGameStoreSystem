@@ -78,9 +78,10 @@ public class SearchController : Controller
                 ReleaseDate = g.ReleaseDate,
                 Price = g.Price,
                 DiscountPrice = g.DiscountPrice,
-                PositiveRate = g.Likes.Count == 0
-                    ? 0
-                    : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count,
+                //PositiveRate = g.Likes.Count == 0
+                //    ? 0
+                //    : (double)g.Likes.Count(l => l.IsLike) / g.Likes.Count,
+                PositiveRate = 0,
                 DeveloperId = g.DeveloperId,
                 DeveloperName = g.Developer.Username
             })
