@@ -20,13 +20,13 @@
                 {
                     <div class="result-card">
                         <div class="cover">
-                            <img src="@g.Cover" alt="@g.Title 封面图">
+                            <img src="@g.Cover" alt="@g.Title Thumbnail">
                         </div>
 
                         <div class="info">
                             <h3 class="title">@g.Title</h3>
                             <div class="date-developer">
-                                <p class="date">发行日期：@g.ReleaseDate.ToString("yyyy-MM-dd")</p>
+                                <p class="date">Released Date：@g.ReleaseDate.ToString("yyyy-MM-dd")</p>
                                 <a asp-controller="Profile" asp-action="Index" asp-route-id="@g.DeveloperId">
                                     <p class="developer">Developer：@g.DeveloperName</p>
                                 </a>
@@ -59,7 +59,7 @@
     <aside class="right-col">
         <!-- 价格筛选区 -->
         <section class="panel" id="pricePanel">
-            <h4>价格筛选</h4>
+            <h4>Price filter</h4>
             <div class="price-slider">
                 <div class="slider-row">
                     <div class="slider-column">
@@ -79,11 +79,11 @@
                 <div style="margin-top:10px; display:flex; gap:12px; align-items:center">
                     <div class="toggle">
                         <div class="switch" id="hideFreeSwitch"><div class="knob"></div></div>
-                        <div class="help">隐藏免费游戏</div>
+                        <div class="help">Hidden free games</div>
                     </div>
                     <div class="toggle">
                         <div class="switch" id="onlyDiscountSwitch"><div class="knob"></div></div>
-                        <div class="help">只显示折扣游戏</div>
+                        <div class="help">Only shows discount games</div>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
 
         <!-- 偏好筛选区 -->
         <section class="panel" id="prefPanel">
-            <h4>偏好筛选</h4>
+            <h4>Preferences</h4>
             <div class="pref-list">
                 <label class="toggle"><div class="switch" id="hideOwnedSwitch"><div class="knob"></div></div><div class="help">隐藏已有游戏</div></label>
                 <label class="toggle"><div class="switch" id="hideWishlistSwitch"><div class="knob"></div></div><div class="help">隐藏愿望单游戏</div></label>
@@ -102,7 +102,7 @@
 
         <!-- 标签筛选区 -->
         <section class="panel" id="tagPanel">
-            <h4>标签筛选</h4>
+            <h4>Tag filter</h4>
             <div>
                 <div class="tag-search">
                     <input type="text" class="tag-input" id="tagInput" placeholder="搜索标签，按 Enter 添加" />

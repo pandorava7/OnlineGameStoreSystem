@@ -44,7 +44,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Comment", b =>
@@ -80,7 +80,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("CommentLike", b =>
@@ -106,7 +106,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CommentLikes");
+                    b.ToTable("CommentLikes", (string)null);
                 });
 
             modelBuilder.Entity("DeveloperRevenue", b =>
@@ -146,7 +146,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("DeveloperRevenues");
+                    b.ToTable("DeveloperRevenues", (string)null);
                 });
 
             modelBuilder.Entity("FavouriteTags", b =>
@@ -161,7 +161,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("FavouriteTags");
+                    b.ToTable("FavouriteTags", (string)null);
                 });
 
             modelBuilder.Entity("Game", b =>
@@ -208,7 +208,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("DeveloperId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("GameLike", b =>
@@ -237,7 +237,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GameLikes");
+                    b.ToTable("GameLikes", (string)null);
                 });
 
             modelBuilder.Entity("GameMedia", b =>
@@ -266,7 +266,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("GameId");
 
-                    b.ToTable("GameMedia");
+                    b.ToTable("GameMedia", (string)null);
                 });
 
             modelBuilder.Entity("GameTag", b =>
@@ -281,7 +281,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("GameTags");
+                    b.ToTable("GameTags", (string)null);
                 });
 
             modelBuilder.Entity("Notification", b =>
@@ -313,7 +313,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("OtpEntry", b =>
@@ -339,7 +339,7 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("OtpEntries");
+                    b.ToTable("OtpEntries", (string)null);
                 });
 
             modelBuilder.Entity("Payment", b =>
@@ -376,7 +376,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Post", b =>
@@ -420,7 +420,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("PostLike", b =>
@@ -446,7 +446,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PostLikes");
+                    b.ToTable("PostLikes", (string)null);
                 });
 
             modelBuilder.Entity("Purchase", b =>
@@ -486,7 +486,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Purchases");
+                    b.ToTable("Purchases", (string)null);
                 });
 
             modelBuilder.Entity("Review", b =>
@@ -524,7 +524,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("ReviewLike", b =>
@@ -550,7 +550,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReviewLikes");
+                    b.ToTable("ReviewLikes", (string)null);
                 });
 
             modelBuilder.Entity("ShoppingCart", b =>
@@ -575,7 +575,7 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("ShoppingCarts");
+                    b.ToTable("ShoppingCarts", (string)null);
                 });
 
             modelBuilder.Entity("Tag", b =>
@@ -592,7 +592,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("User", b =>
@@ -641,7 +641,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("UserPreferences", b =>
@@ -663,7 +663,7 @@ namespace OnlineGameStoreSystem.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPreferences");
+                    b.ToTable("UserPreferences", (string)null);
                 });
 
             modelBuilder.Entity("Wishlist", b =>
@@ -689,7 +689,7 @@ namespace OnlineGameStoreSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlists", (string)null);
                 });
 
             modelBuilder.Entity("CartItem", b =>
