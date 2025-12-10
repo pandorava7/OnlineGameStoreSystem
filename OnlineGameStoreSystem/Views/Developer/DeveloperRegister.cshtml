@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Developer Application";
 }
-<link rel="stylesheet" href="~/css/Developer/developer.css" />
 
 <div class="dashboard-container">
     <h1 class="dashboard-title">Join the Developer Planning</h1>
@@ -44,6 +43,8 @@
                 <input asp-for="FullName" class="form-input" />
                 <label>ID card number / Passport number</label>
                 <input asp-for="IdNumber" class="form-input" />
+
+                <span asp-validation-for="IdNumber" class="text-danger-custom"></span>
             </div>
 
             <div class="form-col-fixed">
@@ -62,28 +63,49 @@
                 <input asp-for="Address1" class="form-input" />
                 <input asp-for="Address2" class="form-input" />
 
+                <label>City/Town</label>
+                <input asp-for="City" class="form-input" />
+
                 <div class="address-grid">
-                    <div class="address-col-small">
-                        <label>State/Province</label>
-                        <input asp-for="State" class="form-input input-date" />
-                    </div>
                     <div class="address-col-small">
                         <label>Postal Code</label>
                         <input asp-for="PostalCode" class="form-input input-date" />
                     </div>
+
+                    <div class="address-col-small">
+                        <label>Country/Region</label>
+                        <select asp-for="Country" id="CountrySelect" class="form-input country-select-width">
+                            <option value="Malaysia" selected>Malaysia</option>
+                            <option value="United States">United States</option>
+                            <option value="Singapore">Singapore</option>
+                        </select>
+                    </div>
                 </div>
 
-                <label style="display:block; margin-top:8px;">Country/Region</label>
-                <select asp-for="Country" class="form-input input-short">
-                    <option>Malaysia</option>
-                    <option>United States</option>
-                    <option>Singapore</option>
-                </select>
-            </div>
+                <div id="StateContainer">
+                    <label style="display:block; margin-top:8px;">State/Province</label>
 
-            <div class="form-col-city">
-                <label>City</label>
-                <input asp-for="City" class="form-input" />
+                    <select asp-for="State" class="form-input input-short" id="StateDropdown">
+                        <option value="">-- Select State/Territory --</option>
+                        <option value="Johor">Johor</option>
+                        <option value="Kedah">Kedah</option>
+                        <option value="Kelantan">Kelantan</option>
+                        <option value="Melaka">Melaka</option>
+                        <option value="Negeri Sembilan">Negeri Sembilan</option>
+                        <option value="Pahang">Pahang</option>
+                        <option value="Perak">Perak</option>
+                        <option value="Perlis">Perlis</option>
+                        <option value="Pulau Pinang">Pulau Pinang (Penang)</option>
+                        <option value="Sabah">Sabah</option>
+                        <option value="Sarawak">Sarawak</option>
+                        <option value="Selangor">Selangor</option>
+                        <option value="Terengganu">Terengganu</option>
+                        <option value="Kuala Lumpur">Kuala Lumpur (Federal Territory)</option>
+                        <option value="Putrajaya">Putrajaya (Federal Territory)</option>
+                    </select>
+
+                    <span asp-validation-for="State" class="text-danger-custom"></span>
+                </div>
             </div>
         </div>
 
@@ -97,7 +119,7 @@
                     <option>+60</option>
                     <option>+1</option>
                 </select>
-                <input asp-for="Phone" class="form-input" placeholder="555-0123" style="width: auto; flex:1;" />
+                <input asp-for="Phone" class="form-input" placeholder="09-555-0123" style="width: auto; flex:1;" />
             </div>
 
             <div class="form-col-fluid" style="min-width: 240px;">
@@ -108,20 +130,47 @@
 
         <div class="section-wrapper">
             <div class="section-badge">Payment Information</div>
-            <p class="section-hint">This payment method and account will be used for income commission for developer.</p>
+            <h2 class="section-hint">This payment method and account will be used for income commission for developer.</h2>
         </div>
 
         <input type="hidden" id="hiddenPaymentMethod" name="SelectedPaymentMethod" value="Method 1" />
 
         <div class="payment-methods">
-            <button type="button" class="btn btn-payment-option active" data-value="Method 1">Method 1</button>
-            <button type="button" class="btn btn-payment-option" data-value="Method 2">Method 2</button>
-            <button type="button" class="btn btn-payment-option" data-value="Method 3">Method 3</button>
+            <button type="button" class="btn btn-payment-option active" data-value="bank" data-target="#details-bank">Bank Account (Method 1)</button>
+            <button type="button" class="btn btn-payment-option" data-value="paypal" data-target="#details-paypal">PayPal (Method 2)</button>
+            <button type="button" class="btn btn-payment-option" data-value="tng" data-target="#details-tng">TNG Number (Method 3)</button>
         </div>
 
-        <div>
-            <label>Account Number</label>
-            <input asp-for="AccountNumber" class="form-input" style="width: 40%;" />
+        <input type="hidden" asp-for="SelectedPaymentMethod" id="HiddenPaymentMethod" />
+
+        <div id="payment-details-wrapper">
+
+            <div id="details-bank" class="method-details active">
+
+                <div class="form-col-fluid" style="gap: 5px;">
+                    <label>Bank Account Number</label>
+                    <input asp-for="BankAcctNumber" class="form-input" />
+                </div>
+
+                <div style="height: 10px;"></div>
+
+                <div class="form-col-fluid" style="gap: 5px;">
+                    <label>Account Holder Name</label>
+                    <input asp-for="BankHolderName" class="form-input" />
+                </div>
+
+            </div>
+
+            <div id="details-paypal" class="method-details hidden">
+                <label>PayPal Email Address</label>
+                <input asp-for="PayPalEmail" class="form-input" style="width: 40%;" />
+            </div>
+
+            <div id="details-tng" class="method-details hidden">
+                <label>TNG Mobile Number</label>
+                <input asp-for="TNGNumber" class="form-input" style="width: 40%;" />
+            </div>
+
         </div>
 
         <div class="section-wrapper">
@@ -143,3 +192,14 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/Developer/developer.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+}

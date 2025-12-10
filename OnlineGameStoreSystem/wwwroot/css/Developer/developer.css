@@ -417,6 +417,18 @@ body {
     width: 60%;
 }
 
+/* 1. 定义新的宽度类 */
+.country-select-width {
+    /* 设置一个固定的宽度，例如 200px，你可以根据需要调整 */
+    width: 200px !important;
+    min-width: 150px;
+    box-sizing: border-box; /* 确保 padding 不会增加总宽度 */
+}
+
+.select2-container.country-select-width {
+    width: 200px !important; /* 强制 Select2 容器宽度为 200px */
+}
+
 .input-date {
     padding: 10px;
 }
@@ -1147,4 +1159,75 @@ Thumbnail Upload Preview Styles
         transform: scale(1.05); /* 轻微放大 */
     }
 
-    /* Test */
+#StateDropdown {
+    /* 限制高度，确保只显示 X 行内容 */
+    max-height: 200px;
+    /* 强制显示滚动条 (如果内容溢出) */
+    overflow-y: scroll;
+    /* 移除浏览器自带的边框，使外观更干净 */
+    border: 1px solid #ccc;
+}
+
+/* =======================================================
+   1. 覆盖默认选择框的外观 (Select Box Appearance)
+   ======================================================= */
+/* 目标：Select2 顶部的显示框 (默认是白色的那个) */
+.select2-container--default .select2-selection--single {
+    /* 你的深色背景和白色文字 */
+    background-color: #333333 !important;
+    color: white !important;
+    border: 1px solid #555555 !important;
+    height: 38px; /* 确保高度和你的其他输入框一致 */
+    box-sizing: border-box;
+}
+
+    /* 目标：选择框内的文字内容和占位符 */
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: white !important;
+        line-height: 36px; /* 垂直居中文字 */
+    }
+
+    /* 目标：修改下拉箭头颜色 */
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        /* 创建一个浅灰色箭头 */
+        border-color: #AAAAAA transparent transparent transparent !important;
+    }
+
+/* =======================================================
+   2. 覆盖下拉浮动列表的外观 (Dropdown List Appearance)
+   ======================================================= */
+/* 目标：浮动列表的整个容器背景 */
+.select2-container--default .select2-dropdown {
+    background-color: #333333; /* 深色背景 */
+    border: 1px solid #555555; /* 深色边框 */
+}
+
+/* 目标：浮动列表中的搜索输入框 (Search Input Box) */
+.select2-search--dropdown .select2-search__field {
+    background-color: #444444; /* 搜索框内部背景比整体稍亮 */
+    color: white;
+    border: 1px solid #666666;
+}
+
+/* 目标：浮动列表中的选项文字颜色 */
+.select2-results__option {
+    color: #DDDDDD; /* 选项文字颜色 */
+    padding: 6px 12px;
+}
+
+/* 目标：鼠标悬停和选中时的样式 (高亮效果) */
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #007bff !important; /* 你的亮蓝色高亮背景 */
+}
+
+/* 目标：最终被选中的选项样式 (通常是点击确定后的显示样式，如图片所示的蓝色选中) */
+.select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: #0056b3 !important; /* 较深的蓝色，作为选中标记 */
+}
+.select2-container.input-short {
+    width: 60% !important;
+}
+
+.hidden {
+    display: none !important;
+}
