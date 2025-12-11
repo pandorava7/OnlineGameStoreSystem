@@ -8,9 +8,10 @@
     <h1 class="dashboard-title">Developer Console >> Edit Game</h1>
     <p class="dashboard-subtitle">Update your game's metadata and media below.</p>
 
-    <form asp-controller="Developer" asp-action="DeveloperUploadGame" method="post" enctype="multipart/form-data">
+    <form asp-controller="Developer" asp-action="DeveloperEditGame" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" id="deletedMediaInput" name="DeletedMediaJson" value="" />
 
         <!-- Basic Info -->
         <div class="section-wrapper">
@@ -46,18 +47,17 @@
             <div class="form-col-fixed">
                 <label>Thumbnail *</label>
                 <div class="upload-row">
-                    <label for="thumbnailInput" class="file-label">
-                        Click or drag your image
+                    <label id="thumbPreviewContainer" class="file-label thumb-dropzone @(Model.ThumbnailUrl != null ? "has-image" : "")" for="thumbnailInput" aria-live="polite">
+                        <span class="upload-placeholder">Click or drag your image</span>
+
+                        @if (!string.IsNullOrEmpty(Model.ThumbnailUrl))
+                        {
+                            <img class="thumb-img" src="@Url.Content(Model.ThumbnailUrl)" alt="Current Thumbnail" style="display:block;" />
+
+                        }
+
                         <input id="thumbnailInput" name="Thumbnail" type="file" accept="image/*" style="display:none;" />
                     </label>
-
-                    <div id="thumbPreview" class="thumbnail-preview" aria-live="polite"
-                         style="@(Model.ThumbnailUrl != null ? $"background-image:url('{Url.Content(Model.ThumbnailUrl)}')" : "")">
-                        @if (string.IsNullOrEmpty(Model.ThumbnailUrl))
-                        {
-                            <div class="preview-placeholder">Preview Image</div>
-                        }
-                    </div>
                 </div>
             </div>
 
@@ -129,10 +129,15 @@
         <div class="form-row">
             <div class="form-col-fixed">
                 <label>Sold Price *</label>
-                <input class="form-input" name="Price" type="number" value="@Model.Price" placeholder="Enter a number" />
+                <input class="form-input" id="priceInput" name="Price" type="number"
+                       value="@Model.Price"
+                       placeholder="Enter a number"
+                       min="0" step="0.01" />
 
                 <div class="checkbox-wrapper">
-                    <label class="checkbox-label"><input type="checkbox" name="IsFree" @(Model.Price == 0 ? "checked" : "") /> Be Free</label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isFreeCheckbox" name="IsFree" @(Model.Price == 0 ? "checked" : "") /> Be Free
+                    </label>
                 </div>
             </div>
         </div>

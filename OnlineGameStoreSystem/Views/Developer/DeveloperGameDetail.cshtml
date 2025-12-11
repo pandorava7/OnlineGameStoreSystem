@@ -5,6 +5,21 @@
 <link rel="stylesheet" href="~/css/Developer/developer.css" />
 
 <main class="dev-gd-container" aria-labelledby="dev-game-title">
+
+    @{
+        // 查找所有媒体项
+        var allMedia = Model.Media?.Where(m => m.MediaType != "zip").OrderBy(m => m.SortOrder).ToList();
+
+        // 1. 定义主封面 URL (primaryThumbUrl)
+        var primaryThumbUrl = allMedia?.FirstOrDefault(m => m.MediaType == "thumb")?.MediaUrl
+        ?? allMedia?.FirstOrDefault(m => m.MediaType == "image")?.MediaUrl
+        ?? "/images/placeholder.png";
+
+        // 2. 确定主展示项
+        var mainMediaItem = allMedia?.FirstOrDefault(m => m.MediaType == "image" || m.MediaType == "video")
+        ?? allMedia?.FirstOrDefault(m => m.MediaType == "thumb");
+    }
+
     <div class="dashboard-container">
         <h1 class="dashboard-title">Developer Console &gt;&gt; Manage Game</h1>
 
@@ -12,49 +27,64 @@
             <div class="dev-gd-left">
                 <div class="dev-gd-media">
                     <div id="dev-main-media" class="dev-gd-main-media" data-current-index="0">
-                        @if (Model.Media != null && Model.Media.Any(m => m.MediaType == "video"))
-                        {
-                            var v = Model.Media.First(m => m.MediaType == "video");
-                            <div class="dev-gd-media-item dev-gd-media-video" data-type="video" data-src="@v.MediaUrl" role="button" aria-label="Play video">
-                                <div class="dev-video-placeholder">
-                                    <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
-                                    <img src="@(Model.Media.FirstOrDefault(m => m.MediaType == "image")?.MediaUrl ?? "/images/placeholder.png")" alt="video thumbnail" />
-                                    <span class="dev-video-tag">Video</span>
-                                </div>
-                            </div>
-                        }
-                        else if (Model.Media != null && Model.Media.Any(m => m.MediaType == "image"))
-                        {
-                            <img src="@Model.Media.First(m => m.MediaType == "image").MediaUrl" alt="@Model.Title" class="dev-gd-media-item dev-gd-media-image" data-type="image" />
-                        }
-                        else
-                        {
-                            <img src="/images/placeholder.png" alt="no media" class="dev-gd-media-item dev-gd-media-image" />
+                        @{
+                            // 这里不再重新声明 primaryThumbUrl/mainMediaItem，直接使用上面定义好的变量
+                            if (mainMediaItem != null)
+                            {
+                                if (mainMediaItem.MediaType == "video")
+                                {
+                                    // 渲染视频占位符
+                                    <div class="dev-gd-media-item dev-gd-media-video" data-type="video" data-src="@mainMediaItem.MediaUrl" role="button" aria-label="Play video">
+                                        <div class="dev-video-placeholder">
+                                            <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                                            <img src="@primaryThumbUrl" alt="video thumbnail" /> @* 使用外部定义的 primaryThumbUrl *@
+                                            <span class="dev-video-tag">Video</span>
+                                        </div>
+                                    </div>
+                                }
+                                else // image 或 thumb
+                                {
+                                    <img src="@mainMediaItem.MediaUrl" alt="@Model.Title" class="dev-gd-media-item dev-gd-media-image" data-type="image" />
+                                }
+                            }
+                            else
+                            {
+                                <img src="/images/placeholder.png" alt="no media" class="dev-gd-media-item dev-gd-media-image" />
+                            }
                         }
                     </div>
 
                     <div id="dev-gd-thumbs" class="dev-gd-thumbs" role="list">
                         @{
                             var idx = 0;
-                            if (Model.Media != null)
+                            if (allMedia != null)
                             {
-                                foreach (var m in Model.Media.OrderBy(mm => mm.SortOrder))
+                                // 筛选出所有需要的媒体类型：thumb, image, video
+                                var filteredMedia = allMedia
+                                .Where(m => m.MediaType == "thumb" || m.MediaType == "image" || m.MediaType == "video")
+                                .OrderBy(mm => mm.SortOrder)
+                                .ToList();
+
+                                foreach (var m in filteredMedia)
                                 {
+                                    // ... (循环逻辑保持不变，确保 m.MediaType == "video" 时使用 primaryThumbUrl 作为 img src) ...
+
                                     if (m.MediaType == "video")
                                     {
                                         <button class="dev-gd-thumb" role="listitem" data-index="@idx" data-type="video" data-src="@m.MediaUrl" aria-label="Video thumb">
                                             <div class="thumb-video">
-                                                <img src="/images/placeholder.png" alt="video thumb" />
+                                                <img src="@primaryThumbUrl" alt="video thumb" style="opacity: 0;" /> @* 使用外部定义的 primaryThumbUrl *@
                                                 <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
                                             </div>
                                         </button>
                                     }
-                                    else
+                                    else // image 或 thumb
                                     {
                                         <button class="dev-gd-thumb" role="listitem" data-index="@idx" data-type="image" data-src="@m.MediaUrl" aria-label="Image thumb">
-                                            <img src="@m.MediaUrl" alt="thumb @idx" />
+                                            <img src="@m.MediaUrl" alt="@(m.MediaType) @idx" />
                                         </button>
                                     }
+
                                     idx++;
                                 }
                             }
@@ -82,7 +112,7 @@
                     </div>
 
                     <div class="dev-gd-actions">
-                        <a class="btn-primary" asp-controller="Developer" asp-action="DeveloperUploadGame" asp-route-id="@Model.Id">Edit / Upload</a>
+                        <a class="btn-primary" asp-controller="Developer" asp-action="DeveloperEditGame" asp-route-id="@Model.Id">Edit / Upload</a>
                         <a class="btn-primary" asp-controller="Developer" asp-action="Analysis" asp-route-id="@Model.Id">Analysis</a>
                         <form asp-controller="Developer" asp-action="DeleteGame" method="post" onsubmit="return confirm('Remove this game? This action cannot be undone.');" style="display:inline;">
                             @Html.AntiForgeryToken()

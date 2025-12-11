@@ -364,6 +364,30 @@ public class DeveloperController : Controller
 
         var files = Request.Form.Files;
         var errors = new List<string>();
+        bool isFree = IsFree ?? false;
+
+        if (!isFree && (Price == null || Price.Value <= 0))
+        {
+            errors.Add("Price: Sold Price must be greater than 0, or the 'Be Free' checkbox must be selected.");
+        }
+
+        // 检查 1: 价格不能为负数
+        if (Price.HasValue && Price.Value < 0)
+        {
+            errors.Add("Price: Sold Price cannot be negative.");
+        }
+
+        // 检查 2: 价格必须存在或勾选免费（维持您原有的逻辑）
+        // 如果价格为 0，且没有勾选 IsFree，我们允许。只有 Price < 0 才算错误。
+        if (!isFree && (!Price.HasValue || Price.Value < 0.01m)) // < 0.01m 意味着必须是零或正数
+        {
+            // 如果用户输入了 0，但没有勾选免费，我们应该允许，除非您想强制用户勾选免费。
+            // 根据您之前的要求 "在不填写sold price且不勾选be free的情况下也可以上传游戏"，我们假设您希望强制填写价格 > 0 或勾选免费。
+            if (!isFree && Price.GetValueOrDefault() < 0.01m)
+            {
+                errors.Add("Price: Sold Price must be greater than 0, or the 'Be Free' checkbox must be selected.");
+            }
+        }
 
         if (files != null && files.Count > 0)
         {
@@ -405,8 +429,7 @@ public class DeveloperController : Controller
                 }
                 else
                 {
-                    // Optional: reject unexpected file inputs
-                    // errors.Add($"Unexpected file input name: {f.Name}");
+                    errors.Add($"Unknown file input \"{f.Name}\".");
                 }
             }
         }
@@ -419,6 +442,18 @@ public class DeveloperController : Controller
             TempData["Title"] = Title;
             TempData["ShortDescription"] = ShortDescription;
             TempData["DetailDescription"] = DetailDescription;
+
+            if (Price.HasValue)
+            {
+                // 使用 ToString() 进行序列化
+                TempData["Price"] = Price.Value.ToString();
+            }
+            else
+            {
+                TempData["Price"] = null; // 或者保持为空
+            }
+
+            TempData["IsFree"] = IsFree;
             return RedirectToAction("DeveloperUploadGame");
         }
 
@@ -435,12 +470,18 @@ public class DeveloperController : Controller
         };
 
         db.Games.Add(game);
-        await db.SaveChangesAsync(); // get game.Id
+        await db.SaveChangesAsync(); // 获取 game.Id
 
-        // save uploaded files (same as before)
+        // 2. 保存上传文件并创建 GameMedia 记录
         if (files != null && files.Count > 0)
         {
-            var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "games", game.Id.ToString());
+            // 获取游戏 ID
+            int uploadGameId = game.Id;
+
+            // 设置上传根目录
+            var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "games", uploadGameId.ToString());
+
+            // 确保根目录存在
             Directory.CreateDirectory(uploadRoot);
 
             int sortOrder = 0;
@@ -448,28 +489,63 @@ public class DeveloperController : Controller
             {
                 if (f == null || f.Length == 0) continue;
 
-                var ext = Path.GetExtension(f.FileName);
-                var fileName = Guid.NewGuid().ToString("N") + ext;
-                var filePath = Path.Combine(uploadRoot, fileName);
+                // 2a. 确定 MediaType 和文件保存的子目录
+                string mediaType = "image";
+                string subDir = "previews"; // 默认子目录为 previews
+                var fileExtension = Path.GetExtension(f.FileName)?.ToLowerInvariant();
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (f.Name == "Thumbnail")
                 {
-                    await f.CopyToAsync(stream);
+                    mediaType = "thumb";
+                    subDir = "thumb";
+                }
+                else if (f.Name == "GameZip")
+                {
+                    mediaType = "zip";
+                    subDir = "zip";
+                }
+                // 增强视频判断：检查 ContentType 或文件扩展名
+                else if ((f.ContentType != null && f.ContentType.StartsWith("video")) ||
+                         fileExtension == ".mp4" || fileExtension == ".webm" || fileExtension == ".mov")
+                {
+                    mediaType = "video";
+                    subDir = "trailers"; // 视频保存到 trailers 子目录
+                }
+                // 否则默认为 image/previews
+
+                // 2b. 构造路径并创建子目录
+                var fileSubDir = Path.Combine(uploadRoot, subDir);
+                Directory.CreateDirectory(fileSubDir); // 【关键修复点】确保子目录存在
+
+                var fileName = Guid.NewGuid().ToString("N") + fileExtension;
+                // 【关键修复点】文件保存路径必须包含子目录
+                var filePath = Path.Combine(fileSubDir, fileName);
+
+                // 2c. 保存文件到磁盘
+                try
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await f.CopyToAsync(stream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 如果文件保存失败（例如权限问题），记录错误并跳过此文件
+                    errors.Add($"Server Save Error for {f.FileName}: {ex.Message}");
+                    continue;
                 }
 
-                var relativeUrl = $"/uploads/games/{game.Id}/{fileName}";
-                string mediaType = "image";
-
-                if (f.Name == "Thumbnail") mediaType = "thumb";
-                else if (f.Name == "GameZip") mediaType = "zip";
-                else if (f.ContentType != null && f.ContentType.StartsWith("video")) mediaType = "video";
+                // 2d. 构造 URL 并创建数据库记录 (URL 必须包含子目录)
+                var relativeUrl = $"/uploads/games/{uploadGameId}/{subDir}/{fileName}";
 
                 var gm = new GameMedia
                 {
-                    GameId = game.Id,
+                    GameId = uploadGameId,
                     MediaUrl = relativeUrl,
                     MediaType = mediaType,
-                    SortOrder = sortOrder++
+                    // 只有 previews 和 trailers 需要排序
+                    SortOrder = (mediaType == "image" || mediaType == "video") ? sortOrder++ : 0
                 };
 
                 db.GameMedia.Add(gm);
@@ -477,8 +553,6 @@ public class DeveloperController : Controller
 
             await db.SaveChangesAsync();
         }
-
-        // TODO: handle tags linking when tag UI is implemented.
 
         return RedirectToAction("Developer");
     }

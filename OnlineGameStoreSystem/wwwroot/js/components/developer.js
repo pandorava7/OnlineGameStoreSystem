@@ -236,96 +236,175 @@
 
 // Image preview helpers (use Object URLs for file previews)
 (function () {
+    // 辅助函数：创建元素
     function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
 
-    // Preview images input (max 8)
+    // =================================================================
+    // 1. Preview images input (max 8) - 修正：文件累积、上限检查、移除功能
+    // =================================================================
     (function () {
         var input = document.getElementById('previewImagesInput');
         var grid = document.getElementById('previewGrid');
         if (!input || !grid) return;
 
-        // revoke map to track object URLs created by this script
-        var urlMap = new Map();
+        // 【核心】文件累积器
+        var filesAccumulator = new DataTransfer();
+        var MAX_PREVIEW_COUNT = 8;
+        var urlMap = new Map(); // 用于跟踪和撤销 Object URLs
 
-        function clearGrid() {
+        // 【新增/重构】渲染所有当前累积的文件
+        function renderAllPreviews() {
+            // 1. 清理旧的 DOM 和 URL
             urlMap.forEach(function (url) { try { URL.revokeObjectURL(url); } catch (e) { } });
             urlMap.clear();
             while (grid.firstChild) grid.removeChild(grid.firstChild);
-        }
 
-        function addImagePreviewFromFile(file) {
-            var item = el('div', 'preview-item');
-            var img = el('img');
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.objectFit = 'cover';
+            // 确保实际的 input.files 始终与累积器同步
+            input.files = filesAccumulator.files;
 
-            var objUrl = URL.createObjectURL(file);
-            urlMap.set(item, objUrl);
-            img.src = objUrl;
+            // 2. 渲染文件
+            Array.from(filesAccumulator.files).forEach(function (file) {
+                var item = el('div', 'preview-item');
+                var img = el('img');
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
 
-            item.appendChild(img);
+                var objUrl = URL.createObjectURL(file);
+                urlMap.set(item, objUrl);
+                img.src = objUrl;
 
-            var btn = el('button', 'preview-remove-btn');
-            btn.type = 'button';
-            btn.textContent = '✖';
-            btn.title = 'Remove';
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                var url = urlMap.get(item);
-                if (url) try { URL.revokeObjectURL(url); } catch (er) { }
-                urlMap.delete(item);
-                item.remove();
+                item.appendChild(img);
+
+                var btn = el('button', 'preview-remove-btn');
+                btn.type = 'button';
+                btn.textContent = '✖';
+                btn.title = 'Remove';
+
+                // 移除按钮逻辑：从累积器中删除并重新渲染
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    var currentItems = Array.from(grid.children);
+                    var removeIndex = currentItems.indexOf(item);
+
+                    if (removeIndex !== -1) {
+                        filesAccumulator.items.remove(removeIndex);
+                        renderAllPreviews(); // 重新渲染界面
+                    }
+                });
+                item.appendChild(btn);
+                grid.appendChild(item);
             });
-            item.appendChild(btn);
-
-            grid.appendChild(item);
         }
 
-        // Accept drag-drop on dashed-dropzone label (if present)
+        // 【核心逻辑】将新文件添加到累积器
+        function accumulateFiles(newFiles) {
+            var filesToProcess = Array.from(newFiles).filter(f => f.type.startsWith('image/'));
+            var addedCount = 0;
+
+            filesToProcess.forEach(function (file) {
+                if (filesAccumulator.items.length < MAX_PREVIEW_COUNT) {
+                    filesAccumulator.items.add(file);
+                    addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                renderAllPreviews(); // 只有在有新文件添加时才重新渲染
+            }
+        }
+
+        // 1. Drag & Drop 事件 (修改为累积模式)
         var dropzone = document.querySelector('.dashed-dropzone[for="previewImagesInput"]');
         if (dropzone) {
             dropzone.addEventListener('dragover', function (e) { e.preventDefault(); dropzone.classList.add('dragover'); });
             dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('dragover'); });
+
             dropzone.addEventListener('drop', function (e) {
                 e.preventDefault();
                 dropzone.classList.remove('dragover');
-                var files = Array.from(e.dataTransfer.files || []).filter(f => f.type.startsWith('image/'));
-                // append files to input.files is tricky; handle directly
-                files.slice(0, 8).forEach(addImagePreviewFromFile);
+
+                var files = e.dataTransfer.files || [];
+                accumulateFiles(files); // 调用新的累积函数
             });
         }
 
-        input.addEventListener('change', function () {
-            // If user explicitly selects files, clear existing previews and show new ones
-            var files = Array.from(input.files || []).filter(f => f.type.startsWith('image/'));
-            // enforce max 8
-            if (files.length > 8) files = files.slice(0, 8);
+        // 2. input change 事件 (点击选择文件 - 修改为累积模式)
+        input.addEventListener('change', function (e) {
+            // 将新选择的文件添加到累积器
+            accumulateFiles(e.target.files);
 
-            clearGrid();
-            files.forEach(addImagePreviewFromFile);
+            // 清空 input 的值，以便下次选择相同文件时依然触发 change 事件
+            e.target.value = '';
         });
 
-        // expose clearGrid for possible use (not required)
-        window._devPreviewImagesClear = clearGrid;
+        // 暴露清空函数 (用于外部调用)
+        window._devPreviewImagesClear = function () {
+            filesAccumulator = new DataTransfer(); // 重置累积器
+            renderAllPreviews();
+        };
+
+        // --- 【新增】媒体初始化函数，必须在 DOMContentLoaded 中调用 ---
+        window._initExistingMedia = function () {
+
+            var deletedUrls = []; // 用于存储被删除的现有媒体URL
+
+            // 获取所有现有的预览图片和视频项
+            var existingItems = document.querySelectorAll('#previewGrid .preview-item[data-existing="true"], #trailerGrid .preview-item[data-existing="true"]');
+
+            // 监听现有媒体的移除按钮
+            existingItems.forEach(function (item) {
+                var removeBtn = item.querySelector('.preview-remove-btn');
+                var mediaUrl = item.getAttribute('data-src');
+
+                if (removeBtn && mediaUrl) {
+                    removeBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+
+                        // 1. 标记为删除（视觉上）
+                        item.style.opacity = '0.5';
+                        item.style.pointerEvents = 'none';
+                        item.dataset.removed = "true";
+
+                        // 2. 将 URL 添加到待删除列表
+                        deletedUrls.push(mediaUrl);
+
+                        // 3. 更新隐藏输入框
+                        document.getElementById('deletedMediaInput').value = JSON.stringify(deletedUrls);
+
+                        // 可选：将 DOM 元素移除
+                        // item.remove(); 
+                    });
+                }
+            });
+        };
+
+        // 确保在 DOM 加载完成后调用初始化函数
+        document.addEventListener('DOMContentLoaded', function () {
+            // ... (其他 DOMContentLoaded 逻辑) ...
+
+            // 调用新的初始化函数
+            window._initExistingMedia();
+        });
     })();
 
-    // Trailer preview (videos) input (max 2)
+    // =================================================================
+    // 2. Trailer preview (videos) input (max 2) - 修正：拖放、文件累积、上限检查
+    // =================================================================
     (function () {
         var input = document.getElementById('trailersInput');
         var grid = document.getElementById('trailerGrid');
         if (!input || !grid) return;
 
+        // 【核心】文件累积器
+        var filesAccumulator = new DataTransfer();
+        var MAX_TRAILER_COUNT = 2;
         var urlMap = new Map();
 
-        function clearGrid() {
-            urlMap.forEach(function (url) { try { URL.revokeObjectURL(url); } catch (e) { } });
-            urlMap.clear();
-            while (grid.firstChild) grid.removeChild(grid.firstChild);
-        }
-
-        function addVideoPreviewFromFile(file) {
-            var item = el('div', 'preview-item');
+        // 渲染单个视频预览（保持原有的 DOM 创建逻辑）
+        function addVideoPreviewFromFile(file, item) {
+            // ... (使用 el 创建 video, label, btn 的原始逻辑) ...
             var video = el('video');
             video.controls = true;
             video.style.width = '100%';
@@ -341,45 +420,87 @@
             var label = el('div', 'preview-item-label');
             label.textContent = file.name || '';
             item.appendChild(label);
-
-            var btn = el('button', 'preview-remove-btn');
-            btn.type = 'button';
-            btn.textContent = '✖';
-            btn.title = 'Remove';
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                var url = urlMap.get(item);
-                if (url) try { URL.revokeObjectURL(url); } catch (er) { }
-                urlMap.delete(item);
-                item.remove();
-            });
-            item.appendChild(btn);
-
-            grid.appendChild(item);
         }
 
+        // 【重构】渲染所有当前累积的文件
+        function renderAllPreviews() {
+            // 1. 清理旧的 DOM 和 URL
+            urlMap.forEach(function (url) { try { URL.revokeObjectURL(url); } catch (e) { } });
+            urlMap.clear();
+            while (grid.firstChild) grid.removeChild(grid.firstChild);
+
+            // 确保实际的 input.files 始终与累积器同步
+            input.files = filesAccumulator.files;
+
+            // 2. 渲染文件
+            Array.from(filesAccumulator.files).forEach(function (file) {
+                var item = el('div', 'preview-item');
+                addVideoPreviewFromFile(file, item); // 调用视频预览创建
+
+                var btn = el('button', 'preview-remove-btn');
+                btn.type = 'button';
+                btn.textContent = '✖';
+                btn.title = 'Remove';
+
+                // 移除按钮的事件处理
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    var currentItems = Array.from(grid.children);
+                    var removeIndex = currentItems.indexOf(item);
+
+                    if (removeIndex !== -1) {
+                        filesAccumulator.items.remove(removeIndex);
+                        renderAllPreviews(); // 重新渲染界面
+                    }
+                });
+                item.appendChild(btn);
+                grid.appendChild(item);
+            });
+        }
+
+        // 【核心逻辑】将新文件添加到累积器
+        function accumulateFiles(newFiles) {
+            var filesToProcess = Array.from(newFiles).filter(f => f.type.startsWith('video/'));
+            var addedCount = 0;
+
+            filesToProcess.forEach(function (file) {
+                if (filesAccumulator.items.length < MAX_TRAILER_COUNT) {
+                    filesAccumulator.items.add(file);
+                    addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                renderAllPreviews();
+            }
+        }
+
+        // 1. Drag & Drop 事件 (修复拖放和累积)
         var dropzone = document.querySelector('.dashed-dropzone[for="trailersInput"]');
         if (dropzone) {
             dropzone.addEventListener('dragover', function (e) { e.preventDefault(); dropzone.classList.add('dragover'); });
             dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('dragover'); });
+
             dropzone.addEventListener('drop', function (e) {
                 e.preventDefault();
                 dropzone.classList.remove('dragover');
-                var files = Array.from(e.dataTransfer.files || []).filter(f => f.type.startsWith('video/'));
-                // show up to 2
-                files.slice(0, 2).forEach(addVideoPreviewFromFile);
+
+                var files = e.dataTransfer.files || [];
+                accumulateFiles(files); // 调用新的累积函数
             });
         }
 
-        input.addEventListener('change', function () {
-            var files = Array.from(input.files || []).filter(f => f.type.startsWith('video/'));
-            if (files.length > 2) files = files.slice(0, 2);
-
-            clearGrid();
-            files.forEach(addVideoPreviewFromFile);
+        // 2. input change 事件 (修复点击上传和累积)
+        input.addEventListener('change', function (e) {
+            accumulateFiles(e.target.files);
+            e.target.value = ''; // 清除 input 值
         });
 
-        window._devTrailerClear = clearGrid;
+        window._devTrailerClear = function () {
+            filesAccumulator = new DataTransfer();
+            renderAllPreviews();
+        };
     })();
 })();
 
@@ -557,17 +678,84 @@
     var thumbs = document.getElementById('dev-gd-thumbs');
     if (!main || !thumbs) return;
 
+    // 【新增函数】使用 Canvas 从视频 URL 生成缩略图 URL
+    function generateVideoThumbnail(videoUrl, callback) {
+        var video = document.createElement('video');
+        video.src = videoUrl;
+        video.crossOrigin = 'anonymous'; // 解决跨域限制（如果视频和网站不在同一域名）
+
+        video.onloadeddata = function () {
+            // 确保视频有足够的时间加载到第一帧
+            video.currentTime = 0.5; // 捕获 0.5 秒那一帧
+        };
+
+        video.onseeked = function () {
+            // 视频定位到指定时间后触发
+            var canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // 将 Canvas 内容转换为 Data URL (Base64 图片)
+            var thumbnailUrl = canvas.toDataURL('image/jpeg');
+
+            // 返回生成的 URL
+            callback(thumbnailUrl);
+
+            // 清理内存
+            video.remove();
+            canvas.remove();
+        };
+
+        video.onerror = function () {
+            // 如果加载视频失败（例如格式不支持或跨域问题），返回一个占位图 URL
+            callback('/images/placeholder.png');
+            video.remove();
+        };
+
+        // 必须开始加载视频
+        video.load();
+    }
+
+    // 主媒体切换逻辑保持不变
     thumbs.addEventListener('click', function (e) {
         var btn = e.target.closest('.dev-gd-thumb');
         if (!btn) return;
         var src = btn.getAttribute('data-src');
         var type = btn.getAttribute('data-type');
+
         // replace main media content
         if (type === 'video') {
-            main.innerHTML = '<video controls style="width:100%;height:100%;object-fit:cover"><source src="' + src + '"></video>';
+            main.innerHTML = '<video controls autoplay style="width:100%;height:100%;object-fit:cover"><source src="' + src + '"></video>';
         } else {
             main.innerHTML = '<img src="' + src + '" alt="" style="width:100%;height:100%;object-fit:cover" />';
         }
+    });
+
+    // 【新增】初始化逻辑：生成所有视频缩略图
+    document.addEventListener('DOMContentLoaded', function () {
+        var videoThumbs = thumbs.querySelectorAll('.dev-gd-thumb[data-type="video"]');
+
+        videoThumbs.forEach(function (btn) {
+            var videoUrl = btn.getAttribute('data-src');
+            var imgElement = btn.querySelector('img');
+
+            if (imgElement && videoUrl) {
+                // 确保 img 元素是空的（如果 Razor 渲染了占位图，就覆盖它）
+                imgElement.src = '';
+
+                // 异步生成缩略图
+                generateVideoThumbnail(videoUrl, function (thumbnailUrl) {
+                    // 更新 img 元素的 src
+                    imgElement.src = thumbnailUrl;
+                    // 可选：移除视频的播放图标占位
+                    var playIcon = btn.querySelector('.play-icon');
+                    if (playIcon) playIcon.style.display = 'none';
+                });
+            }
+        });
     });
 })();
 
@@ -644,16 +832,9 @@ $(document).ready(function () {
     $countrySelect.on('change', function () {
         toggleStateField();
     });
-});
 
-// 当页面完全加载后执行
-$(document).ready(function () {
     // 告诉 Select2 库将 ID 为 'StateDropdown' 的元素转换为可搜索的浮动列表
     $('#StateDropdown').select2();
-});
-
-$(document).ready(function () {
-    // ... (其他 Select2 或初始化代码) ...
 
     // 监听支付按钮的点击事件
     $('.btn-payment-option').on('click', function () {

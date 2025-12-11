@@ -335,6 +335,70 @@ body {
    修复 Media Upload 布局的核心 CSS
    ========================================= */
 
+/* 搜索区域的布局 (CSS) */
+.tag-search {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+    .tag-search .tag-input {
+        flex-grow: 1; /* 输入框占据剩余空间 */
+        /* 继承你的 form-input 样式 */
+    }
+
+/* 标签建议列表 (CSS) */
+.tag-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #333; /* 分隔线 */
+    margin-bottom: 10px;
+}
+
+.tag-pill {
+    background: #444; /* 建议标签的背景色 */
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+    .tag-pill:hover {
+        background: #555;
+    }
+
+/* 已选中的标签列表 (CSS) */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 10px;
+}
+
+.filter-pill {
+    background: #e94e88; /* 已选标签使用主题色 */
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+}
+
+    .filter-pill button {
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 0;
+    }
+
 /* 1. 确保 Flex 容器允许子元素横向排列 */
 .dashboard-container.form-row {
     display: flex;
