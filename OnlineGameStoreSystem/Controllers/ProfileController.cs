@@ -6,6 +6,7 @@ using OnlineGameStoreSystem.Models;
 using OnlineGameStoreSystem.Models.ViewModels;
 using System.IO; // Required for file operations
 using System.Security.Claims;
+using static OnlineGameStoreSystem.Models.ViewModels.PublicProfileViewModel;
 
 namespace OnlineGameStoreSystem.Controllers
 {
@@ -415,7 +416,7 @@ namespace OnlineGameStoreSystem.Controllers
                         .Where(m => m.MediaType == "thumb")
                         .OrderBy(m => m.SortOrder)
                         .Select(m => m.MediaUrl)
-                        .FirstOrDefault() ?? "/images/default-cover.jpg",
+                        .FirstOrDefault() ?? "/images/placeholder.png",
                     Content = r.Content ?? "",
                     CreatedAt = r.CreatedAt
                 })
@@ -434,13 +435,34 @@ namespace OnlineGameStoreSystem.Controllers
                         CoverUrl = g.Media
                             .OrderBy(m => m.SortOrder)
                             .Select(m => m.MediaUrl)
-                            .FirstOrDefault() ?? "/img/no-cover.png",
+                            .FirstOrDefault() ?? "/images/placeholder.png",
                         PriceAtPurchase = p.PriceAtPurchase,
                         PurchasedAt = p.Payment.CreatedAt
                     }
                 )
                 .ToList()
             };
+
+            if (user.IsDeveloper)
+            {
+                vm.PublishedGames = db.Games
+                    .Where(g => g.DeveloperId == user.Id && g.Status == GameStatus.Published)
+                    .Include(g => g.Media)
+                    .OrderByDescending(g => g.ReleaseDate)
+                    .Select(g => new PublishedGameVM
+                    {
+                        GameId = g.Id,
+                        Title = g.Title,
+                        Price = g.DiscountPrice ?? g.Price,
+                        ReleaseDate = g.ReleaseDate,
+                        CoverUrl = g.Media
+                            .Where(m => m.MediaType == "thumb")
+                            .OrderBy(m => m.SortOrder)
+                            .Select(m => m.MediaUrl)
+                            .FirstOrDefault() ?? "/images/placeholder.png"
+                    })
+                    .ToList();
+            }
 
             return View(vm);
         }

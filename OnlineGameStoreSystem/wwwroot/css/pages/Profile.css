@@ -552,3 +552,132 @@ h1.Tags {
     gap: 10px; /* 左边文字与开关间距 */
     margin-left:40px;
 }
+/* ============================= */
+/* Published Games Slider */
+/* ============================= */
+
+.published-slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 78%;
+    margin-bottom: 20px;
+}
+
+/* Wrapper hides overflow */
+.published-wrapper {
+    overflow: hidden;
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* Horizontal list */
+.published-list {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.35s ease;
+}
+
+/* ----------------------------- */
+/* Published Game Card */
+/* ----------------------------- */
+.published-game-card {
+    width: 210px;
+    height: 270px;
+    background: #1a1c1f;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(0,0,0,0.35);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+    /* ✅ Hover ONLY for published games */
+    .published-game-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+    }
+
+    /* Cover image */
+    .published-game-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+ 
+
+/* Text area */
+.published-info {
+    padding: 12px;
+}
+
+/* ❌ 文字不变亮 */
+.published-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #dbe4ee;
+}
+
+.published-price {
+    font-size: 14px;
+    color: #b8c6db;
+    margin-bottom: 4px;
+}
+
+.published-release {
+    font-size: 12px;
+    color: #8899aa;
+}
+
+/* ----------------------------- */
+/* Slider Buttons */
+/* ----------------------------- */
+.published-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(35, 35, 35, .8);
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+    .published-btn:hover {
+        background: rgba(70, 70, 70, .9);
+    }
+
+.published-left {
+    left: -70px;
+}
+
+.published-right {
+    right: -70px;
+}
+
+/* ----------------------------- */
+/* Responsive */
+/* ----------------------------- */
+@media (max-width: 768px) {
+    .published-left {
+        left: -70px;
+    }
+
+    .published-right {
+        right: -70px;
+    }
+
+    .published-game-card {
+        width: 180px;
+        height: 250px;
+    }
+}

@@ -130,6 +130,55 @@
     }
 </div>
 
+@if(Model.IsDeveloper)
+{
+    <h1 class="Tags">Published Games</h1>
+    @if (Model.PublishedGames == null || !Model.PublishedGames.Any())
+    {
+        <div class="no-review-container">
+            <p>No published games.</p>
+        </div>
+    }
+    else
+    {
+        <div class="published-slider">
+            <!-- 左右按钮 -->
+            <button class="published-btn published-left">&#10094;</button>
+
+            <div class="published-wrapper">
+                <div class="published-list">
+                    @foreach (var game in Model.PublishedGames)
+                    {
+                        <a class="published-game-card"
+                           asp-controller="Home"
+                           asp-action="GameDetail"
+                           asp-route-name="@game.Title.Replace(" ", "_")">
+                            <img src="@game.CoverUrl" alt="@game.Title" />
+                            <div class="published-info">
+                                <p class="published-title">@game.Title</p>
+                                <p class="published-price">RM @game.Price</p>
+                                <small class="published-release">
+                                    @game.ReleaseDate.ToString("yyyy-MM-dd")
+                                </small>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <button class="published-btn published-right">&#10095;</button>
+        </div>
+
+        <!-- Dots Navigation -->
+        <div class="published-dots">
+            @for (int i = 0; i < Math.Ceiling(Model.PublishedGames.Count / 4.0); i++)
+            {
+                <span class="published-dot @(i == 0 ? "active" : "")" data-index="@i"></span>
+            }
+        </div>
+    }
+
+}
 
 @section Styles{
     <!-- 左边：用户资料 -->
@@ -138,5 +187,6 @@
 
 @section Scripts{
     <script src="~/js/components/ProfileGame.js" asp-append-version="true"></script>
-    <script src="~/js/components/Review.js" asp-append-version="true"></script>    
+    <script src="~/js/components/Review.js" asp-append-version="true"></script>
+    <script src="~/js/components/publish.js" asp-append-version="true"></script>
 }

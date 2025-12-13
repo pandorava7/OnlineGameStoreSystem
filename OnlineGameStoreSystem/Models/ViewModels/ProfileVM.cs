@@ -87,6 +87,16 @@ namespace OnlineGameStoreSystem.Models.ViewModels
         public List<PurchasedGameVM> PurchasedGames { get; set; } = new();
 
         public bool PublicProfile { get; set; } = true; // 只读 Privacy 信息
+        public List<PublishedGameVM> PublishedGames { get; set; } = new();
+        public class PublishedGameVM
+        {
+            public int GameId { get; set; }
+            public string Title { get; set; } = null!;
+            public string CoverUrl { get; set; } = null!;
+            public decimal Price { get; set; }
+            public DateTime ReleaseDate { get; set; }
+        }
+
     }
     #endregion
 
