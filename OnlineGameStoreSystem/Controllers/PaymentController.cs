@@ -89,7 +89,7 @@ public class PaymentController : Controller
             return new PaymentSummaryGame
             {
                 Title = game.Title,
-                Price = game.Price,
+                Price = game.GetDiscountedPrice(),
                 ThumbnailUrl = game.Media
                     .Where(m => m.MediaType == "thumb")
                     .Select(m => m.MediaUrl)
@@ -138,7 +138,8 @@ public class PaymentController : Controller
             });
         }
 
-        decimal totalAmount = cart.Items.Sum(ci => ci.Game.Price);
+        //decimal totalAmount = cart.Items.Sum(ci => ci.Game.Price);
+        decimal totalAmount = cart.Items.Sum(ci => ci.Game.GetDiscountedPrice());
 
         // 2️⃣ 创建 Payment
         var payment = new Payment
@@ -161,7 +162,7 @@ public class PaymentController : Controller
             UserId = userId,
             GameId = ci.GameId,
             PaymentId = payment.Id,
-            PriceAtPurchase = ci.Game.Price,
+            PriceAtPurchase = ci.Game.GetDiscountedPrice(),
             Status = PurchaseStatus.Pending
         }).ToList();
 

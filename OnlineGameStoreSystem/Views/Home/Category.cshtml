@@ -33,15 +33,17 @@
                                             if (game.Price == 0 || game.DiscountPrice == 0)
                                             {
                                                 <!-- 折扣为0或者原价为0，算作 Free，同时显示原价划掉 -->
-                                                <p class="game-price free">Free <span class="original-price">RM @game.Price</span></p>
+                                                <p class="game-price free">
+                                                    Free <span class="original-price">RM @($"{game.Price:F2}")</span>
+                                                </p>
                                             }
                                             else
                                             {
                                                 <!-- 有折扣且折扣>0 -->
-                                                var discountedPrice = game.Price * (1 - (game.DiscountPrice ?? 0m) / 100m);
+                                                var discountedPrice = game.DiscountPrice ?? game.Price;
                                                 <p class="game-price discounted">
-                                                    RM @discountedPrice
-                                                    <span class="original-price">RM @game.Price</span>
+                                                    RM @($"{discountedPrice:F2}")
+                                                    <span class="original-price">RM @($"{game.Price:F2}")</span>
                                                 </p>
                                             }
                                         }
@@ -54,9 +56,10 @@
                                             }
                                             else
                                             {
-                                                <p class="game-price">RM @game.Price</p>
+                                                <p class="game-price">RM @($"{game.Price:F2}")</p>
                                             }
                                         }
+
                                     </div>
                                 </div>
                             </a>

@@ -41,6 +41,10 @@
                     @Html.AntiForgeryToken()
                     <input id="removePostId" type="hidden" name="postId" value="" />
                 </form>
+                <form id="restorePostForm" asp-controller="Admin" asp-action="RestorePost" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input id="restorePostId" type="hidden" name="postId" value="" />
+                </form>
 
                 @foreach (var item in Model)
                 {
@@ -71,7 +75,22 @@
                                     asp-controller="Community" asp-action="PostDetail" asp-route-id="@item.PostId">
                                     View
                                 </a>
-                                <button data-post-id="@item.PostId" type="submit" class="danger-btn remove-post-btn">Remove</button>
+                                @if (item.PostStatus.ToLower() == "banned")
+                                {
+                                    <button data-post-id="@item.PostId"
+                                            type="submit"
+                                            class="primary-btn restore-post-btn">
+                                        Restore
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button data-post-id="@item.PostId"
+                                            type="submit"
+                                            class="danger-btn remove-post-btn">
+                                        Remove
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>

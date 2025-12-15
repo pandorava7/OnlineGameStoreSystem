@@ -25,7 +25,8 @@
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Items</th>
+                    <th>Items & Status</th>
+                    <th>Payment Status</th>
                     <th>Type</th>
                     <th>Total</th>
                     <th class="action-col">Action</th>
@@ -37,11 +38,14 @@
                 {
                     <tr>
                         <td>@item.PurchaseDate</td>
-                        <td>
-                            @foreach (var i in @item.Items)
+                        <td class="flex-column-left">
+                            @foreach (var i in @item.ItemAndStatus)
                             {
                                 // print all the item name
-                                <span>@i</span>
+                                <div class="flex-row gap">
+                                    <span>@i.Key</span>
+                                    <span style="color: var(--text-muted)">@i.Value</span>
+                                </div>
                             }
                         </td>
                         <td>
@@ -50,6 +54,7 @@
                                 <p class="method">@item.PaymentMethod</p>
                             </div>
                         </td>
+                        <td>@item.PaymentStatus</td>
                         <td>@item.Total</td>
 
                         <td class="action-col">

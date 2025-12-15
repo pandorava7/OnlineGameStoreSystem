@@ -81,7 +81,7 @@
                 const data = await res.json();
 
                 if (res.status === 401) {
-                    alert("Please login first.");
+                    showTemporaryMessage("Please login first.", "error");
                     return;
                 }
 

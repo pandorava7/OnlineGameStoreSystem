@@ -62,24 +62,26 @@ public class SupportController : Controller
         }
 
         var vm = query
-            .Where(p => p.UserId == userId)
-            .Select(p => new PurchaseItemVM
-            {
-                // if this payment is registration, just create new list for that
-                // if this is not registration, take purchase gamaes name to list
-                PaymentId = p.Id,
-                Items = p.Purpose == PaymentPurposeType.DeveloperRegistration
-                    ? new List<string> { "Registration fee" }
-                     : p.Purchases.
-                     Select(purchase => purchase.Game.Title.ToString())
-                     .ToList(),
-                PaymentMethod = p.PaymentMethod.ToString(),
-                PurchaseDate = p.CreatedAt,
-                PurchasePurpose = p.Purpose.ToString(),
-                Total = p.Amount,
-            })
-            .OrderBy(p => p.PurchaseDate)
-            .ToPagedList(pageNumber, pageSize);
+    .Where(p => p.UserId == userId)
+    .AsEnumerable() // 数据拉到内存，后续操作在客户端执行
+    .Select(p => new PurchaseItemVM
+    {
+        PaymentId = p.Id,
+        ItemAndStatus = p.Purpose == PaymentPurposeType.DeveloperRegistration
+            ? new Dictionary<string, string> { { "Registration fee", "Completed" } }
+            : p.Purchases.ToDictionary(
+                purchase => purchase.Game.Title,  // 不需要 ToString()
+                purchase => purchase.Status.ToString()
+            ),
+        PaymentMethod = p.PaymentMethod.ToString(),
+        PurchaseDate = p.CreatedAt,
+        PurchasePurpose = p.Purpose.ToString(),
+        PaymentStatus = p.Status.ToString(),
+        Total = p.Amount,
+    })
+    .OrderBy(p => p.PurchaseDate)
+    .ToPagedList(pageNumber, pageSize);
+
 
         var user = _db.Users.Find(userId);
         if (user == null)
@@ -94,7 +96,10 @@ public class SupportController : Controller
 
     public IActionResult ViewPurchaseDetail(int paymentId)
     {
-        var payment = _db.Payments.Find(paymentId);
+        var payment = _db.Payments
+            .Include(p => p.Purchases)
+                .ThenInclude(pu => pu.Game)
+            .FirstOrDefault(p => p.Id == paymentId);
         if (payment == null)
             return NotFound("payment not found");
 
@@ -141,7 +146,9 @@ public class SupportController : Controller
         {
             PaymentId = payment.Id,
             TotalAmount = payment.Amount,
-            Purchases = payment.Purchases.Select(p => new RefundPurchaseItemVM
+            Purchases = payment.Purchases
+            .Where(p => p.Status == PurchaseStatus.Completed) // 仅显示已完成的购买项以供退款
+            .Select(p => new RefundPurchaseItemVM
             {
                 PurchaseId = p.Id,
                 GameThumbnailUrl = p.Game.Media.FirstOrDefault(gm => gm.MediaType == "thumb")?.MediaUrl,
@@ -171,7 +178,9 @@ public class SupportController : Controller
         {
             PaymentId = payment.Id,
             TotalAmount = payment.Amount,
-            Purchases = payment.Purchases.Select(p => new RefundPurchaseItemVM
+            Purchases = payment.Purchases
+            .Where(p => p.Status == PurchaseStatus.Completed) // 仅显示已完成的购买项以供退款
+            .Select(p => new RefundPurchaseItemVM
             {
                 PurchaseId = p.Id,
                 GameThumbnailUrl = p.Game.Media.FirstOrDefault(gm => gm.MediaType == "thumb")?.MediaUrl,

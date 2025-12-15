@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <form asp-controller="Developer" asp-action="ProcessPayment" method="post">
+    <form asp-controller="Profile" asp-action="ProcessPayment" method="post">
         @Html.AntiForgeryToken()
 
         <div class="section-wrapper">
@@ -73,8 +73,8 @@
 
         <div class="btn-group-wrapper payment-btn-group">
             <button type="submit" class="btn-primary btn-large">Confirm & Process payment</button>
-            <a asp-controller="Developer" asp-action="RegistrationCancelled" class="btn-outline btn-large">I want to cancel this registration</a>
-        </div>
+            <a asp-controller="Profile" asp-action="RegistrationCancelled" class="btn-outline btn-large">I want to cancel this registration</a>
+        </div>                           
     </form>
 </div>
 

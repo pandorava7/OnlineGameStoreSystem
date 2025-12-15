@@ -1,0 +1,48 @@
+﻿.site-footer {
+    background-color: var(--bg-surface);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 0;
+    margin-top: 40px;
+    width: 100%;
+    z-index: 100; /* 确保在最上层 */
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.footer-left,
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.footer-brand {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.footer-copy {
+    color: #ffffff;
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
+.footer-label {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+}
+
+.footer-contact {
+    color: #ffffff;
+    font-size: 0.95rem;
+}

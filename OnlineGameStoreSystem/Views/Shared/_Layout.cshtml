@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/OnlineGameStoreSystem.styles.css" asp-append-version="true" />
     @* components css *@
     <link rel="stylesheet" href="~/css/components/navbar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/components/footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/modal.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/alert.css" asp-append-version="true" />
 
@@ -35,14 +36,13 @@
     <partial name="_NavBar" />
 
     <div class="container">
-        <main role="main">
+        <main role="main" class="layout-content">
             @RenderBody()
         </main>
     </div>
 
-    @* <footer>
+    <partial name="_Footer" />
 
-    </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @* API *@

@@ -42,6 +42,10 @@
                     @Html.AntiForgeryToken()
                     <input id="removeCommentId" type="hidden" name="commentId" value="" />
                 </form>
+                <form id="restoreCommentForm" asp-controller="Admin" asp-action="RestoreComment" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input id="restoreCommentId" type="hidden" name="commentId" value="" />
+                </form>
 
                 @foreach (var item in Model)
                 {
@@ -71,11 +75,22 @@
                                     View
                                 </a> *@
 
-                                <button data-comment-id="@item.CommentId"
-                                        type="submit"
-                                        class="danger-btn remove-comment-btn">
-                                    Remove
-                                </button>
+                                @if (item.CommentStatus.ToLower() == "banned")
+                                {
+                                    <button data-comment-id="@item.CommentId"
+                                            type="submit"
+                                            class="primary-btn restore-comment-btn">
+                                        Restore
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button data-comment-id="@item.CommentId"
+                                            type="submit"
+                                            class="danger-btn remove-comment-btn">
+                                        Remove
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>

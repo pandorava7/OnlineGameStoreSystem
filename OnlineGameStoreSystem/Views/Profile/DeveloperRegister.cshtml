@@ -7,7 +7,7 @@
     <h1 class="dashboard-title">Join the Developer Planning</h1>
     <p class="dashboard-subtitle">Please fill out the form to apply as a developer.</p>
 
-    <form asp-controller="Developer" asp-action="Apply" method="post">
+    <form asp-controller="Profile" asp-action="DeveloperResgiterApply" method="post">
         @Html.AntiForgeryToken()
 
         @if (TempData["FlashMessage"] != null)

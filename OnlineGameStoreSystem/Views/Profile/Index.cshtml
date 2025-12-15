@@ -86,14 +86,16 @@
                 <div class="comment-list">
                     @foreach (var review in Model.UserReviews)
                     {
-                        <div class="comment-card">
-                            <img src="@review.CoverUrl" alt="@review.GameTitle" />
-                            <div class="comment-info">
-                                <p class="game-title">@review.GameTitle</p>
-                                <p class="comment-content">@review.Content</p>
-                                <small class="comment-date">@review.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                        <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@review.GameTitle.Replace(' ','_')">
+                            <div class="comment-card">
+                                <img src="@review.CoverUrl" alt="@review.GameTitle" />
+                                <div class="comment-info">
+                                    <p class="game-title">@review.GameTitle</p>
+                                    <p class="comment-content">@review.Content</p>
+                                    <small class="comment-date">@review.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     }
                 </div>
             </div>
@@ -113,8 +115,8 @@
     @if (Model.PurchasedGames == null || !Model.PurchasedGames.Any())
     {
         <div class="no-review-container">
-                <p>No game yet.</p>
-       </div>
+            <p>No game yet.</p>
+        </div>
     }
     else
     {
@@ -166,7 +168,7 @@
             }
             else
             {
-                <a class="btn-primary" asp-controller="Developer" asp-action="DeveloperRegister">Apply as Developer</a>
+                <a class="btn-primary" asp-controller="Profile" asp-action="DeveloperRegister">Apply as Developer</a>
             }
         </div>
     </nav>

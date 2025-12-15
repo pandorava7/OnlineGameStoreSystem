@@ -32,6 +32,9 @@ public class ReviewController : Controller
             return BadRequest("please make sure rating between 1 ~ 5");
 
         var userId = User.GetUserId();
+        var user = await db.Users.FindAsync(userId);
+        if (user == null)
+            return Unauthorized("User is not logged in");
 
         var review = new Review
         {
@@ -59,6 +62,7 @@ public class ReviewController : Controller
             .Include(c => c.User)
             .Include(c => c.Likes) // ⭐ 必须 include Likes
             .OrderBy(c => c.CreatedAt)
+            .Where(c => c.Status == ActiveStatus.Active)
             .Select(c => new
             {
                 c.Id,
@@ -96,7 +100,8 @@ public class ReviewController : Controller
         if (review.UserId != userId)
             return Forbid(); // 只有作者可以删除
 
-        db.Reviews.Remove(review);
+        //db.Reviews.Remove(review);
+        review.Status = ActiveStatus.Banned; // 软删除
         await db.SaveChangesAsync();
         return Ok();
     }

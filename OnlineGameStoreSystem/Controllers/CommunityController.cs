@@ -5,6 +5,7 @@ using OnlineGameStoreSystem.Models;
 using System.Diagnostics;
 using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineGameStoreSystem.Controllers;
 
@@ -39,7 +40,7 @@ public class CommunityController : Controller
                     CreatedAt = p.CreatedAt,
                     ViewCount = p.ViewCount,
                     LikeCount = p.LikeCount,
-                    CommentCount = db.Comments.Count(c => c.PostId == p.Id)
+                    CommentCount = db.Comments.Count(c => c.PostId == p.Id),
                 })
                 .ToList()
         };
@@ -74,7 +75,7 @@ public class CommunityController : Controller
             ViewCount = post.ViewCount,
             LikeCount = post.Likes.Count,
             Comments = db.Comments
-                .Where(c => c.PostId == post.Id)
+                .Where(c => c.PostId == post.Id && c.Status == ActiveStatus.Active)
                 .Include(c => c.User)
                 .Select(c => new CommentViewModel
                 {
@@ -91,6 +92,7 @@ public class CommunityController : Controller
     }
 
     // 管理自己的帖子页面
+    [Authorize]
     [Route("community/posts")]
     public IActionResult PostManage()
     {
@@ -98,7 +100,7 @@ public class CommunityController : Controller
         var userId = User.GetUserId();
 
         var userPosts = db.Posts
-            .Where(p => p.UserId == userId)
+            .Where(p => p.UserId == userId && p.Status == ActiveStatus.Active)
             .Select(p => new UserPostViewModel
             {
                 Id = p.Id,
@@ -122,6 +124,7 @@ public class CommunityController : Controller
     }
 
     // 发布或编辑帖子页面
+    [Authorize]
     [Route("community/publish")]
     [HttpGet]
     public IActionResult PublishPage(int? id)
@@ -149,6 +152,7 @@ public class CommunityController : Controller
 
 
     // 发布新帖子上传逻辑
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreatePost(CreatePostViewModel model)
     {
@@ -156,13 +160,19 @@ public class CommunityController : Controller
         if (!ModelState.IsValid)
         {
             ModelStateHelper.LogErrors(ModelState);
-            return RedirectToAction("PublishPage", model);
+            return View("PublishPage", model);
         }
 
         // 处理缩略图上传
         string thumbnailUrl = model.Thumbnail != null
             ? await TrySaveThumbnailAsync(model.Thumbnail)
             : "";
+
+        if(string.IsNullOrEmpty(thumbnailUrl))
+        {
+            // 上传失败且错误已记录，返回编辑页
+            return View("PublishPage", model);
+        }
 
         // 如果已有原本的图片，且没有上传新图片，则用原本图片
         if (model.ThumbnailUrl != null && thumbnailUrl == "")
@@ -196,6 +206,9 @@ public class CommunityController : Controller
                 post.Thumbnail = thumbnailUrl;
         }
 
+        TempData["FlashMessage"] = "Post is created";
+        TempData["FlashMessageType"] = "success";
+
         db.SaveChanges();
         return RedirectToAction("PostManage");
     }
@@ -214,6 +227,7 @@ public class CommunityController : Controller
         }
     }
 
+    [Authorize]
     [HttpPost]
     public IActionResult DeletePost(int id)
     {
@@ -223,8 +237,12 @@ public class CommunityController : Controller
             return NotFound();
         }
 
-        db.Posts.Remove(post);
+        //db.Posts.Remove(post);
+        post.Status = ActiveStatus.Banned;
         db.SaveChanges();
+
+        TempData["FlashMessage"] = "Post is deleted";
+        TempData["FlashMessageType"] = "info";
 
         return RedirectToAction("PostManage"); // 或者你要跳的页面
     }

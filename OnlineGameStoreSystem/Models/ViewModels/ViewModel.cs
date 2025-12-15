@@ -206,10 +206,11 @@ public class PurchaseItemVM
 {
     public int PaymentId { get; set; }
     public DateTime PurchaseDate { get; set; }
-    public List<string> Items { get; set; } = new List<string>();
+    public Dictionary<string, string> ItemAndStatus { get; set; } = new Dictionary<string, string>();
     public string PurchasePurpose { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = string.Empty;
     public decimal Total { get; set; }
+    public string PaymentStatus { get; set; } = string.Empty;
 }
 
 public class PurchaseDetailVM
@@ -223,6 +224,7 @@ public class PurchaseDetailVM
     public decimal Subtotal { get; set; }   
     public decimal Discount { get; set; }
     public decimal Total { get; set; }
+    public string Status { get; set; } = string.Empty;
 }
 
 public class PurchaseItem

@@ -20,11 +20,15 @@
                 {
                     <div class="result-card">
                         <div class="cover">
-                            <img src="@g.Cover" alt="@g.Title Thumbnail">
+                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@g.Title.Replace(' ','_')">
+                                <img src="@g.Cover" alt="@g.Title Thumbnail">
+                            </a>
                         </div>
 
                         <div class="info">
-                            <h3 class="title">@g.Title</h3>
+                            <a asp-controller="Home" asp-action="GameDetail" asp-route-name="@g.Title.Replace(' ','_')">
+                                <h3 class="title">@g.Title</h3>
+                            </a>
                             <div class="date-developer">
                                 <p class="date">Released Date：@g.ReleaseDate.ToString("yyyy-MM-dd")</p>
                                 <a asp-controller="Profile" asp-action="Index" asp-route-id="@g.DeveloperId">

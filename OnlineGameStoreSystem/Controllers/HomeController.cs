@@ -148,6 +148,7 @@ public class HomeController : Controller
             .ToList(),
             Genres = game.Tags.Count > 0 ? game.Tags.Select(t => t.Tag.Name).ToList() : new List<string> { "No Genre" },
             Reviews = game.Reviews
+                .Where(r => r.Status == ActiveStatus.Active)
                 .Select(r => new Review
                 {
                     User = r.User,
@@ -160,6 +161,12 @@ public class HomeController : Controller
             ReleasedDate = game.ReleaseDate,
             DeveloperName = game.Developer.Username,
         };
+
+        // debug the review status
+        //foreach (var review in gameDetailViewModel.Reviews)
+        //{
+        //    ConsoleHelper.WriteRed($"Review by {review.User.Username}, Status: {review.Status}");
+        //}
 
         // increase exposure count
         // 进入详情页，曝光+3
@@ -184,8 +191,12 @@ public class HomeController : Controller
             .Include(g => g.Media)
             .Include(g => g.Tags).ThenInclude(gt => gt.Tag)
             .Include(g => g.Purchases).ThenInclude(p => p.Payment)
-            .Where(g => g.Purchases.Any(p => p.UserId == userId)) // 关键：只显示玩家拥有的游戏
             .AsQueryable();
+
+        // ---------------- Purchase合法性 ----------------
+        query = query.Where(g => g.Purchases
+                                 .Any(p => p.UserId == userId && p.Status == PurchaseStatus.Completed
+                                 && p.Payment.Status == PaymentStatus.Completed));
 
         // ---------------- 搜索词 ----------------
         if (!string.IsNullOrWhiteSpace(term))

@@ -7,6 +7,9 @@
     @* 标题 *@
     <h1 class="page-title"><a href="/Community">Community</a> &gt;&gt; <a href="/community/posts">Post</a> &gt;&gt; Write Your Own Post</h1>
 
+    <!-- =================== 顶部错误汇总 =================== -->
+    <div asp-validation-summary="All" class="alert text-danger"></div>
+
     <div class="post-form-container">
         @* Form() *@
         <form id="postForm" enctype="multipart/form-data" method="post" asp-controller="Community" asp-action="CreatePost">

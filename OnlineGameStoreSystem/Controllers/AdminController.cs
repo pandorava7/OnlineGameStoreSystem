@@ -28,7 +28,7 @@ public class AdminController : Controller
     public IActionResult StatusManage(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Users.AsQueryable();
 
@@ -89,6 +89,9 @@ public class AdminController : Controller
 
         _db.SaveChanges();
 
+        TempData["FlashMessage"] = "User updated";
+        TempData["FlashMessageType"] = "info";
+
         return RedirectToAction("StatusManage");
     }
 
@@ -101,6 +104,9 @@ public class AdminController : Controller
             user.Status = "deleted";
             _db.SaveChanges();
         }
+
+        TempData["FlashMessage"] = "User deleted";
+        TempData["FlashMessageType"] = "info";
 
         // 删除后回到管理页面
         return RedirectToAction("StatusManage");
@@ -120,7 +126,7 @@ public class AdminController : Controller
     public IActionResult GameReleaseReview(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Games
             .Include(g => g.Developer)
@@ -141,7 +147,7 @@ public class AdminController : Controller
                 Title = g.Title,
                 CreatedAt = g.CreatedAt,
             })
-            .OrderBy(g => g.CreatedAt)
+            .OrderByDescending(g => g.CreatedAt)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Game >> Game Release Review";
@@ -211,7 +217,7 @@ public class AdminController : Controller
     public IActionResult GameManagement(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Games
             .Include(g => g.Developer)
@@ -238,7 +244,7 @@ public class AdminController : Controller
                 Status = g.Status.ToString(),
                 CreatedAt = g.CreatedAt,
             })
-            .OrderBy(g => g.CreatedAt)
+            .OrderByDescending(g => g.CreatedAt)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Game >> Game Management";
@@ -271,7 +277,7 @@ public class AdminController : Controller
     public IActionResult RefundHandling(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Purchases
             .Include(r => r.User)
@@ -297,7 +303,7 @@ public class AdminController : Controller
                 RefundReason = p.RefundReason ?? "no reason",
                 RefundRequestDate = p.RefundRequestedAt,
             })
-            .OrderBy(p => p.RefundRequestDate)
+            .OrderByDescending(p => p.RefundRequestDate)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Purchase >> Refund Handling";
@@ -334,7 +340,7 @@ public class AdminController : Controller
     public IActionResult TrackPurchase(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Payments
             .Include(r => r.User)
@@ -359,7 +365,7 @@ public class AdminController : Controller
                 AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
                 UserName = p.User.Username,
             })
-            .OrderBy(p => p.PurchaseDate)
+            .OrderByDescending(p => p.PurchaseDate)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Purchase >> Track Purchase";
@@ -401,15 +407,37 @@ public class AdminController : Controller
             Subtotal = subtotal,
             Discount = discount,
             Total = total,
+            Status = payment.Status.ToString(),
         };
 
         return View(vm);
     }
 
+    public IActionResult HandlePayment(int paymentId, bool approve)
+    {
+        // 更新游戏状态
+        var payment = _db.Payments.Find(paymentId);
+        if (payment == null)
+            return NotFound("Payment is not found");
+
+        if (payment.Status == PaymentStatus.Failed)
+            return BadRequest("This payment is not valid for refund, the status is: " + payment.Status.ToString());
+
+        ConsoleHelper.WriteRed("Approve: " + approve);
+        payment.Status = approve ? PaymentStatus.Failed : PaymentStatus.Completed;
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = approve ? "Successfully to fail this payment." : "Restored this payment.";
+        TempData["FlashMessageType"] = approve ? "success" : "info";
+
+        return RedirectToAction("TrackPurchase");
+    }
+
+
     public IActionResult PostManagement(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Posts
             .Include(r => r.User)
@@ -429,8 +457,9 @@ public class AdminController : Controller
                 UserId = p.UserId,
                 AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
                 UserName = p.User.Username,
+                PostStatus = p.Status.ToString(),
             })
-            .OrderBy(p => p.PostDate)
+            .OrderByDescending(p => p.PostDate)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Community >> Post Management";
@@ -448,13 +477,32 @@ public class AdminController : Controller
         post.Status = ActiveStatus.Banned;
         _db.SaveChanges();
 
+        TempData["FlashMessage"] = "Successfully to remove this post";
+        TempData["FlashMessageType"] = "info";
+
         return RedirectToAction("PostManagement");
     }
+
+    public IActionResult RestorePost(int postId)
+    {
+        var post = _db.Posts.Find(postId);
+        if (post == null)
+            return NotFound("post not found");
+
+        post.Status = ActiveStatus.Active;
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = "Successfully restored this post";
+        TempData["FlashMessageType"] = "info";
+
+        return RedirectToAction("PostManagement");
+    }
+
 
     public IActionResult CommentManagement(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Comments
             .Include(c => c.Post)
@@ -477,8 +525,9 @@ public class AdminController : Controller
                 UserId = p.UserId,
                 AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
                 UserName = p.User.Username,
+                CommentStatus = p.Status.ToString(),
             })
-            .OrderBy(p => p.CommentDate)
+            .OrderByDescending(p => p.CommentDate)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Community >> Comment Management";
@@ -496,13 +545,32 @@ public class AdminController : Controller
         comment.Status = ActiveStatus.Banned;
         _db.SaveChanges();
 
+        TempData["FlashMessage"] = "Successfully to remove this comment";
+        TempData["FlashMessageType"] = "info";
+
         return RedirectToAction("CommentManagement");
     }
+
+    public IActionResult RestoreComment(int commentId)
+    {
+        var comment = _db.Comments.Find(commentId);
+        if (comment == null)
+            return NotFound("comment not found");
+
+        comment.Status = ActiveStatus.Active;
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = "Successfully restored this comment";
+        TempData["FlashMessageType"] = "info";
+
+        return RedirectToAction("CommentManagement");
+    }
+
 
     public IActionResult GameReviewManagement(string? search, int? page)
     {
         int pageSize = 5;
-        int pageNumber = page ?? 1;
+        int pageNumber = Math.Max(page ?? 1, 1);
 
         var query = _db.Reviews
             .Include(r => r.Game)
@@ -521,6 +589,7 @@ public class AdminController : Controller
                 ReviewId = r.Id,
                 ReviewRating = r.Rating,
                 ReviewContent = r.Content ?? "",
+                ReviewStatus = r.Status.ToString(),
                 ReviewDate = r.CreatedAt,
                 GameId = r.GameId,
                 GameThumbnailUrl = r.Game.Media.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault(),
@@ -529,7 +598,7 @@ public class AdminController : Controller
                 AvatarUrl = string.IsNullOrEmpty(r.User.AvatarUrl) == false ? r.User.AvatarUrl : "/images/avatar_default.png",
                 UserName = r.User.Username,
             })
-            .OrderBy(p => p.ReviewDate)
+            .OrderByDescending(p => p.ReviewDate)
             .ToPagedList(pageNumber, pageSize);
 
         ViewData["Title"] = "Community >> Game Review Management";
@@ -546,6 +615,24 @@ public class AdminController : Controller
 
         review.Status = ActiveStatus.Banned;
         _db.SaveChanges();
+
+        TempData["FlashMessage"] = "Successfully to remove this review";
+        TempData["FlashMessageType"] = "info";
+
+        return RedirectToAction("GameReviewManagement");
+    }
+
+    public IActionResult RestoreGameReview(int reviewId)
+    {
+        var review = _db.Reviews.Find(reviewId);
+        if (review == null)
+            return NotFound("review not found");
+
+        review.Status = ActiveStatus.Active;
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = "Successfully to restore this review";
+        TempData["FlashMessageType"] = "info";
 
         return RedirectToAction("GameReviewManagement");
     }

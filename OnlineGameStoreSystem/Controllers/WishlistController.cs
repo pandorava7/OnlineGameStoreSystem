@@ -8,7 +8,6 @@ using System.Diagnostics;
 
 namespace OnlineGameStoreSystem.Controllers;
 
-[Authorize]
 public class WishlistController : Controller
 {
     private readonly DB db;
@@ -57,9 +56,11 @@ public class WishlistController : Controller
 
         // 查找用户
         var user = await db.Users
-                           .FirstOrDefaultAsync(u => u.Id == userId);
+            .Include(u => u.Wishlists)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
         if (user == null)
-            return Json(new { success = false, message = "User not found" });
+            return Json(new { success = false, message = "Please log in first" });
 
         // 检查用户是否已经添加该游戏进愿望单
         bool alreadyWish = user.Wishlists.Any(p => p.GameId == gameId);

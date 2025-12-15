@@ -31,6 +31,7 @@
                     <th>User</th>
                     <th>Game</th>
                     <th>Review</th>
+                    <th>Status</th>
                     <th>Review Date</th>
                     <th class="action-col">Action</th>
                 </tr>
@@ -42,6 +43,10 @@
                 <form id="removeReviewForm" asp-controller="Admin" asp-action="RemoveGameReview" method="post" style="display:inline;">
                     @Html.AntiForgeryToken()
                     <input id="removeReviewId" type="hidden" name="reviewId" value="" />
+                </form>
+                <form id="restoreReviewForm" asp-controller="Admin" asp-action="RestoreGameReview" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input id="restoreReviewId" type="hidden" name="reviewId" value="" />
                 </form>
 
                 @foreach (var item in Model)
@@ -83,15 +88,28 @@
                             @item.ReviewContent
                         </td>
 
+                        <td>@item.ReviewStatus</td>
+
                         <td>@item.ReviewDate.ToString("yyyy-MM-dd HH:mm")</td>
 
                         <td class="action-col">
                             <div class="button-group">
-                                <button data-review-id="@item.ReviewId"
-                                        type="submit"
-                                        class="danger-btn remove-review-btn">
-                                    Remove
-                                </button>
+                                @if(item.ReviewStatus.ToLower() == "banned")
+                                {
+                                    <button data-review-id="@item.ReviewId"
+                                            type="submit"
+                                            class="primary-btn restore-review-btn">
+                                        Restore
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button data-review-id="@item.ReviewId"
+                                            type="submit"
+                                            class="danger-btn remove-review-btn">
+                                        Remove
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>

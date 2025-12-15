@@ -31,6 +31,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Approve / Reject POST form -->
+    <form id="refundActionForm" asp-controller="Admin" asp-action="HandlePayment" method="post" style="display:none;">
+        @Html.AntiForgeryToken()
+        <input id="refundPaymentId" type="hidden" name="paymentId" />
+        <input id="refundApproveStatus" type="hidden" name="approve" />
+    </form>
+
+    <div class="flex-column-right">
+        <div class="button-group">
+            @if(Model.Status.ToLower() == "completed")
+            {
+                <button data-payment-id="@Model.PaymentId" type="button" class="primary-btn fail-payment-btn">
+                    Fail Payment
+                </button>
+            }
+            else
+            {
+                <button data-payment-id="@Model.PaymentId" type="button" class="danger-btn restore-payment-btn">
+                    Restore
+                </button>
+            }
+        </div>
+    </div>
 </div>
 
 @section Styles {

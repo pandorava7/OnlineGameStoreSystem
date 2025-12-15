@@ -392,7 +392,8 @@ async function addToCart(gameId) {
 }
 
 async function addToWishlist(gameId) {
-    confirmMessage(async  () => {
+    confirmMessage(async () => {
+        console.log("Adding to wishlist:", gameId);
         const res = await fetch(`/Wishlist/AddItem?gameId=${gameId}`, {
             method: 'POST'
         });
@@ -400,12 +401,13 @@ async function addToWishlist(gameId) {
         const result = await res.json();
         if (result.success) {
             showTemporaryMessage("Added to your wishlist", "success");
-
+            console.log("Successfully added to wishlist");
             // 更新购物车徽章
             //await CartAPI.loadCartFromServer();
         }
         else {
             showTemporaryMessage(result.message, "error");
+            console.log("Failed to add to wishlist:", result.message);
         }
     }, "Confirm add to your wishlist?");
     

@@ -24,6 +24,7 @@ public class SearchController : Controller
             .Include(g => g.Reviews)
             .Include(g => g.Developer)
             .Where(g => g.Status == GameStatus.Published)
+            .Take(100) // Limit to first 100 results to improve performance
             .AsQueryable();
 
         // ---------------- Search query ----------------

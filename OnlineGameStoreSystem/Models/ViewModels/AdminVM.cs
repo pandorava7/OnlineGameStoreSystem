@@ -92,6 +92,7 @@ public class PostManagementVM
     public int PostId { get; set; }
     public string PostTitle { get; set; } = string.Empty;
     public DateTime PostDate { get; set; }
+    public string PostStatus { get; set; } = string.Empty;
     public int UserId { get; set; }
     public string AvatarUrl { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
@@ -105,6 +106,7 @@ public class CommentManagementVM
     public int CommentId { get; set; }
     public string CommentContent { get; set; } = string.Empty;
     public DateTime CommentDate { get; set; }
+    public string CommentStatus { get; set; } = string.Empty;
     public int UserId { get; set; }
     public string AvatarUrl { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
@@ -118,6 +120,7 @@ public class GameReviewManagementVM
     public int ReviewId { get; set; }
     public int ReviewRating { get; set; }
     public string ReviewContent {  get; set; } = string.Empty;
+    public string ReviewStatus { get; set; } = string.Empty;
     public DateTime ReviewDate { get; set; }
     public int UserId { get; set; }
     public string AvatarUrl { get; set; } = string.Empty;

@@ -56,9 +56,10 @@ public class CartController : Controller
         // 查找用户
         var user = await db.Users
                            .Include(u => u.Purchases) // 包含用户购买记录
+                           .ThenInclude(p => p.Payment) // 包含购买记录的支付信息
                            .FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)
-            return Json(new { success = false, message = "User not found" });
+            return Json(new { success = false, message = "Please log in first" });
 
         // 查找用户现有的购物车
         var cart = await db.ShoppingCarts.Include(sp=>sp.Items).FirstOrDefaultAsync(c => c.UserId == userId);
@@ -78,10 +79,11 @@ public class CartController : Controller
         }
 
         // 检查用户是否已经购买该游戏
-        bool alreadyPurchased = user.Purchases.Any(p => p.GameId == gameId);
+        bool alreadyPurchased = user.Purchases.Any(p => p.GameId == gameId && p.Status == PurchaseStatus.Completed 
+        && p.Payment.Status == PaymentStatus.Completed);
         if (alreadyPurchased)
         {
-            //return Json(new { success = false, message = "You already own this game" });
+            return Json(new { success = false, message = "You already own this game" });
         }
 
         // 检查用户是否已经添加到购物车

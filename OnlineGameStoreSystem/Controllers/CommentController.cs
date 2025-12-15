@@ -29,6 +29,9 @@ public class CommentController : Controller
             return NotFound("Post is not exist");
 
         var userId = User.GetUserId();
+        var user = await db.Users.FindAsync(userId);
+        if (user == null)
+            return Unauthorized("User is not logged in");
 
         var comment = new Comment
         {
@@ -51,7 +54,7 @@ public class CommentController : Controller
         var userId = User.GetUserId(); // -1 表示未登录
 
         var comments = await db.Comments
-            .Where(c => c.PostId == postId)
+            .Where(c => c.PostId == postId && c.Status == ActiveStatus.Active)
             .Include(c => c.User)
             .Include(c => c.Likes) // ⭐ 必须 include Likes
             .OrderBy(c => c.CreatedAt)
@@ -90,7 +93,8 @@ public class CommentController : Controller
         if (comment.UserId != userId)
             return Forbid(); // 只有作者可以删除
 
-        db.Comments.Remove(comment);
+        //db.Comments.Remove(comment);
+        comment.Status = ActiveStatus.Banned; // 软删除
         await db.SaveChangesAsync();
         return Ok();
     }
