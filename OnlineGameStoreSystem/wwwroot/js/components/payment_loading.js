@@ -88,9 +88,9 @@ function showSuccessModal(data) {
             Play Now
         </button>
 
-        <button class="secondary-btn" onclick="location.href='/Payment/Invoice/${data.paymentId}'">
+        <a href="/Invoice/${data.paymentId}" target="_blank" class="secondary-btn button">
             Invoice
-        </button>
+        </a>
 
         <button class="secondary-btn" onclick="location.href='/'">
             Home

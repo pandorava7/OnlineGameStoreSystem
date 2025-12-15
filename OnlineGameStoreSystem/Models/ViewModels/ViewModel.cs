@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 #region Test
 
@@ -267,5 +266,34 @@ public class WishlistVM
 {
     public List<WishlistItemVM> Items { get; set; } = new();
 }
+
+#endregion
+
+#region Invoice
+
+public class InvoiceDto
+{
+    public string InvoiceNumber { get; set; } = null!;
+    public DateTime IssuedAt { get; set; }
+
+    public string CustomerName { get; set; } = null!;
+    public string CustomerEmail { get; set; } = null!;
+
+    public List<InvoiceItemDto> Items { get; set; } = new();
+
+    public decimal Subtotal { get; set; }
+    public decimal Discount { get; set; }
+    public decimal Total { get; set; }
+}
+
+public class InvoiceItemDto
+{
+    public int No { get; set; }
+    public string ItemName { get; set; } = null!;
+    public decimal Price { get; set; }
+    public decimal Discount { get; set; }
+    public decimal Total => Price - Discount;
+}
+
 
 #endregion

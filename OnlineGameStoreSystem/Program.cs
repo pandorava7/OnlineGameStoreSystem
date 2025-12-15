@@ -36,6 +36,9 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 // Recommendation services
 builder.Services.AddScoped<RecommendationService>();
 
+// Invoice services
+builder.Services.AddScoped<InvoiceService>();
+
 // ?? HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 // ?? SecurityHelper
