@@ -91,6 +91,17 @@
             color: #3ad07d;
         }
 
+.original-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+
+.discounted {
+    color: red;
+}
+
 /* Slider Buttons */
 .cat-btn {
     position: absolute;

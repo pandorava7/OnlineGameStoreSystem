@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Extensions;
+using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Models;
 using System;
 
@@ -33,18 +34,28 @@ public class SearchController : Controller
         }
 
         // ---------------- Price ----------------
+        // ---------------- Price ----------------
         if (!string.IsNullOrWhiteSpace(price) && price != "Any Price")
         {
-            decimal upper = price switch
+            if (price == "Free")
             {
-                "under RM15" => 15m,
-                "under RM30" => 30m,
-                "under RM60" => 60m,
-                "under RM150" => 150m,
-                "under RM300" => 300m,
-                _ => decimal.MaxValue
-            };
-            query = query.Where(g => (g.DiscountPrice ?? g.Price) <= upper);
+                // 只显示免费游戏
+                query = query.Where(g => (g.DiscountPrice.HasValue && g.DiscountPrice.Value == 0)
+                                      || (!g.DiscountPrice.HasValue && g.Price == 0));
+            }
+            else
+            {
+                decimal upper = price switch
+                {
+                    "under RM15" => 15m,
+                    "under RM30" => 30m,
+                    "under RM60" => 60m,
+                    "under RM150" => 150m,
+                    "under RM300" => 300m,
+                    _ => decimal.MaxValue
+                };
+                query = query.Where(g => (g.DiscountPrice ?? g.Price) <= upper);
+            }
         }
 
         // ---------------- Toggle ----------------
@@ -87,6 +98,17 @@ public class SearchController : Controller
             })
             .ToListAsync()
         };
+
+        // Increase exposure count for each result
+        foreach (var result in vm.Results)
+        {
+            var game = await _db.Games.FirstOrDefaultAsync(g => g.Title == result.Title);
+            if (game != null)
+            {
+                game.ExposureCount += 1;
+                ConsoleHelper.WriteRed($"Increased exposure count for game by search '{game.Title}' to {game.ExposureCount}");
+            }
+        }
 
         return View("/Views/Home/Search.cshtml", vm);
     }

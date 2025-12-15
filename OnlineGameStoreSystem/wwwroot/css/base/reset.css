@@ -73,6 +73,7 @@ textarea {
     color: var(--color-text);
     padding: var(--space-sm) var(--space-md);
     transition: background var(--transition-normal), border-color var(--transition-normal);
+    line-height: 1;
 }
 
 button {

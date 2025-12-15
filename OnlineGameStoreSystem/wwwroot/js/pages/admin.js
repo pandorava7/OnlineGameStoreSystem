@@ -37,6 +37,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }, "Confirm the removal of this game?");
         });
     });
+
+    // Restore buttons
+    const restoreGameBtns = document.querySelectorAll(".restore-game-btn");
+    restoreGameBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const gameId = btn.getAttribute('data-game-id');
+                document.getElementById('restoreGameId').value = gameId;
+                document.getElementById('restoreGameForm').submit();
+            }, "Restore this game data?");
+        });
+    });
 });
 
 // confirm refund approve and reject

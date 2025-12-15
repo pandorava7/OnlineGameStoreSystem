@@ -81,7 +81,7 @@ public class CartController : Controller
         bool alreadyPurchased = user.Purchases.Any(p => p.GameId == gameId);
         if (alreadyPurchased)
         {
-            return Json(new { success = false, message = "You already own this game" });
+            //return Json(new { success = false, message = "You already own this game" });
         }
 
         // 检查用户是否已经添加到购物车

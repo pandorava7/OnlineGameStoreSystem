@@ -1,165 +1,167 @@
-﻿@{
+﻿@model OnlineGameStoreSystem.Models.ViewModels.GamePublishViewModel
+
+@{
     Layout = "_Layout";
 }
 
 <link rel="stylesheet" href="/css/Developer/developer.css" />
 
 <div class="dashboard-container">
-    <h1 class="dashboard-title">Developer Console >> Publish Your Game</h1>
+    <!-- 页面标题 -->
+    <h1 class="dashboard-title"><a href="/Developer/Developer">Developer Console</a> &gt;&gt; Publish Your Game</h1>
     <p class="dashboard-subtitle">Fill in the information below and submit your game for review.</p>
 
-    <form method="post" enctype="multipart/form-data">
-
-        @if (TempData["UploadErrors"] is string errorString)
-        {
-            var errors = errorString.Split("||", StringSplitOptions.RemoveEmptyEntries);
-            if (errors.Length > 0)
-            {
-                <div class="upload-errors" role="alert" style="background:#2b000a;color:#ffd7df;padding:10px;border-radius:6px;margin-bottom:12px;">
-                    <strong>Validation errors:</strong>
-                    <ul style="margin:8px 0 0 18px;">
-                        @foreach (var err in errors)
-                        {
-                            <li>@err</li>
-                        }
-                    </ul>
-                </div>
-            }
-        }
-
+    <!-- 使用模型绑定的表单 -->
+    <form id="publishForm" asp-action="DeveloperUploadGame" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
 
-        <!-- Basic Info -->
+        <!-- =================== 顶部错误汇总 =================== -->
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="upload-errors" role="alert" style="background:#2b000a;color:#ffd7df;padding:10px;border-radius:6px;margin-bottom:12px;">
+                <strong>Validation errors:</strong>
+                <ul style="margin:8px 0 0 18px;">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <!-- =================== Basic Info =================== -->
         <div class="section-wrapper">
             <span class="section-badge">Basic Info</span>
             <p class="section-hint">Provide basic meta for your game</p>
         </div>
 
         <div class="form-row">
-            <div class="form-col-fluid">
-                <label>Game Title *</label>
-                <input class="form-input" name="Title" placeholder="Enter game title" required />
+            <div class="form-col-fluid flex-column-left">
+                <label asp-for="Title">Game Title *</label>
+                <input class="form-input" asp-for="Title" placeholder="Enter game title" />
+                <span class="text-danger" asp-validation-for="Title"></span>
 
-                <input type="hidden" id="selectedTagsInput" name="Tags" value="" />
 
                 <label>Tags (Minimum 1, Maximum 10)</label>
                 <div class="tag-search">
                     <input type="text" class="tag-input" id="tagInput" placeholder="Search Tags,Press Enter to Add" />
-
                     <button type="button" class="search-submit" id="tagAddBtn">Add</button>
                 </div>
-
                 <div class="tag-suggestions" id="tagSuggestions" aria-hidden="true"></div>
-
                 <div class="active-filters" id="activeFilters" aria-live="polite"></div>
-            </div>
-                <span id="tagError" class="text-danger-custom" style="display:none; margin-top: 5px;"></span>
+                <!-- 提交前生成的 hidden inputs 容器 -->
+                <div id="tagHiddenInputsContainer"></div>
+                <span class="text-danger" asp-validation-for="Tags" style="display:block; margin-top:5px;"></span>
 
-                <label class="small-gap">Short Description</label>
-                <textarea class="form-textarea" name="ShortDescription" placeholder="maximum about 30 words"></textarea>
-            </div>
 
-        <!-- Media Upload -->
+                <label class="small-gap" asp-for="ShortDescription">Short Description</label>
+                <textarea class="form-textarea" asp-for="ShortDescription" placeholder="maximum about 30 words"></textarea>
+                <span class="text-danger" asp-validation-for="ShortDescription"></span>
+            </div>
+        </div>
+
+        <!-- =================== Media Upload =================== -->
         <div class="section-wrapper">
             <span class="section-badge">Media Upload</span>
         </div>
 
-        <!-- three columns in a single row: Thumbnail | Preview Images | Trailers -->
         <div class="form-row">
-            <!-- left: thumbnail -->
+            <!-- Thumbnail -->
             <div class="form-col-fixed">
                 <label>Thumbnail *</label>
                 <div class="upload-row">
                     <label id="thumbPreviewContainer" class="file-label thumb-dropzone" for="thumbnailInput" aria-live="polite">
                         <span class="upload-placeholder">Click or drag your image</span>
-
-                        <input id="thumbnailInput" name="Thumbnail" type="file" accept="image/*" style="display:none;" />
-
+                        <input id="thumbnailInput" asp-for="Thumbnail" type="file" accept="image/*" style="display:none;" />
                     </label>
+                    <span class="text-danger" asp-validation-for="Thumbnail"></span>
                 </div>
             </div>
 
-            <!-- middle: preview images -->
+            <div class="flex-row gap" style="margin: 10px 0">
+                <label>Preview Images (multiple files)</label>
+                <input type="file" name="PreviewImages" accept="image/*" multiple />
+                <span asp-validation-for="PreviewImages"></span>
+            </div>
+
+            <div class="flex-row gap" style="margin: 10px 0">
+                <label>Trailer Videos (multiple files)</label>
+                <input type="file" name="Trailers" accept="video/*" multiple />
+                <span asp-validation-for="Trailers"></span>
+            </div>
+
+            @* <!-- Preview Images -->
             <div class="form-col-fluid">
                 <label>Preview Images (Maximum 8)</label>
                 <label class="dashed-dropzone" for="previewImagesInput">
                     Click or drag your image
-                    <input id="previewImagesInput" name="PreviewImages" type="file" accept="image/*" multiple style="display:none;" />
+                    <input id="previewImagesInput" asp-for="PreviewImages" type="file" accept="image/*" multiple style="display:none;" />
                 </label>
-
-                <div id="previewGrid" class="preview-grid" aria-live="polite">
-                    <!-- JS will inject preview <div class="preview-item"> elements here -->
-                </div>
+                <div id="previewGrid" class="preview-grid" aria-live="polite"></div>
+                <span class="text-danger" asp-validation-for="PreviewImages"></span>
             </div>
 
-            <!-- right: trailers -->
+            <!-- Trailer Videos -->
             <div class="form-col-fixed">
                 <label class="small-gap">Trailer Videos (Maximum 2)</label>
                 <label class="file-label" for="trailersInput">
                     Click or drag your video
-                    <input id="trailersInput" name="Trailers" type="file" accept="video/*" multiple style="display:none;" />
+                    <input id="trailersInput" asp-for="Trailers" type="file" accept="video/*" multiple style="display:none;" />
                 </label>
-
-                <div id="trailerGrid" class="preview-grid" aria-live="polite">
-                    <!-- JS will inject preview <div class="preview-item"> (video) elements here -->
-                </div>
-            </div>
+                <div id="trailerGrid" class="preview-grid" aria-live="polite"></div>
+                <span class="text-danger" asp-validation-for="Trailers"></span>
+            </div> *@
         </div>
 
-        <!-- Game Detail -->
+        <!-- =================== Game Detail =================== -->
         <div class="section-wrapper">
             <span class="section-badge">Game Detail</span>
         </div>
 
         <div class="form-row">
-            <div class="form-col-fluid">
-                <label>Detail Description</label>
-                <textarea class="form-textarea" name="DetailDescription" placeholder="maximum about 1000 words"></textarea>
+            <div class="form-col-fluid flex-column-left">
+                <label asp-for="DetailDescription">Detail Description</label>
+                <textarea class="form-textarea" asp-for="DetailDescription" placeholder="maximum about 1000 words"></textarea>
+                <span class="text-danger" asp-validation-for="DetailDescription"></span>
 
-                <label class="small-gap">Upload Game ZIP File *</label>
-                <input class="form-input" type="file" name="GameZip" accept=".zip" />
+                <label class="small-gap" asp-for="GameZip">Upload Game ZIP File *</label>
+                <input class="form-input" asp-for="GameZip" type="file" accept=".zip" />
+                <span class="text-danger" asp-validation-for="GameZip"></span>
             </div>
         </div>
 
-        <!-- Price & Publish -->
+        <!-- =================== Price & Publish =================== -->
         <div class="section-wrapper">
             <span class="section-badge">Price & Publish</span>
         </div>
 
         <div class="form-row">
-            <div class="form-col-fixed">
-                <label>Sold Price *</label>
-                <input class="form-input" name="Price" type="number" step="0.01" placeholder="Enter a number"
-                       value="@(TempData["Price"]?.ToString())" min="0" step="0.01" />
-
-                <div id="priceErrorValidation" class="text-danger-custom">
-                    @* 这里的错误会由上面的 TempData["UploadErrors"] 统一处理 *@
-                </div>
-
+            <div class="form-col-fixed" style="width: 30%">
+                <label asp-for="Price">Sold Price *</label>
+                <input class="form-input" asp-for="Price" type="number" step="1" placeholder="Enter a number" min="0" />
+                <span class="text-danger" asp-validation-for="Price"></span>
 
                 <div class="checkbox-wrapper">
-                    @{
-                        var isFreeChecked = TempData["IsFree"] as bool? == true ? "checked" : "";
-                    }
                     <label class="checkbox-label">
-                        <input type="checkbox" name="IsFree" @isFreeChecked /> Be Free
+                        <input asp-for="IsFree" type="checkbox" /> Be Free
                     </label>
                 </div>
             </div>
         </div>
 
-        <p class="section-hint">Your game will be submitted to the administrator for review. Once the review is approved, you will receive a notification and your game will be officially released.</p>
+        <p class="section-hint">
+            Your game will be submitted to the administrator for review. Once the review is approved, you will receive a notification and your game will be officially released.
+        </p>
 
+        <!-- 提交按钮 -->
         <div class="button-submit">
             <button type="submit" class="dashboard-report-btn">Submit For Review</button>
         </div>
     </form>
 </div>
 
-@Html.AntiForgeryToken()
-
 @section scripts {
-    <script src="~/lib/select2/dist/js/select2.min.js"></script>
     <script src="~/js/components/developer.js" asp-append-version="true"></script>
+    <script src="~/js/components/game_submit.js" asp-append-version="true"></script>
     <script src="~/js/pages/library.js" asp-append-version="true"></script>
 }

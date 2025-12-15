@@ -6,6 +6,27 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.real-file-input {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.contract-box {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    height: 300px; /* 固定高度 */
+    overflow-y: auto; /* 超过高度滚动 */
+    background-color: #f9f9f9;
+}
+    .contract-box p {
+        color: black;
+        line-height: 1;
+    }
+
 .dashboard-container {
     max-width: 1100px;
     margin: 40px auto;
@@ -27,7 +48,7 @@ body {
 .dashboard-chart-section {
     background: #232323;
     border-radius: 8px;
-    padding: 24px 24px 16px 24px;
+    padding: 24px;
     margin-bottom: 32px;
 }
 .dashboard-controls {
@@ -85,24 +106,10 @@ body {
     height: 260px;
     background: #181818;
     border-radius: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 30px;
     position: relative;
 }
-.dashboard-report-btn {
-    background: #e94e88;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 24px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-top: 8px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.dashboard-report-btn:hover {
-    background: #c93e6e;
-}
+
 .dashboard-summary-row {
     display: flex;
     gap: 24px;
@@ -207,22 +214,22 @@ body {
 .game-item-body {
     display: flex;
     gap: 18px;
-    align-items: center;
 }
 .game-thumb {
-    width: 220px;
-    height: 110px;
-    background: #666;
+    max-width: 350px;
+    min-height: 200px;
     display: flex;
-    align-items: center;
+    align-items: self-start;
     justify-content: center;
     color: #222;
     font-weight: bold;
-    border: 4px solid #8a57ff;
 }
-.game-info {
-    flex: 1;
-}
+    .game-thumb img{
+
+    }
+    .game-info {
+        flex: 1;
+    }
 .game-title {
     font-size: 1.4rem;
     margin-bottom: 8px;
@@ -302,7 +309,9 @@ body {
 }
 
 .dashboard-title {
-    margin-bottom: 10px;
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: normal;
 }
 
 .dashboard-subtitle {
@@ -343,7 +352,8 @@ body {
 }
 
     .tag-search .tag-input {
-        flex-grow: 1; /* 输入框占据剩余空间 */
+        min-width: 300px;
+        /*flex-grow: 1;*/ /* 输入框占据剩余空间 */
         /* 继承你的 form-input 样式 */
     }
 
@@ -352,9 +362,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 8px 0;
-    border-bottom: 1px solid #333; /* 分隔线 */
-    margin-bottom: 10px;
 }
 
 .tag-pill {
@@ -453,10 +460,10 @@ body {
     display: flex;
     gap: 12px;
     margin-top: 8px;
+    width: 60%;
 }
 
 .address-col-small {
-    flex: 0 0 120px;
 }
 
 /* 输入框通用样式 */
@@ -484,17 +491,18 @@ body {
 /* 1. 定义新的宽度类 */
 .country-select-width {
     /* 设置一个固定的宽度，例如 200px，你可以根据需要调整 */
-    width: 200px !important;
+    /*width: 200px !important;
     min-width: 150px;
-    box-sizing: border-box; /* 确保 padding 不会增加总宽度 */
+    box-sizing: border-box;*/ /* 确保 padding 不会增加总宽度 */
 }
 
 .select2-container.country-select-width {
-    width: 200px !important; /* 强制 Select2 容器宽度为 200px */
+    /*width: 200px !important;*/ /* 强制 Select2 容器宽度为 200px */
 }
 
 .input-date {
     padding: 10px;
+    width: 20%;
 }
 
 .phone-wrapper {
@@ -529,6 +537,9 @@ body {
    支付方式按钮样式修正
    ========================================= */
 
+.payment-methods{
+    margin-bottom: 20px;
+}
 /* 1. 支付按钮的基础样式 (未选中状态) */
 /* 使用更具体的选择器 .payment-methods .btn-payment-option 以提高权重 */
 .payment-methods .btn-payment-option {
@@ -566,8 +577,6 @@ body {
 /* Checkbox 布局 */
 .checkbox-wrapper {
     display: flex;
-    align-items: center;
-    gap: 12px;
     margin-top: 12px;
 }
 
@@ -604,6 +613,7 @@ body {
 
 .tag-search {
     max-width: 260px;
+    margin-top: 10px;
 }
 
 /* Upload components */
@@ -742,7 +752,7 @@ body {
     padding: 10px 24px;
     font-size: 1.1rem;
     font-weight: bold;
-    margin-top: 8px;
+
     cursor: pointer;
     transition: background 0.2s;
 }
@@ -753,9 +763,6 @@ body {
 
 /* Responsive tweaks */
 @media (max-width: 1100px) {
-    .form-col-fixed {
-        width: 320px;
-    }
 
     .upload-row .file-label, .dashed-dropzone {
         width: 320px;

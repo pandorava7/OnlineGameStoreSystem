@@ -1,4 +1,4 @@
-@model OnlineGameStoreSystem.Models.ViewModels.DeveloperRegisterVM
+﻿@model OnlineGameStoreSystem.Models.ViewModels.DeveloperRegisterVM
 @{
     ViewData["Title"] = "Developer Application";
 }
@@ -38,19 +38,21 @@
         </div>
 
         <div class="form-row">
-            <div class="form-col-fluid">
+            <div class="form-col-fluid flex-column-left">
                 <label>Legal English Name</label>
                 <input asp-for="FullName" class="form-input" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
                 <label>ID card number / Passport number</label>
                 <input asp-for="IdNumber" class="form-input" />
-
-                <span asp-validation-for="IdNumber" class="text-danger-custom"></span>
+                <span asp-validation-for="IdNumber" class="text-danger"></span>
             </div>
 
-            <div class="form-col-fixed">
+            <div class="form-col-fixed flex-column-left">
                 <label>Date of birth</label>
                 <input asp-for="Dob" class="form-input input-date" type="date" />
+                <span asp-validation-for="Dob" class="text-danger"></span>
             </div>
+
         </div>
 
         <div class="section-wrapper">
@@ -61,50 +63,38 @@
             <div class="form-col-fluid">
                 <label>Street Address</label>
                 <input asp-for="Address1" class="form-input" />
+                <span asp-validation-for="Address1" class="text-danger"></span>
                 <input asp-for="Address2" class="form-input" />
+                <span asp-validation-for="Address2" class="text-danger"></span>
 
                 <label>City/Town</label>
                 <input asp-for="City" class="form-input" />
+                <span asp-validation-for="City" class="text-danger"></span>
 
                 <div class="address-grid">
                     <div class="address-col-small">
                         <label>Postal Code</label>
-                        <input asp-for="PostalCode" class="form-input input-date" />
+                        <input asp-for="PostalCode" class="form-input" />
+                        <span asp-validation-for="PostalCode" class="text-danger"></span>
                     </div>
 
-                    <div class="address-col-small">
+                    <div class="address-col-small flex-column-left">
                         <label>Country/Region</label>
-                        <select asp-for="Country" id="CountrySelect" class="form-input country-select-width">
-                            <option value="Malaysia" selected>Malaysia</option>
+                        <select asp-for="Country" id="CountrySelect" class="form-input">
+                            <option value="">-- Select Country --</option>
+                            <option value="Malaysia">Malaysia</option>
                             <option value="United States">United States</option>
                             <option value="Singapore">Singapore</option>
                         </select>
+                        <span asp-validation-for="Country" class="text-danger"></span>
+
+                        <label>State/Province</label>
+                        <select asp-for="State" id="StateSelect" class="form-input">
+                            <option value="">-- Select State/Territory --</option>
+                        </select>
+                        <span asp-validation-for="State" class="text-danger"></span>
                     </div>
-                </div>
 
-                <div id="StateContainer">
-                    <label style="display:block; margin-top:8px;">State/Province</label>
-
-                    <select asp-for="State" class="form-input input-short" id="StateDropdown">
-                        <option value="">-- Select State/Territory --</option>
-                        <option value="Johor">Johor</option>
-                        <option value="Kedah">Kedah</option>
-                        <option value="Kelantan">Kelantan</option>
-                        <option value="Melaka">Melaka</option>
-                        <option value="Negeri Sembilan">Negeri Sembilan</option>
-                        <option value="Pahang">Pahang</option>
-                        <option value="Perak">Perak</option>
-                        <option value="Perlis">Perlis</option>
-                        <option value="Pulau Pinang">Pulau Pinang (Penang)</option>
-                        <option value="Sabah">Sabah</option>
-                        <option value="Sarawak">Sarawak</option>
-                        <option value="Selangor">Selangor</option>
-                        <option value="Terengganu">Terengganu</option>
-                        <option value="Kuala Lumpur">Kuala Lumpur (Federal Territory)</option>
-                        <option value="Putrajaya">Putrajaya (Federal Territory)</option>
-                    </select>
-
-                    <span asp-validation-for="State" class="text-danger-custom"></span>
                 </div>
             </div>
         </div>
@@ -120,11 +110,13 @@
                     <option>+1</option>
                 </select>
                 <input asp-for="Phone" class="form-input" placeholder="09-555-0123" style="width: auto; flex:1;" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
 
             <div class="form-col-fluid" style="min-width: 240px;">
                 <label>Notification Email</label>
                 <input asp-for="NotifyEmail" class="form-input" placeholder="example@gmail.com" />
+                <span asp-validation-for="NotifyEmail" class="text-danger"></span>
             </div>
         </div>
 
@@ -133,17 +125,34 @@
             <h2 class="section-hint">This payment method and account will be used for income commission for developer.</h2>
         </div>
 
-        <input type="hidden" id="hiddenPaymentMethod" name="SelectedPaymentMethod" value="Method 1" />
+        <input type="hidden" id="HiddenPaymentMethod" asp-for="SelectedPaymentMethod" />
 
         <div class="payment-methods">
-            <button type="button" class="btn btn-payment-option active" data-value="bank" data-target="#details-bank">Bank Account (Method 1)</button>
+            <button type="button" class="btn btn-payment-option" data-value="bank" data-target="#details-bank">Bank Account (Method 1)</button>
             <button type="button" class="btn btn-payment-option" data-value="paypal" data-target="#details-paypal">PayPal (Method 2)</button>
             <button type="button" class="btn btn-payment-option" data-value="tng" data-target="#details-tng">TNG Number (Method 3)</button>
         </div>
+        <span asp-validation-for="SelectedPaymentMethod" class="text-danger"></span>
 
-        <input type="hidden" asp-for="SelectedPaymentMethod" id="HiddenPaymentMethod" />
+        <div id="details-bank" class="method-details hidden">
+            <input asp-for="BankAcctNumber" class="form-control" placeholder="Bank Account Number" />
+            <span asp-validation-for="BankAcctNumber" class="text-danger"></span>
 
-        <div id="payment-details-wrapper">
+            <input asp-for="BankHolderName" class="form-control" placeholder="Bank Holder Name" />
+            <span asp-validation-for="BankHolderName" class="text-danger"></span>
+        </div>
+
+        <div id="details-paypal" class="method-details hidden">
+            <input asp-for="PayPalEmail" class="form-control" placeholder="PayPal Email" />
+            <span asp-validation-for="PayPalEmail" class="text-danger"></span>
+        </div>
+
+        <div id="details-tng" class="method-details hidden">
+            <input asp-for="TNGNumber" class="form-control" placeholder="TNG Number" />
+            <span asp-validation-for="TNGNumber" class="text-danger"></span>
+        </div>
+
+        @* <div id="payment-details-wrapper">
 
             <div id="details-bank" class="method-details active">
 
@@ -171,9 +180,9 @@
                 <input asp-for="TNGNumber" class="form-input" style="width: 40%;" />
             </div>
 
-        </div>
+        </div> *@
 
-        <div class="section-wrapper">
+        @* <div class="section-wrapper">
             <div class="section-badge">Contract</div>
         </div>
 
@@ -185,9 +194,215 @@
             <label class="checkbox-label">
                 <input asp-for="Agree" type="checkbox" /> Agree with terms
             </label>
+        </div> *@
+
+        <div class="contract-box" style="margin-top: 40px">
+            <div class="WordSection1">
+
+                <p class="MsoNormal" align="center" style="text-align:center">
+                    <b>
+                        <span style="font-size:10.0pt">
+                            VALVE CORPORATION <br>
+                            NONDISCLOSURE AGREEMENT
+                        </span>
+                    </b>
+                </p>
+
+                <p class="MsoNormal">
+                    <span style="font-size:10.0pt">
+                        THIS AGREEMENT (the “Agreement”) is made by and
+                        between VALVE CORPORATION (“VALVE”) a Washington<b> </b>corporation and the
+                        person or entity identified by you in the “Company Legal Name” field in
+                        connection with the Agreement completion process (“Company”),
+                    </span><span style="font-family:&quot;CG Times&quot;,&quot;serif&quot;"> </span><span style="font-size:10.0pt">
+                        and
+                        is effective on the date that Valve provides you with confirmation of its
+                        acceptance.
+                    </span>
+                </p>
+
+                <p class="MsoNormal">
+                    <span style="font-size:10.0pt">
+                        In consideration of the promises and covenants
+                        contained in this Agreement, the parties hereto agree as follows:
+                    </span>
+                </p>
+
+                <p class="MsoHeading7" style="margin-top:12.0pt;text-align:justify;page-break-after:avoid">
+                    <b>
+                        <span style="font-size:10.0pt">
+                            A.&nbsp;&nbsp; CONFIDENTIAL
+                            INFORMATION
+                        </span>
+                    </b>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        As used in this Agreement,
+                        “Confidential Information” means information which VALVE or its Affiliate(s)
+                        designate to Company as being confidential or which, based on the nature of
+                        such information and the circumstances surrounding its disclosure, ought in
+                        good faith to be treated as confidential.&nbsp; Confidential Information includes,
+                        but is not limited to, any discussions and materials regarding unreleased Valve
+                        products between Valve, or its Affiliate(s), and the Company, and the terms of
+                        any Valve agreement or agreement template.&nbsp; Confidential Information shall not,
+                        however, include information Company can conclusively establish: (i) has
+                        entered the public domain without Company’s breach of any obligation owed to
+                        VALVE; (ii) is rightfully received by Company from a third party without
+                        confidentiality restrictions; (iii)&nbsp;is known to Company without any
+                        restriction as to use or disclosure prior to first receipt by Company from
+                        VALVE; or (iv)&nbsp;is
+                        independently developed by Company.&nbsp; An “Affiliate” of a party to this
+                        Agreement means any entity that directly or indirectly controls, is controlled
+                        by, or is under common control with VALVE.
+                    </span>
+                </p>
+
+                <p class="MsoHeading7" style="margin-top:12.0pt;text-align:justify;page-break-after:avoid"><b><span style="font-size:10.0pt">B.&nbsp;&nbsp; RESTRICTIONS</span></b></p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.&nbsp;&nbsp; Company shall not
+                        disclose any Confidential Information to third parties following the date of
+                        its disclosure by VALVE to Company. Company shall only use the Confidential
+                        Information for pursuing Company’s business relationship with VALVE, and only
+                        as expressly permitted in this Agreement.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.&nbsp;&nbsp; Company shall take
+                        reasonable security precautions, at least as great as the precautions it takes
+                        to protect its own confidential information, to keep confidential the
+                        Confidential Information.&nbsp; Company may disclose Confidential Information only
+                        to Company’s employees on a need-to-know basis.&nbsp;
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.&nbsp;&nbsp; Company may not
+                        reverse-engineer, decompile, or disassemble any software disclosed to Company
+                        hereunder.
+                    </span>
+                </p>
+
+                <p class="MsoHeading7" style="margin-top:12.0pt;text-align:justify;page-break-after:avoid">
+                    <b>
+                        <span style="font-size:10.0pt">
+                            C.&nbsp;&nbsp; RIGHTS
+                            AND REMEDIES
+                        </span>
+                    </b>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.&nbsp;&nbsp; Company shall notify
+                        VALVE promptly upon discovery of any unauthorized use or disclosure of
+                        Confidential Information, or any other breach of this Agreement by Company, and
+                        will cooperate with VALVE in every reasonable way to help VALVE regain
+                        possession of the Confidential Information and prevent any further unauthorized
+                        use.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.&nbsp;&nbsp; Company shall return
+                        all originals, copies, reproductions, and summaries of Confidential Information
+                        at VALVE’s request or, at VALVE’s option, certify destruction of the same.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.&nbsp;&nbsp; Company acknowledges
+                        that monetary damages may not be a sufficient remedy for unauthorized
+                        disclosure or use of Confidential Information and that VALVE may seek, without
+                        waiving any other rights or remedies, such injunctive or equitable relief as
+                        may be deemed proper by a court of competent jurisdiction.
+                    </span>
+                </p>
+
+                <p class="MsoHeading7" style="margin-top:12.0pt;text-align:justify;page-break-after:avoid"><b><span style="font-size:10.0pt">D.&nbsp;&nbsp; MISCELLANEOUS</span></b></p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.&nbsp;&nbsp; All Confidential
+                        Information is and shall remain the property of VALVE or its suppliers. By
+                        disclosing information to Company, VALVE does not grant any express or implied
+                        right to Company to or under any VALVE patents, copyrights, trademarks, or
+                        other proprietary or intellectual property rights.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.&nbsp;&nbsp; This Agreement
+                        constitutes the entire agreement between the parties with respect to the
+                        subject matter hereof and merges all prior discussions between them as to such
+                        subject matter.&nbsp; It shall not be modified except by a written agreement dated
+                        subsequent to the date of this Agreement and signed by both parties. None of
+                        the provisions of this Agreement shall be deemed to have been waived by any act
+                        or acquiescence on the part of VALVE, its agents, or employees, but only by an
+                        instrument in writing signed by an authorized officer of VALVE.&nbsp; No waiver of
+                        any provision of this Agreement shall constitute a waiver of any other
+                        provision(s) or of the same provision on another occasion.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3.&nbsp;&nbsp; If either VALVE or
+                        Company employs attorneys to enforce any rights arising out of or in relation
+                        to this Agreement, the prevailing party shall be entitled to recover reasonable
+                        attorneys’ fees. This Agreement shall be construed and controlled by the laws
+                        of the State of Washington, and Company further consents to jurisdiction by the
+                        state and federal courts sitting in the State of Washington.&nbsp; Process may be
+                        served on either party by U.S. Mail, postage paid, certified or registered,
+                        return receipt requested, or by such other method as is authorized by the
+                        Washington Long Arm Statute.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.&nbsp;&nbsp; Subject to the limitations
+                        set forth in this Agreement, this Agreement will inure to the benefit of and be
+                        binding upon the parties, their successors and assigns.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5.&nbsp;&nbsp; If any provision of this
+                        Agreement shall be held by a court of competent jurisdiction to be illegal,
+                        invalid, or unenforceable, the remaining provisions shall remain in full force
+                        and effect.
+                    </span>
+                </p>
+
+                <p class="MsoNormal" style="margin-top:6.0pt;text-align:justify;">
+                    <span style="font-size:10.0pt">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.&nbsp;&nbsp; All obligations created by
+                        this Agreement shall survive change or termination of the parties’ business
+                        relationship.
+                    </span>
+                </p>
+
+            </div>
         </div>
 
-        <div class="btn-group-wrapper">
+        <div class="checkbox-wrapper">
+            <label class="checkbox-label">
+                <input asp-for="Agree" type="checkbox" /> Agree with terms
+            </label>
+        </div>
+
+        <div class="btn-group-wrapper" style="margin-top: 20px">
             <button class="btn-primary" type="submit">Confirm & Submit</button>
         </div>
     </form>
@@ -201,5 +416,4 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/Developer/developer.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 }

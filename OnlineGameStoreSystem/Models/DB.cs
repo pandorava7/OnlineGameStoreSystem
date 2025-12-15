@@ -674,7 +674,8 @@ public class Game
     [Required]
     public string Title { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string ShortDescription { get; set; } = null!;
+    public string DetailDescription { get; set; } = null!;
 
     public decimal Price { get; set; }
     public decimal? DiscountPrice { get; set; }
@@ -692,6 +693,7 @@ public class Game
     public int LikeCount { get; set; }
     public List<GameLike> Likes { get; set; } = new();
     public int StorageRequireMB { get; set; }
+    public int ExposureCount { get; set; } = 0;
 }
 
 public class GameMedia

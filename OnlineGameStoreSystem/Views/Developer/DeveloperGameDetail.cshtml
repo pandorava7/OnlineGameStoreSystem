@@ -1,26 +1,26 @@
-﻿@model OnlineGameStoreSystem.Models.ViewModels.DeveloperGameDetailViewModel
+﻿@* @model OnlineGameStoreSystem.Models.ViewModels.DeveloperGameDetailViewModel
 @{
     ViewData["Title"] = "Developer — Manage Game";
-}
-<link rel="stylesheet" href="~/css/Developer/developer.css" />
+} *@
+@* <link rel="stylesheet" href="~/css/Developer/developer.css" />
 
-<main class="dev-gd-container" aria-labelledby="dev-game-title">
+<main class="dev-gd-container" aria-labelledby="dev-game-title"> *@
 
     @{
         // 查找所有媒体项
-        var allMedia = Model.Media?.Where(m => m.MediaType != "zip").OrderBy(m => m.SortOrder).ToList();
+        // var allMedia = Model.Media?.Where(m => m.MediaType != "zip").OrderBy(m => m.SortOrder).ToList();
 
         // 1. 定义主封面 URL (primaryThumbUrl)
-        var primaryThumbUrl = allMedia?.FirstOrDefault(m => m.MediaType == "thumb")?.MediaUrl
-        ?? allMedia?.FirstOrDefault(m => m.MediaType == "image")?.MediaUrl
-        ?? "/images/placeholder.png";
+        // var primaryThumbUrl = allMedia?.FirstOrDefault(m => m.MediaType == "thumb")?.MediaUrl
+        // ?? allMedia?.FirstOrDefault(m => m.MediaType == "image")?.MediaUrl
+        // ?? "/images/placeholder.png";
 
         // 2. 确定主展示项
-        var mainMediaItem = allMedia?.FirstOrDefault(m => m.MediaType == "image" || m.MediaType == "video")
-        ?? allMedia?.FirstOrDefault(m => m.MediaType == "thumb");
+        // var mainMediaItem = allMedia?.FirstOrDefault(m => m.MediaType == "image" || m.MediaType == "video")
+        // ?? allMedia?.FirstOrDefault(m => m.MediaType == "thumb");
     }
 
-    <div class="dashboard-container">
+@*     <div class="dashboard-container">
         <h1 class="dashboard-title">Developer Console &gt;&gt; Manage Game</h1>
 
         <section class="dev-gd-main">
@@ -37,7 +37,7 @@
                                     <div class="dev-gd-media-item dev-gd-media-video" data-type="video" data-src="@mainMediaItem.MediaUrl" role="button" aria-label="Play video">
                                         <div class="dev-video-placeholder">
                                             <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
-                                            <img src="@primaryThumbUrl" alt="video thumbnail" /> @* 使用外部定义的 primaryThumbUrl *@
+                                            <img src="@primaryThumbUrl" alt="video thumbnail" /> 
                                             <span class="dev-video-tag">Video</span>
                                         </div>
                                     </div>
@@ -73,7 +73,7 @@
                                     {
                                         <button class="dev-gd-thumb" role="listitem" data-index="@idx" data-type="video" data-src="@m.MediaUrl" aria-label="Video thumb">
                                             <div class="thumb-video">
-                                                <img src="@primaryThumbUrl" alt="video thumb" style="opacity: 0;" /> @* 使用外部定义的 primaryThumbUrl *@
+                                                <img src="@primaryThumbUrl" alt="video thumb" style="opacity: 0;" /> 
                                                 <svg viewBox="0 0 24 24" class="play-icon" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
                                             </div>
                                         </button>
@@ -132,7 +132,7 @@
             </div>
         </section>
     </div>
-</main>
+</main> *@
 
 @section scripts {
     <script src="~/js/components/developer.js" asp-append-version="true"></script>

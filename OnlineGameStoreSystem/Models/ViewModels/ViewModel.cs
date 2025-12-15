@@ -1,6 +1,24 @@
-﻿#region 主页VM
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+
+#region Test
+
+public class UploadTestViewModel
+{
+    [Required]
+    public IFormFile Thumbnail { get; set; } = null!;
+
+    public List<IFormFile> PreviewImages { get; set; } = new List<IFormFile>();
+    public List<IFormFile> Trailers { get; set; } = new List<IFormFile>();
+
+    [Required]
+    public IFormFile GameZip { get; set; } = null!;
+}
+
+#endregion
+
+
+#region 主页VM
 
 public class HomeViewModel
 {
@@ -19,15 +37,16 @@ public class TopGameViewModel
 
 public class GameCategoryViewModel
 {
-    public string Title { get; set; }
-    public string Slug { get; set; }
-    public List<GameViewModel> Games { get; set; }
+    public string Title { get; set; } = null!;
+    public string Slug { get; set; } = null!;
+    public List<GameViewModel> Games { get; set; } = null!;
 }
 public class GameViewModel
 {
-    public string Title { get; set; }
-    public string CoverUrl { get; set; }
+    public string Title { get; set; } = null!;
+    public string CoverUrl { get; set; } = null!;
     public decimal Price { get; set; }
+    public decimal? DiscountPrice { get; set; }
 }
 #endregion
 

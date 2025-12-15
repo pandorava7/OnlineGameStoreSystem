@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Extensions;
+using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Models;
 using OnlineGameStoreSystem.Services;
 using System.Diagnostics;
@@ -136,7 +137,7 @@ public class HomeController : Controller
             Title = game.Title,
             Price = game.Price,
             DiscountPrice = game.DiscountPrice,
-            Description = game.Description,
+            Description = game.ShortDescription,
             VideoUrls = game.Media
             .Where(g => g.MediaType == "video")
             .Select(m => m.MediaUrl)
@@ -159,6 +160,13 @@ public class HomeController : Controller
             ReleasedDate = game.ReleaseDate,
             DeveloperName = game.Developer.Username,
         };
+
+        // increase exposure count
+        // 进入详情页，曝光+3
+        game.ExposureCount += 3;
+        ConsoleHelper.WriteRed($"Game '{game.Title}' exposure increased to {game.ExposureCount}");
+        db.SaveChanges();
+
         return View(gameDetailViewModel);
     }
 

@@ -89,6 +89,15 @@ namespace OnlineGameStoreSystem.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied(string? returnUrl = null)
+        {
+            // 将 ReturnUrl 放入 ViewData，方便前端渲染按钮或链接
+            ViewData["ReturnUrl"] = returnUrl;
+
+            return View();
+        }
         #endregion 
 
 
@@ -130,6 +139,7 @@ namespace OnlineGameStoreSystem.Controllers
             TempData["FlashMessageType"] = "success"; // success, error, warning, info
             return RedirectToAction("Login", "Account");
         }
+
         #endregion
 
 

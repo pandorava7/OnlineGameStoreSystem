@@ -148,7 +148,8 @@ public class PaymentController : Controller
             PaymentMethod = selectedPaymentMethod.Value,
             TransactionId = Guid.NewGuid().ToString(),
             Purpose = PaymentPurposeType.Purchase,
-            Status = PaymentStatus.Pending
+            Status = PaymentStatus.Pending,
+            CreatedAt = DateTime.UtcNow
         };
 
         db.Payments.Add(payment);

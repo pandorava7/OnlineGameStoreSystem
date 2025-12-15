@@ -25,7 +25,10 @@
             <ul>
                 <li><a asp-controller="Home" asp-action="Index">Store</a></li>
                 <li><a asp-controller="Community" asp-action="Index">Community</a></li>
-                <li><a asp-controller="Admin" asp-action="Index">Admin Testing</a></li>
+                @if (currentUser != null && currentUser.IsAdmin)
+                {
+                    <li><a asp-controller="Admin" asp-action="Index">Admin Management</a></li>
+                }
                 <li><a asp-controller="Support" asp-action="Index">Support</a></li>
             </ul>
         </nav>
@@ -62,7 +65,7 @@
                              class="avatar" />
                         <span class="username">@currentUser?.Username</span>
                     </div>
-                    
+
 
                     <div id="userDropdown" class="dropdown-menu">
                         <a class="dropdown-item" href="/Profile/Index">Profile</a>

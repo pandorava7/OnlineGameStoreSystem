@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineGameStoreSystem.Helpers;
 using OnlineGameStoreSystem.Models;
 using System;
 
@@ -82,7 +83,15 @@ public class RecommendationService
                 Title = game.Title,
                 Score = score
             });
+
+            // increase exposure count
+            // 轮播图推荐，曝光+5
+            game.ExposureCount += 5;
+            ConsoleHelper.WriteRed($"Increased exposure for game '{game.Title}'. New ExposureCount: {game.ExposureCount}");
         }
+
+        // save exposure count
+        await _context.SaveChangesAsync();
 
         // sort by score
         return result.OrderByDescending(r => r.Score).ToList();
@@ -156,12 +165,21 @@ public class RecommendationService
             .Include(g => g.Tags)
                 .ThenInclude(gt => gt.Tag)
             .Where(g => g.Status == GameStatus.Published)
+            .Take(20)
             .ToListAsync();
+
+        // increase exposure count
+        // 普通推荐，曝光+1
+        foreach (var game in freeGames)
+        {
+            game.ExposureCount += 1;
+            ConsoleHelper.WriteRed($"Increased exposure for free game '{game.Title}'. New ExposureCount: {game.ExposureCount}");
+        }
 
         categories.Add(new GameCategoryViewModel
         {
             Title = "Free to Play",
-            Slug = "free-to-play",
+            Slug = "price=Free",
             Games = freeGames
                 .Select(g => new { Game = g, Score = ComputeScore(g, interestTags) })
                 .OrderByDescending(x => x.Score)
@@ -170,7 +188,8 @@ public class RecommendationService
                 {
                     Title = x.Game.Title,
                     CoverUrl = x.Game.Media?.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault() ?? string.Empty,
-                    Price = x.Game.Price
+                    Price = x.Game.Price,
+                    DiscountPrice = x.Game.DiscountPrice
                 })
                 .ToList()
         });
@@ -182,12 +201,21 @@ public class RecommendationService
             .Include(g => g.Tags)
                 .ThenInclude(gt => gt.Tag)
             .Where(g => g.Status == GameStatus.Published)
+            .Take(20)
             .ToListAsync();
+
+        // increase exposure count
+        // 普通推荐，曝光+1
+        foreach (var game in discountGames)
+        {
+            game.ExposureCount += 1;
+            ConsoleHelper.WriteRed($"Increased exposure for discount game '{game.Title}'. New ExposureCount: {game.ExposureCount}");
+        }
 
         categories.Add(new GameCategoryViewModel
         {
             Title = "Discounts",
-            Slug = "discounts",
+            Slug = "onlyDiscount=true",
             Games = discountGames
                 .Select(g => new { Game = g, Score = ComputeScore(g, interestTags) })
                 .OrderByDescending(x => x.Score)
@@ -196,7 +224,8 @@ public class RecommendationService
                 {
                     Title = x.Game.Title,
                     CoverUrl = x.Game.Media?.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault() ?? string.Empty,
-                    Price = x.Game.Price
+                    Price = x.Game.Price,
+                    DiscountPrice = x.Game.DiscountPrice
                 })
                 .ToList()
         });
@@ -210,12 +239,21 @@ public class RecommendationService
                   .Include(g => g.Tags)
                       .ThenInclude(gt => gt.Tag)
                   .Where(g => g.Status == GameStatus.Published)
+                  .Take(20)
                   .ToListAsync();
+
+            // increase exposure count
+            // 普通推荐，曝光+1
+            foreach (var game in tagGames)
+            {
+                game.ExposureCount += 1;
+                ConsoleHelper.WriteRed($"Increased exposure for game '{game.Title}' due to tag '{tagName}'. New ExposureCount: {game.ExposureCount}");
+            }
 
             categories.Add(new GameCategoryViewModel
             {
                 Title = tagName,
-                Slug = $"tag-{Slugify(tagName)}",
+                Slug = $"tags={Slugify(tagName)}",
                 Games = tagGames
                     .Select(g => new { Game = g, Score = ComputeScore(g, interestTags) })
                     .OrderByDescending(x => x.Score)
@@ -224,11 +262,15 @@ public class RecommendationService
                     {
                         Title = x.Game.Title,
                         CoverUrl = x.Game.Media?.Where(m => m.MediaType == "thumb").Select(m => m.MediaUrl).FirstOrDefault() ?? string.Empty,
-                        Price = x.Game.Price
+                        Price = x.Game.Price,
+                        DiscountPrice = x.Game.DiscountPrice
                     })
                     .ToList()
             });
         }
+
+        // save exposure count
+        await _context.SaveChangesAsync();
 
         return categories;
     }
@@ -236,11 +278,10 @@ public class RecommendationService
     // Slugify 简单实现
     private static string Slugify(string input)
     {
-        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        var s = input.Trim().ToLowerInvariant();
-        s = System.Text.RegularExpressions.Regex.Replace(s, @"\s+", "-");
-        s = System.Text.RegularExpressions.Regex.Replace(s, @"[^a-z0-9\-]", "");
-        return s;
+        if (string.IsNullOrWhiteSpace(input))
+            return string.Empty;
+
+        return input.Trim().Replace(" ", "+");
     }
 
 

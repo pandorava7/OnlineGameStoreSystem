@@ -55,15 +55,15 @@
 
         <div class="form-row">
             <div class="form-col-fluid">
-                <select asp-for="SelectedPaymentMethod" class="form-input">
-                    <option value="Method 1">Method 1 (Credit Card)</option>
-                    <option value="Method 2">Method 2 (PayPal)</option>
-                    <option value="Method 3">Method 3 (Bank Transfer)</option>
+                <select asp-for="SelectedPaymentMethod" asp-items="Html.GetEnumSelectList<PaymentMethod>()" class="form-control payment-options">
+                    <option value="" disabled selected hidden>-- Please Select --</option>
                 </select>
+                <!-- 显示验证信息 -->
+                <span asp-validation-for="SelectedPaymentMethod" class="text-danger"></span>
             </div>
         </div>
 
-        <div class="checkbox-wrapper confirm-checkbox-wrapper">
+        <div class="checkbox-wrapper confirm-checkbox-wrapper flex-column-left">
             <label class="checkbox-label confirm-checkbox-label">
                 <input asp-for="ConfirmPayment" type="checkbox" />
                 I confirm to pay RM100 for developer registration.

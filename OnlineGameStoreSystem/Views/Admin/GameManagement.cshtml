@@ -46,6 +46,10 @@
                     <input id="approveGameId" type="hidden" name="gameId" value="" />
                     <input id="approveGameStatus" type="hidden" name="approve" value="true" />
                 </form>
+                <form id="restoreGameForm" asp-controller="Admin" asp-action="RestoreGame" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input id="restoreGameId" type="hidden" name="gameId" value="" />
+                </form>
 
                 @foreach (var item in Model)
                 {
@@ -79,7 +83,14 @@
                         <td class="action-col">
                             <div class="button-group">
                                 <a asp-controller="Admin" asp-action="GameReview" asp-route-gameId="@item.GameId" class="button secondary-btn">Review</a>
-                                <button data-game-id="@item.GameId" type="submit" class="danger-btn remove-game-btn">Remove</button>
+                                @if(item.Status.ToLower() == "removed")
+                                {
+                                    <button data-game-id="@item.GameId" type="submit" class="primary-btn restore-game-btn">Restore</button>
+                                }
+                                else
+                                {
+                                    <button data-game-id="@item.GameId" type="submit" class="danger-btn remove-game-btn">Remove</button>
+                                }
                             </div>
                         </td>
                     </tr>

@@ -35,7 +35,8 @@ public class GameReviewVM
     public int GameId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string DeveloperName { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string ShortDescription { get; set; } = string.Empty;
+    public string DetailDescription { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public DateTime CreatedAt { get; set; }
     public string? ThumbnailUrl { get; set; } = string.Empty;

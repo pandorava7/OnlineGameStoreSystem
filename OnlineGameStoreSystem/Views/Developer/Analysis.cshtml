@@ -7,37 +7,43 @@
 <main class="main-content">
     <div class="dashboard-container">
         <h1 class="dashboard-title">Developer Console >> Analysis</h1>
-        <h2> Your @Model.Title ！</h2>
+        <h2>Your @Model.Title!</h2>
         <div class="dashboard-subtitle">Here's your performance overview.</div>
-    <div class="dashboard-chart-section">
-        <div class="dashboard-controls">
-            <label>Zoom</label>
-            <button class="btn active" data-hours="48">48 hours</button>
-            <button class="btn" data-hours="168">1 week</button>
-            <button class="btn" data-hours="720">1 month</button>
-            <button class="btn" data-hours="8760">1 year</button>
-            <button class="btn" data-hours="0">max</button>
 
-            <label style="margin-left:24px;">Data Type</label>
-            <button class="btn active" data-type="all">All</button>
-            <button class="btn" data-type="sales">Sales</button>
-            <button class="btn" data-type="revenue">Revenue</button>
-            <button class="btn" data-type="exposure">Exposure</button>
+        <div class="dashboard-chart-section">
+            <div class="dashboard-controls">
+                <label>Zoom</label>
+                <button class="btn active" data-hours="48">48 hours</button>
+                <button class="btn" data-hours="168">1 week</button>
+                <button class="btn" data-hours="720">1 month</button>
+                <button class="btn" data-hours="8760">1 year</button>
+                <button class="btn" data-hours="0">max</button>
+
+                <label style="margin-left:24px;">Data Type</label>
+                <button class="btn active" data-type="all">All</button>
+                <button class="btn" data-type="sales">Sales</button>
+                <button class="btn" data-type="revenue">Revenue</button>
+                <button class="btn" data-type="exposure">Exposure</button>
+            </div>
+
+            <div class="dashboard-legend">
+                <span><span class="legend-dot exposure"></span>Exposure</span>
+                <span><span class="legend-dot sales"></span>Sales</span>
+                <span><span class="legend-dot revenue"></span>Revenue</span>
+            </div>
+
+            <!-- 单游戏统计 Canvas -->
+            <div class="dashboard-chart">
+                <canvas id="gameStatsChart" data-gameid="@Model.GameId" height="260"></canvas>
+            </div>
+
+            <a class="dashboard-report-btn" href="@Url.Action("GenerateReport", "Developer")">Generate report file</a>
         </div>
-        <div class="dashboard-legend">
-            <span><span class="legend-dot exposure"></span>Exposure</span>
-            <span><span class="legend-dot sales"></span>Sales</span>
-            <span><span class="legend-dot revenue"></span>Revenue</span>
-        </div>
-        <div class="dashboard-chart">
-            <canvas id="devStatsChart" height="260"></canvas>
-        </div>
-        <a class="dashboard-report-btn" href="@Url.Action("GenerateReport", "Developer")">Generate report file</a>
-    </div>
     </div>
 </main>
 
 @section scripts {
-    <script src="~/js/components/developer.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/components/developer.js" asp-append-version="true"></script>
+    <script src="~/js/components/dashboard.js" asp-append-version="true"></script>
 }

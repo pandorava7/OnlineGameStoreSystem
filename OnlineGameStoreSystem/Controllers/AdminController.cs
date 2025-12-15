@@ -10,6 +10,7 @@ using X.PagedList.Extensions;
 
 namespace OnlineGameStoreSystem.Controllers;
 
+[RequireAdmin]
 public class AdminController : Controller
 {
     private readonly DB _db;
@@ -37,7 +38,6 @@ public class AdminController : Controller
         }
 
         var vm = query
-            .Where(u => u.Status != "deleted")
             .Select(u => new StatusManageVM
             {
                 UserId = u.Id,
@@ -170,7 +170,8 @@ public class AdminController : Controller
             GameId = game.Id,
             DeveloperName = game.Developer.Username,
             Title = game.Title,
-            Description = game.Description,
+            ShortDescription = game.ShortDescription,
+            DetailDescription = game.DetailDescription,
             Price = game.Price,
             Tags = game.Tags.Select(gt => gt.Tag.Name).ToArray(),
             ThumbnailUrl = game.Media.FirstOrDefault(gm => gm.MediaType == "thumb")?.MediaUrl,
@@ -191,7 +192,7 @@ public class AdminController : Controller
             return NotFound("Game is not found");
         }
 
-        if (game.Status == GameStatus.Removed)
+        if (game.Status == GameStatus.Removed && !approve)
             return BadRequest("This game is already being removed");
         if (approve == true && game.Status == GameStatus.Published)
             return BadRequest("This game is already being published");
@@ -244,6 +245,27 @@ public class AdminController : Controller
         ViewData["Description"] = "This page is for game management, view the information for each game and provide function to manage them.";
 
         return View(vm);
+    }
+
+    public IActionResult RestoreGame(int gameId)
+    {
+        // 更新游戏状态
+        var game = _db.Games.Find(gameId);
+        if (game == null)
+        {
+            return NotFound("Game is not found");
+        }
+
+        if (game.Status != GameStatus.Removed)
+            return BadRequest("This game is not being removed");
+
+        game.Status = GameStatus.Pending;
+        _db.SaveChanges();
+
+        TempData["FlashMessage"] = "Successfully to restore this game";
+        TempData["FlashMessageType"] = "success";
+
+        return RedirectToAction("GameManagement");
     }
 
     public IActionResult RefundHandling(string? search, int? page)

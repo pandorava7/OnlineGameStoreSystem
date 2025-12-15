@@ -76,7 +76,7 @@
     <div class="panel-pager">
         @Html.PagedListPager(
         Model,
-        page => Url.Action("GameReleaseView", new { page }),
+        page => Url.Action("GameReleaseReview", new { page }),
                 PagedListRenderOptions.ClassicPlusFirstAndLast
                 )
     </div>

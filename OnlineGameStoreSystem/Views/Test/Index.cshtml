@@ -1,0 +1,48 @@
+﻿@* @model OnlineGameStoreSystem.Models.ViewModels.GamePublishViewModelTest
+
+@{
+    Layout = null;
+}
+
+<h2>Multi-File Upload Test</h2>
+
+@if (TempData["Message"] != null)
+{
+    <p style="color:green">@TempData["Message"]</p>
+}
+
+<form asp-action="Index" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label>Thumbnail (single file)</label>
+        <input type="file" name="Thumbnail" accept="image/*" />
+        <span asp-validation-for="Thumbnail"></span>
+    </div>
+
+    <div>
+        <label>Preview Images (multiple files)</label>
+        <input type="file" name="PreviewImages" accept="image/*" multiple />
+        <span asp-validation-for="PreviewImages"></span>
+    </div>
+
+    <div>
+        <label>Trailer Videos (multiple files)</label>
+        <input type="file" name="Trailers" accept="video/*" multiple />
+        <span asp-validation-for="Trailers"></span>
+    </div>
+
+    <div>
+        <label>Game ZIP (single file)</label>
+        <input type="file" name="GameZip" accept=".zip" />
+        <span asp-validation-for="GameZip"></span>
+    </div>
+
+    <button type="submit">Upload</button>
+</form>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+} *@

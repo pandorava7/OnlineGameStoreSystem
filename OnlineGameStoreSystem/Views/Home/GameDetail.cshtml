@@ -72,8 +72,8 @@
                     @if (Model.DiscountPrice.HasValue)
                     {
                         <div class="price-row">
-                            <span class="price-discount">@Model.DiscountPrice.Value.ToString("C")</span>
-                            <span class="price-original">@Model.Price.ToString("C")</span>
+                            <span class="price-discount">RM @Model.DiscountPrice.Value.ToString()</span>
+                            <span class="price-original">RM @Model.Price.ToString()</span>
                             @{
                                 var percent = 0;
                                 if (Model.Price > 0)
@@ -87,7 +87,7 @@
                     else
                     {
                         <div class="price-row">
-                            <span class="price-current">@Model.Price.ToString("C")</span>
+                            <span class="price-current">RM @Model.Price.ToString()</span>
                         </div>
                     }
                 </div>

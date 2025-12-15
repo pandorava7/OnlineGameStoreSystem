@@ -9,7 +9,7 @@
 
             <div class="category-header">
                 <h2>@category.Title</h2>
-                <a class="view-all" href="/Category/@category.Slug">View All</a>
+                <a class="view-all" href="/Search?@category.Slug">View All</a>
             </div>
 
             <div class="category-slider">
@@ -27,13 +27,35 @@
                                     <img src="@game.CoverUrl" alt="@game.Title" />
                                     <div class="game-info">
                                         <p class="game-title">@game.Title</p>
-                                        @if (game.Price == 0)
+
+                                        @if (game.DiscountPrice != null)
                                         {
-                                            <p class="game-price free">Free</p>
+                                            if (game.Price == 0 || game.DiscountPrice == 0)
+                                            {
+                                                <!-- 折扣为0或者原价为0，算作 Free，同时显示原价划掉 -->
+                                                <p class="game-price free">Free <span class="original-price">RM @game.Price</span></p>
+                                            }
+                                            else
+                                            {
+                                                <!-- 有折扣且折扣>0 -->
+                                                var discountedPrice = game.Price * (1 - (game.DiscountPrice ?? 0m) / 100m);
+                                                <p class="game-price discounted">
+                                                    RM @discountedPrice
+                                                    <span class="original-price">RM @game.Price</span>
+                                                </p>
+                                            }
                                         }
                                         else
                                         {
-                                            <p class="game-price">RM @game.Price</p>
+                                            <!-- 无折扣 -->
+                                            if (game.Price == 0)
+                                            {
+                                                <p class="game-price free">Free to Play</p>
+                                            }
+                                            else
+                                            {
+                                                <p class="game-price">RM @game.Price</p>
+                                            }
                                         }
                                     </div>
                                 </div>

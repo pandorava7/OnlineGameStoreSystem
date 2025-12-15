@@ -1,4 +1,20 @@
-﻿// Thumbnail preview (single) — enhanced: drag/drop, click-to-select, remove button
+﻿// 删除游戏确认弹窗
+document.addEventListener('DOMContentLoaded', () => {
+    const removeGameBtns = document.querySelectorAll(".remove-game-btn");
+    
+    removeGameBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            confirmMessage(() => {
+                const gameId = btn.getAttribute('data-game-id');
+                document.getElementById('removeGameId').value = gameId;
+                document.getElementById('removeGameForm').submit();
+            },
+                "Confirm to remove your game? Your game data is still storing in our database, you can call admin to restore your game.")
+        });
+    });
+});
+
+// Thumbnail preview (single) — enhanced: drag/drop, click-to-select, remove button
 // Refactored to use a single container for both upload prompt and preview.
 (function () {
     var input = document.getElementById('thumbnailInput');
@@ -107,135 +123,19 @@
     });
 })();
 
-// Dashboard chart (Chart.js) with mock fallback and other app logic
-(function () {
-    function ensureChartAndInit() {
-        if (typeof Chart === 'undefined') {
-            setTimeout(ensureChartAndInit, 200);
-            return;
-        }
-
-        var canvas = document.getElementById('devStatsChart');
-        var ctx = canvas ? canvas.getContext('2d') : null;
-        var chart = null;
-
-        function generateMockData(hours) {
-            var points = 12;
-            var labels = [];
-            var exposure = [];
-            var sales = [];
-            var revenue = [];
-
-            var now = new Date();
-            var totalMs = (hours > 0 ? hours : 48) * 60 * 60 * 1000;
-            var step = totalMs / points;
-
-            for (var i = points - 1; i >= 0; i--) {
-                var d = new Date(now.getTime() - (i * step));
-                labels.push(hours <= 48 ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : d.toLocaleDateString());
-                var s = Math.max(0, Math.round(3 + Math.sin(i * 0.8) * 6 + i));
-                var r = +(s * (5 + (i % 5))).toFixed(2);
-                var e = s * 200 + (i * 8);
-                sales.push(s);
-                revenue.push(r);
-                exposure.push(e);
-            }
-
-            return { labels: labels, exposure: exposure, sales: sales, revenue: revenue };
-        }
-
-        async function loadData(hours) {
-            if (!ctx) return;
-            var url = '/Developer/GetDashboardData?hours=' + (hours || 48);
-            var payload = null;
-            try {
-                var res = await fetch(url, { cache: 'no-store' });
-                if (res.ok) payload = await res.json();
-            } catch (err) {
-                console.warn('Failed to fetch dashboard data, using mock. Error:', err);
-            }
-
-            if (!payload || !Array.isArray(payload.labels) || payload.labels.length === 0) {
-                payload = generateMockData(hours || 48);
-            }
-
-            payload.exposure = (payload.exposure || []).map(Number);
-            payload.sales = (payload.sales || []).map(Number);
-            payload.revenue = (payload.revenue || []).map(Number);
-
-            var datasets = [
-                { label: 'Exposure', data: payload.exposure, borderColor: '#b6ff3e', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 },
-                { label: 'Sales', data: payload.sales, borderColor: '#3eeaff', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 },
-                { label: 'Revenue', data: payload.revenue, borderColor: '#c06cff', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 }
-            ];
-
-            if (chart) chart.destroy();
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: payload.labels, datasets: datasets },
-                options: {
-                    animation: { duration: 600 },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#bbb' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#bbb' }, beginAtZero: true }
-                    },
-                    plugins: { legend: { labels: { color: '#ddd' } } },
-                    interaction: { mode: 'index', intersect: false },
-                    elements: { line: { borderWidth: 2 } }
-                }
-            });
-
-            applyDataTypeSelection();
-        }
-
-        // Zoom buttons (data-hours) — toggle .active and reload data
-        var hourButtons = document.querySelectorAll('.dashboard-controls .btn[data-hours]');
-        if (hourButtons && hourButtons.length > 0) {
-            hourButtons.forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    hourButtons.forEach(function (b) { b.classList.remove('active'); });
-                    btn.classList.add('active');
-                    var h = parseInt(btn.getAttribute('data-hours')) || 48;
-                    loadData(h);
-                });
-            });
-        }
-
-        // data-type buttons handling: exclusive selection, show/hide datasets
-        function applyDataTypeSelection() {
-            var active = document.querySelector('.dashboard-controls .btn[data-type].active');
-            var type = active ? active.getAttribute('data-type') : 'all';
-            if (!chart) return;
-            chart.data.datasets.forEach(function (ds) {
-                var label = ((ds.label || '') + '').toLowerCase();
-                if (type === 'all') ds.hidden = false;
-                else ds.hidden = (label !== type);
-            });
-            chart.update();
-        }
-
-        var typeButtons = document.querySelectorAll('.dashboard-controls .btn[data-type]');
-        if (typeButtons && typeButtons.length > 0) {
-            typeButtons.forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    typeButtons.forEach(function (b) { b.classList.remove('active'); });
-                    btn.classList.add('active');
-                    applyDataTypeSelection();
-                });
-            });
-        }
-
-        // initial load
-        loadData(48);
-    }
-
-    ensureChartAndInit();
-})();
-
 // Image preview helpers (use Object URLs for file previews)
 (function () {
+
+    document.querySelectorAll('.dashed-dropzone').forEach(function (zone) {
+        zone.addEventListener('click', function () {
+            var inputId = zone.getAttribute('data-for');
+            var input = document.getElementById(inputId);
+            if (input) {
+                input.click();
+            }
+        });
+    });
+
     // 辅助函数：创建元素
     function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
 
@@ -316,7 +216,10 @@
         }
 
         // 1. Drag & Drop 事件 (修改为累积模式)
-        var dropzone = document.querySelector('.dashed-dropzone[for="previewImagesInput"]');
+        //var dropzone = document.querySelector('.dashed-dropzone[for="previewImagesInput"]');
+        var dropzone = document.querySelector('.dashed-dropzone[data-for="previewImagesInput"]');
+        console.log("dropzone "+ dropzone);
+
         if (dropzone) {
             dropzone.addEventListener('dragover', function (e) { e.preventDefault(); dropzone.classList.add('dragover'); });
             dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('dragover'); });
@@ -505,7 +408,7 @@
 })();
 
 
-// Client-side upload validation (images/videos/zip) — debug-enabled (fixed insertBefore crash)
+ //Client-side upload validation (images/videos/zip) — debug-enabled (fixed insertBefore crash)
 (function () {
     var form = document.querySelector('form[enctype="multipart/form-data"]');
     if (!form) return;
@@ -667,6 +570,47 @@
         });
     });
 
+    // Zoom buttons (data-hours) — toggle .active and reload data
+    //var hourButtons = document.querySelectorAll('.dashboard-controls .btn[data-hours]');
+    ////console.log(hourButtons);
+    //if (hourButtons && hourButtons.length > 0) {
+    //    hourButtons.forEach(function (btn) {
+    //        btn.addEventListener('click', function () {
+    //            hourButtons.forEach(function (b) { b.classList.remove('active'); });
+    //            btn.classList.add('active');
+    //            var h = parseInt(btn.getAttribute('data-hours')) || 48;
+    //            loadData(h);
+    //        });
+    //    });
+    //}
+
+    // data-type buttons handling: exclusive selection, show/hide datasets
+    function applyDataTypeSelection() {
+        //console.log('Applying data type selection');
+        var active = document.querySelector('.dashboard-controls .btn[data-type].active');
+        var type = active ? active.getAttribute('data-type') : 'all';
+        console.log(chart);
+        if (!chart) return;
+        chart.data.datasets.forEach(function (ds) {
+            var label = ((ds.label || '') + '').toLowerCase();
+            if (type === 'all') ds.hidden = false;
+            else ds.hidden = (label !== type);
+        });
+        chart.update();
+    }
+
+    var typeButtons = document.querySelectorAll('.dashboard-controls .btn[data-type]');
+    console.log(typeButtons);
+    if (typeButtons && typeButtons.length > 0) {
+        typeButtons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                typeButtons.forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                applyDataTypeSelection();
+            });
+        });
+    }
+
     // initial load
     fetchAndRender(48);
 })();
@@ -807,51 +751,112 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 $(document).ready(function () {
-    // 缓存选择器
-    var $countrySelect = $('#CountrySelect');
-    var $stateContainer = $('#StateContainer');
-    var $stateSelect = $('#State');
+    //// 缓存选择器
+    //var $countrySelect = $('#CountrySelect');
+    //var $stateContainer = $('#StateContainer');
+    //var $stateSelect = $('#State');
 
-    // 定义切换显示状态的函数
-    function toggleStateField() {
-        // 检查选中的值是否为 'Malaysia'
-        if ($countrySelect.val() === 'Malaysia') {
-            $stateContainer.slideDown(200); // 慢速显示
-        } else {
-            $stateContainer.slideUp(200);   // 慢速隐藏
+    //// 定义切换显示状态的函数
+    //function toggleStateField() {
+    //    // 检查选中的值是否为 'Malaysia'
+    //    if ($countrySelect.val() === 'Malaysia') {
+    //        $stateContainer.slideDown(200); // 慢速显示
+    //    } else {
+    //        $stateContainer.slideUp(200);   // 慢速隐藏
 
-            // 【重要】隐藏时清空 State 的值，防止提交无效数据或触发错误的后端验证
-            $stateSelect.val('');
-        }
-    }
+    //        // 【重要】隐藏时清空 State 的值，防止提交无效数据或触发错误的后端验证
+    //        $stateSelect.val('');
+    //    }
+    //}
 
-    // 1. 页面加载时执行一次 (处理浏览器回退或默认值)
-    toggleStateField();
+    //// 1. 页面加载时执行一次 (处理浏览器回退或默认值)
+    //toggleStateField();
 
-    // 2. 当 Country 下拉列表改变时，执行切换函数
+    //// 2. 当 Country 下拉列表改变时，执行切换函数
+    //$countrySelect.on('change', function () {
+    //    toggleStateField();
+    //});
+
+    //// 告诉 Select2 库将 ID 为 'StateDropdown' 的元素转换为可搜索的浮动列表
+    ////$('#StateDropdown').select2();
+    //$('#StateDropdown').select2({
+    //    width: '100%',
+    //    placeholder: '-- Select State/Territory --',
+    //    allowClear: true,
+    //});
+
+    //// 隐藏原生 <select> （Select2 会替代它显示浮动框）
+    //$('#StateDropdown').hide();
+
+    // 定义每个国家对应的 State/Province 列表
+    // 当 Country 改变时更新 State
+    const statesByCountry = {
+        "Malaysia": [
+            "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan",
+            "Pahang", "Perak", "Perlis", "Pulau Pinang", "Sabah",
+            "Sarawak", "Selangor", "Terengganu", "Kuala Lumpur", "Putrajaya"
+        ],
+        "United States": ["California", "New York", "Texas", "Florida", "..."],
+        "Singapore": ["Central", "East", "North", "North-East", "West"]
+    };
+
+    const $countrySelect = $('#CountrySelect');
+    const $stateSelect = $('#StateSelect');
+
+    // 当 Country 改变时更新 State
     $countrySelect.on('change', function () {
-        toggleStateField();
+
+        $('#StateHidden').val($(this).val());
+
+        const country = $(this).val();
+        const states = statesByCountry[country] || [];
+
+        // 清空 State 下拉
+        $stateSelect.empty();
+
+        // 添加默认空选项
+        $stateSelect.append('<option value="">-- Select State/Territory --</option>');
+
+        // 添加新的选项
+        states.forEach(function (state) {
+            $stateSelect.append(`<option value="${state}">${state}</option>`);
+        });
     });
 
-    // 告诉 Select2 库将 ID 为 'StateDropdown' 的元素转换为可搜索的浮动列表
-    $('#StateDropdown').select2();
+    // 页面加载时触发一次更新（用于默认值或回退）
+    $countrySelect.trigger('change');
 
-    // 监听支付按钮的点击事件
+    // ----------------- 原有按钮点击逻辑 -----------------
     $('.btn-payment-option').on('click', function () {
-
         var $clickedButton = $(this);
         var targetId = $clickedButton.data('target');
         var paymentValue = $clickedButton.data('value');
 
-        // a. 切换按钮 active 样式
+        // 切换按钮 active 样式
         $('.btn-payment-option').removeClass('active');
         $clickedButton.addClass('active');
 
-        // b. 🔴 切换详情容器的显示状态 (使用 .toggleClass('hidden'))
-        $('.method-details').addClass('hidden'); // 先隐藏所有详情
-        $(targetId).removeClass('hidden');       // 再显示目标详情
+        // 显示对应详情
+        $('.method-details').addClass('hidden');
+        $(targetId).removeClass('hidden');
 
-        // c. 更新隐藏字段的值
+        // 更新隐藏字段的值
         $('#HiddenPaymentMethod').val(paymentValue);
+
+        console.log("Selected payment method:", paymentValue);
     });
+
+    // 1. 获取隐藏字段的值（后端渲染进来的 SelectedPaymentMethod）
+    var selectedMethod = $('#HiddenPaymentMethod').val();
+
+    if (selectedMethod) {
+        // 2. 找到对应按钮
+        var $btn = $('.btn-payment-option[data-value="' + selectedMethod + '"]');
+
+        if ($btn.length) {
+            // 3. 触发点击事件，执行切换逻辑
+            console.log("Auto-selecting payment method button:", $btn);
+            $btn.click();
+        }
+    }
 });

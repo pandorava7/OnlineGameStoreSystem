@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<div class="access-denied-wrapper">
+    <h2>Access Denied</h2>
+    <p>Sorry, you do not have permission to access this page.</p>
+
+    @* @if (!string.IsNullOrEmpty(returnUrl))
+    {
+        <p>
+            <a href="@returnUrl" class="btn btn-secondary">Go Back</a>
+        </p>
+    } *@
+
+    <p>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Go to Home</a>
+    </p>
+</div>
+
+<style>
+    .access-denied-wrapper {
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 30px;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+        .access-denied-wrapper h2 {
+            margin-bottom: 20px;
+            color: #d9534f;
+        }
+
+        .access-denied-wrapper p {
+            margin-bottom: 15px;
+        }
+</style>
