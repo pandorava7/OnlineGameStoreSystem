@@ -1,12 +1,30 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const downloadBoxs = document.querySelectorAll('.download-box');
+
     downloadBoxs.forEach(db => {
-        db.addEventListener('click', function () {
+        db.addEventListener('click', () => {
+
+            const gameId = db.dataset.gameId;
 
             confirmDownloadGame(async () => {
+                const response = await fetch(`/api/games/${gameId}/download`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    showTemporaryMessage('Failed', "error");
+                    return;
+                }
+
+                const data = await response.json();
+
+                // 再触发真正的下载
                 const link = document.createElement('a');
-                link.href = '/download/example.zip'; // Zip file path
-                link.download = 'example.zip'; // file name when download
+                link.href = data.downloadUrl;
+                link.download = '';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

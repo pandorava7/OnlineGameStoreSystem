@@ -180,6 +180,7 @@ public class SearchResultVM
 
 public class GameLibraryViewModel
 {
+    public int Id { get; set; }
     public string Title { get; set; } = null!;
     public string ThumbnailUrl { get; set; } = null!;
     public DateTime PurchasedDate { get; set; }

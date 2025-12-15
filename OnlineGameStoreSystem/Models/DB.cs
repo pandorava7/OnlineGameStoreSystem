@@ -694,6 +694,7 @@ public class Game
     public List<GameLike> Likes { get; set; } = new();
     public int StorageRequireMB { get; set; }
     public int ExposureCount { get; set; } = 0;
+    public int TotalDownload { get; set; } = 0;
 
     public decimal GetDiscountedPrice()
     {

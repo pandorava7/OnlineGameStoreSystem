@@ -174,6 +174,30 @@ public class PaymentController : Controller
         purchases.ForEach(p => p.Status = PurchaseStatus.Completed);
         await db.SaveChangesAsync();
 
+        // 生成开发者收入
+        var revenues = new List<DeveloperRevenue>();
+        foreach (var revenue in cart.Items)
+        {
+            var game = revenue.Game;
+            var purchase = purchases.First(p => p.GameId == game.Id);
+            var amount = game.GetDiscountedPrice();
+            var platformFee = amount * 30m / 100m; // 30% 平台费
+            var netAmount = amount - platformFee;
+            var developerRevenue = new DeveloperRevenue
+            {
+                DeveloperId = game.DeveloperId,
+                GameId = game.Id,
+                PurchaseId = purchase.Id,
+                Amount = amount,
+                PlatformFee = platformFee,
+                NetAmount = netAmount,
+                GeneratedAt = DateTime.UtcNow,
+            };
+            revenues.Add(developerRevenue);
+        }
+        db.DeveloperRevenues.AddRange(revenues);
+        await db.SaveChangesAsync();
+
         // 5️⃣ 清空购物车
         db.CartItems.RemoveRange(cart.Items);
         await db.SaveChangesAsync();

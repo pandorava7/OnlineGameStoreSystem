@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineGameStoreSystem.Extensions;
@@ -244,6 +245,7 @@ public class HomeController : Controller
         // ---------------- 投影 ----------------
         var games = await query.Select(g => new GameLibraryViewModel
         {
+            Id = g.Id,
             Title = g.Title,
             ThumbnailUrl = g.Media
                             .Where(m => m.MediaType == "thumb")
@@ -265,7 +267,7 @@ public class HomeController : Controller
     {
         var userId = User.GetUserId();
 
-        var wishlist = db.Wishlists.Where(w => w.UserId == userId).Include(w=>w.Game);
+        var wishlist = db.Wishlists.Where(w => w.UserId == userId).Include(w => w.Game);
 
         var vm = new WishlistVM
         {
@@ -283,6 +285,35 @@ public class HomeController : Controller
         };
 
         return View(vm);
+    }
+
+    [Authorize]
+    [HttpPost("/api/games/{gameId}/download")]
+    public IActionResult DownloadGame(int gameId)
+    {
+        var userId = User.GetUserId();
+        // 验证用户是否购买了该游戏
+        var hasPurchased = db.Purchases
+            .Any(p => p.UserId == userId
+                   && p.GameId == gameId
+                   && p.Status == PurchaseStatus.Completed
+                   && p.Payment.Status == PaymentStatus.Completed);
+        if (!hasPurchased)
+            return NotFound("you have not purchased this game");
+
+        var game = db.Games.FirstOrDefault(g => g.Id == gameId);
+        if (game == null)
+            return NotFound("game not found");
+
+        // 🔥 关键：下载次数 +1
+        game.TotalDownload += 1;
+        db.SaveChanges();
+
+        // 返回真实下载地址（或 token）
+        return Ok(new
+        {
+            downloadUrl = $"/download/example.zip"
+        });
     }
 
 
