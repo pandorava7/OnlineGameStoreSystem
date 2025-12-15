@@ -78,12 +78,18 @@ public class DeveloperController : Controller
         var completedPurchases = purchasesAll.Where(p => p.Status == PurchaseStatus.Completed).ToList();
 
         var totalSales = completedPurchases.Count;
-        var totalRevenue = completedPurchases.Sum(p => p.PriceAtPurchase);
         var totalExposure = completedPurchases.Sum(p => p.Game.ExposureCount);
         var totalLikes = games.Sum(g => g.LikeCount);
         var totalReviews = games.Sum(g => g.Reviews?.Count ?? 0);
-        var totalDownloads = purchasesAll.Count; // all purchases entries count as downloads
-        var netRevenue = totalRevenue; // keep same for now, apply platform fee if needed
+        var totalDownloads = games.Sum(g => g.TotalDownload);
+
+        // 计算真实的总收入
+        // 获取所有developer revenue并统计total revenue, net revenue和platform fee，平台30%分成
+        var developerRevenue = db.DeveloperRevenues.Where(dr => dr.DeveloperId == developerId)
+            .ToList();
+        decimal totalRevenue = developerRevenue.Sum(dr => dr.Amount);
+        decimal netRevenue = developerRevenue.Sum(dr => dr.NetAmount);
+        decimal platformfee = developerRevenue.Sum(dr => dr.PlatformFee);
 
         var vm = new DeveloperDashboardViewModel
         {
@@ -95,7 +101,8 @@ public class DeveloperController : Controller
             TotalLikes = totalLikes,
             TotalReviews = totalReviews,
             TotalDownloads = totalDownloads,
-            NetRevenue = netRevenue
+            NetRevenue = netRevenue,
+            PlatformFee = platformfee
         };
 
         return View(vm);
@@ -922,6 +929,8 @@ public class DeveloperController : Controller
         return View(vm);
     }
 
+    #region Single Game Analysis
+
     [HttpGet]
     public async Task<IActionResult> Analysis(int id)
     {
@@ -1062,5 +1071,5 @@ public class DeveloperController : Controller
         return File(bytes, "text/csv", fileName);
     }
 
-
+    #endregion
 }

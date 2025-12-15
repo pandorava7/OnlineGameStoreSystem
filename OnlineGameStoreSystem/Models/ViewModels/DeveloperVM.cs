@@ -134,10 +134,11 @@ public class DeveloperDashboardViewModel
     public int TotalExposure { get; set; }
     public int TotalSales { get; set; }
     public decimal TotalRevenue { get; set; }
+    public decimal NetRevenue { get; set; }
+    public decimal PlatformFee { get; set; }
     public int TotalDownloads { get; set; }
     public int TotalLikes { get; set; }
     public int TotalReviews { get; set; }
-    public decimal NetRevenue { get; set; }
 }
 
 public class DeveloperGameItemViewModel

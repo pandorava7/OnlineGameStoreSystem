@@ -169,7 +169,8 @@ body {
 .dashboard-revenue-value {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #fff;
+    color: var(--primary-color);
+    margin-bottom: 30px;
 }
 .dashboard-revenue-desc {
     color: #bdbdbd;
