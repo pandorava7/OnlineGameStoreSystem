@@ -599,9 +599,6 @@ public class GameLike
     public int GameId { get; set; }
     public Game Game { get; set; } = null!;
 
-    // 新增字段：true = Like，false = Dislike
-    //public bool IsLike { get; set; }
-
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 

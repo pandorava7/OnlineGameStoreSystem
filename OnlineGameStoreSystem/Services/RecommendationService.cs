@@ -122,7 +122,6 @@ public class RecommendationService
                                  .Where(t => t.UserId == userId)
                                  //.OrderByDescending(t => t.Score) // 如果有分数字段可优先
                                  .Select(t => t.Tag.Name)
-                                 .Take(10)
                                  .ToListAsync();
 
         var wishlistSet = new HashSet<int>(wishlist);
@@ -231,6 +230,8 @@ public class RecommendationService
         });
 
         // ---------- 3) 基于用户兴趣标签 ----------
+        int tagCategoryCount = 0;
+        int maxTagCategories = 5; // 最多推荐5个标签分类
         foreach (var tagName in interestTags)
         {
             var tagGames = await _context.Games
@@ -241,6 +242,12 @@ public class RecommendationService
                   .Where(g => g.Status == GameStatus.Published)
                   .Take(20)
                   .ToListAsync();
+
+            if(tagGames.Count == 0)
+                continue;
+            tagCategoryCount++;
+            if (tagCategoryCount > maxTagCategories)
+                break;
 
             // increase exposure count
             // 普通推荐，曝光+1

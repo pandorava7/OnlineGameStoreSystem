@@ -601,6 +601,15 @@ document.addEventListener('DOMContentLoaded', () => {
             payload.sales = (payload.sales || []).map(Number);
             payload.revenue = (payload.revenue || []).map(Number);
 
+            // === 添加缩放系数 ===
+            const exposureFactor = 0.001;  // 例如把 180000 缩小到 180
+            const salesFactor = 1;          // 80 保持不变
+            const revenueFactor = 0.01;     // 2000 缩小到 20
+
+            payload.exposure = payload.exposure.map(v => v * exposureFactor);
+            payload.sales = payload.sales.map(v => v * salesFactor);
+            payload.revenue = payload.revenue.map(v => v * revenueFactor);
+
             var datasets = [
                 { label: 'Exposure', data: payload.exposure, borderColor: '#b6ff3e', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 },
                 { label: 'Sales', data: payload.sales, borderColor: '#3eeaff', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 },

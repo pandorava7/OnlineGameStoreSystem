@@ -315,7 +315,7 @@ public class AdminController : Controller
     public IActionResult HandleRefund(int purchaseId, bool approve)
     {
         // 更新游戏状态
-        var purchase = _db.Purchases.Find(purchaseId);
+        var purchase = _db.Purchases.Include(p=>p.Game).FirstOrDefault(p=>p.Id == purchaseId);
         if (purchase == null)
             return NotFound("Purchase is not found");
 
@@ -325,6 +325,25 @@ public class AdminController : Controller
         ConsoleHelper.WriteRed("Approve: " + approve);
         purchase.Status = approve ? PurchaseStatus.Refunded : PurchaseStatus.Completed;
         _db.SaveChanges();
+
+        if (purchase.Status == PurchaseStatus.Refunded)
+        {
+            // Update Developer's revenue
+            var developer = _db.Users.Find(purchase.Game.DeveloperId);
+            if (developer != null)
+            {
+                var revenueRecord = _db.DeveloperRevenues
+                    .FirstOrDefault(r => r.DeveloperId == developer.Id && r.GameId == purchase.GameId);
+                if (revenueRecord != null)
+                {
+                    decimal priceAtPurchase = purchase.PriceAtPurchase;
+                    revenueRecord.Amount -= priceAtPurchase;
+                    revenueRecord.NetAmount -= priceAtPurchase * 0.7m;
+                    revenueRecord.PlatformFee -= priceAtPurchase * 0.3m;
+                    _db.SaveChanges();
+                }
+            }
+        }
 
         TempData["FlashMessage"] = approve ? "Successfully to refund this purchase." : "Reject the refund request of this purchase.";
         TempData["FlashMessageType"] = approve ? "success" : "info";

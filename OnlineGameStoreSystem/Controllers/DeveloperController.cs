@@ -58,6 +58,7 @@ public class DeveloperController : Controller
             .Include(g => g.Media)
             .Include(g => g.Purchases)
             .Include(g => g.Reviews)
+            //.Include(g => g.Likes)
             .ToListAsync();
 
         var gameVms = games.Select(g => new DeveloperGameItemViewModel
@@ -67,7 +68,7 @@ public class DeveloperController : Controller
             ThumbnailUrl = g.Media.FirstOrDefault(m => m.MediaType == "thumb")?.MediaUrl ?? "/images/example/silksong.png",
             Price = g.Price,
             LikeRate = g.LikeCount > 0 ? Math.Round((double)g.LikeCount / Math.Max(1, g.Purchases.Count) * 100, 0) : 0,
-            SalesCount = g.Purchases.Count(p => p.Status == PurchaseStatus.Completed),
+            SalesCount = g.Purchases.Count(p => p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding),
             ReleaseDate = g.ReleaseDate,
             UpdatedAt = g.CreatedAt,
             Status = g.Status.ToString()
@@ -75,7 +76,7 @@ public class DeveloperController : Controller
 
         // aggregate totals from DB data
         var purchasesAll = games.SelectMany(g => g.Purchases).ToList();
-        var completedPurchases = purchasesAll.Where(p => p.Status == PurchaseStatus.Completed).ToList();
+        var completedPurchases = purchasesAll.Where(p => p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding).ToList();
 
         var totalSales = completedPurchases.Count;
         var totalExposure = completedPurchases.Sum(p => p.Game.ExposureCount);
@@ -123,7 +124,7 @@ public class DeveloperController : Controller
             .Include(p => p.Payment)
             .Where(p => p.Game.DeveloperId == developerId
                         && p.Payment.CreatedAt >= start && p.Payment.CreatedAt <= end
-                        && p.Status == PurchaseStatus.Completed)
+                        && p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding)
             .ToListAsync();
 
         List<string> labels = new List<string>();
@@ -215,6 +216,7 @@ public class DeveloperController : Controller
             .Include(g => g.Purchases)
             .Include(g => g.Reviews)
             .Include(g => g.Media)
+            //.Include(g => g.Likes)
             .ToListAsync();
 
         // Per-game stats and totals
@@ -229,8 +231,8 @@ public class DeveloperController : Controller
 
         foreach (var g in games)
         {
-            var sales = g.Purchases.Count(p => p.Status == PurchaseStatus.Completed);
-            var revenue = g.Purchases.Where(p => p.Status == PurchaseStatus.Completed).Sum(p => p.PriceAtPurchase);
+            var sales = g.Purchases.Count(p => p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding);
+            var revenue = g.Purchases.Where(p => p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding).Sum(p => p.PriceAtPurchase);
             var likes = g.LikeCount;
             var reviews = g.Reviews.Count;
             var exposure = g.ExposureCount;
@@ -879,7 +881,7 @@ public class DeveloperController : Controller
 
         foreach (var g in games)
         {
-            var completed = g.Purchases.Where(p => p.Status == PurchaseStatus.Completed).ToList();
+            var completed = g.Purchases.Where(p => p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding).ToList();
             var sales = completed.Count;
             var gross = completed.Sum(p => p.PriceAtPurchase);
             // example platform fee 33% (adjust as required)
@@ -943,7 +945,7 @@ public class DeveloperController : Controller
             .Include(p => p.Payment)
             .Include(p => p.Game) // 确保能访问 Game.ExposureCount
             .Where(p => p.GameId == id
-                        && p.Status == PurchaseStatus.Completed
+                        && (p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding)
                         && p.Payment.CreatedAt >= start
                         && p.Payment.CreatedAt <= end)
             .ToListAsync();
@@ -1028,7 +1030,7 @@ public class DeveloperController : Controller
         if (game == null) return NotFound();
 
         // Summarize purchases
-        var completed = game.Purchases.Where(p => p.Status == PurchaseStatus.Completed).ToList();
+        var completed = game.Purchases.Where(p => p.Status == PurchaseStatus.Completed || p.Status == PurchaseStatus.Refunding).ToList();
         var totalSales = completed.Count;
         var totalRevenue = completed.Sum(p => p.PriceAtPurchase);
         var totalExposure = game.ExposureCount;

@@ -80,6 +80,20 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DB>();
+
+    //// 清空所有游戏报告相关数据（需要时）
+    // TestDataCleaner.ClearAllTestData(db);
+
+    //// 生成所有游戏报告相关数据
+    //TestDataGenerator.GenerateTestData(db);
+}
+
+
+
 app.Run();
 
 

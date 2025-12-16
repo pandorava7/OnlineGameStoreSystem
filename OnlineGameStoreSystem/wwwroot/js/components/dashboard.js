@@ -10,32 +10,6 @@
         var ctx = canvas ? canvas.getContext('2d') : null;
         var chart = null;
 
-        //function generateMockData(hours) {
-        //    var points = 12;
-        //    var labels = [];
-        //    var exposure = [];
-        //    var sales = [];
-        //    var revenue = [];
-
-        //    var now = new Date();
-        //    var totalMs = (hours > 0 ? hours : 48) * 60 * 60 * 1000;
-        //    var step = totalMs / points;
-
-        //    for (var i = points - 1; i >= 0; i--) {
-        //        var d = new Date(now.getTime() - (i * step));
-        //        console.log(d);
-        //        labels.push(hours <= 48 ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : d.toLocaleDateString());
-        //        var s = Math.max(0, Math.round(3 + Math.sin(i * 0.8) * 6 + i));
-        //        var r = +(s * (5 + (i % 5))).toFixed(2);
-        //        var e = s * 200 + (i * 8);
-        //        sales.push(s);
-        //        revenue.push(r);
-        //        exposure.push(e);
-        //    }
-
-        //    return { labels: labels, exposure: exposure, sales: sales, revenue: revenue };
-        //}
-
         async function loadData(hours) {
             console.log('Loading dashboard data for last', hours, 'hours');
             if (!ctx) return;
@@ -92,11 +66,49 @@
                 });
             });
 
+            // 保存原始值
+            const originalExposure = (payload.exposure || []).map(Number);
+            const originalSales = (payload.sales || []).map(Number);
+            const originalRevenue = (payload.revenue || []).map(Number);
 
-            var datasets = [
-                { label: 'Exposure', data: payload.exposure, borderColor: '#b6ff3e', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 },
-                { label: 'Sales', data: payload.sales, borderColor: '#3eeaff', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 },
-                { label: 'Revenue', data: payload.revenue, borderColor: '#c06cff', backgroundColor: 'transparent', tension: 0.2, pointRadius: 3 }
+            // === 创建用于绘图的缩放数据，不改原始值 ===
+            const exposureFactor = 0.001;
+            const salesFactor = 1;
+            const revenueFactor = 0.01;
+
+            const exposureData = originalExposure.map(v => v * exposureFactor);
+            const salesData = originalSales.map(v => v * salesFactor);
+            const revenueData = originalRevenue.map(v => v * revenueFactor);
+
+            // 图表 dataset 用缩放后的数据
+            const datasets = [
+                {
+                    label: 'Exposure',
+                    data: exposureData,
+                    borderColor: '#b6ff3e',
+                    backgroundColor: 'transparent',
+                    tension: 0.2,
+                    pointRadius: 3,
+                    originalData: originalExposure // 保存原始数据
+                },
+                {
+                    label: 'Sales',
+                    data: salesData,
+                    borderColor: '#3eeaff',
+                    backgroundColor: 'transparent',
+                    tension: 0.2,
+                    pointRadius: 3,
+                    originalData: originalSales
+                },
+                {
+                    label: 'Revenue',
+                    data: revenueData,
+                    borderColor: '#c06cff',
+                    backgroundColor: 'transparent',
+                    tension: 0.2,
+                    pointRadius: 3,
+                    originalData: originalRevenue
+                }
             ];
 
             if (chart) chart.destroy();
@@ -104,14 +116,40 @@
                 type: 'line',
                 data: { labels: payload.labels, datasets: datasets },
                 options: {
+                    plugins: {
+                        legend: { labels: { color: '#ddd' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function (ctx) {
+                                    const ds = ctx.dataset;
+                                    const idx = ctx.dataIndex;
+
+                                    if (ds.originalData && ds.originalData[idx] != null) {
+                                        return ds.label + ': ' + ds.originalData[idx];
+                                    }
+
+                                    return ds.label + ': ' + ctx.parsed.y;
+                                }
+                            }
+                        }
+                    },
                     animation: { duration: 600 },
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
                         x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#bbb' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#bbb' }, beginAtZero: true }
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.04)' },
+                            ticks: {
+                                color: '#bbb',
+                                callback: function (value) {
+                                    // 这里只是一个示例：假设 exposure 在显示
+                                    return Math.round(value / 0.001);
+                                }
+                            }
+                        }
                     },
-                    plugins: { legend: { labels: { color: '#ddd' } } },
                     interaction: { mode: 'index', intersect: false },
                     elements: { line: { borderWidth: 2 } }
                 }
