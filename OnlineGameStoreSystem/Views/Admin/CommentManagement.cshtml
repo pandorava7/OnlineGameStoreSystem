@@ -30,6 +30,7 @@
                     <th>CommentId</th>
                     <th>User</th>
                     <th>Comment</th>
+                    <th>Report Count</th>
                     <th>Comment Date</th>
                     <th class="action-col">Action</th>
                 </tr>
@@ -63,6 +64,8 @@
                         </td>
 
                         <td>@item.CommentContent</td>
+
+                        <td>@item.ReportedCount</td>
 
                         <td>@item.CommentDate.ToString("yyyy-MM-dd HH:mm")</td>
 

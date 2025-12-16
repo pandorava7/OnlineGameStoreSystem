@@ -509,6 +509,7 @@ public class Review
     public int LikeCount { get; set; }
     public List<ReviewLike> Likes { get; set; } = new List<ReviewLike>();
     public ActiveStatus Status { get; set; }
+    public int ReportedCount { get; set; } = 0;
 }
 
 public class Notification
@@ -620,6 +621,7 @@ public class Comment
     public int LikeCount { get; set; }
     public List<CommentLike> Likes { get; set; } = new List<CommentLike>();
     public ActiveStatus Status { get; set; }
+    public int ReportedCount { get; set; } = 0;
 }
 
 public class Purchase

@@ -108,6 +108,19 @@ public class ReviewController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Report(int reviewId)
+    {
+        var review = await db.Reviews.FindAsync(reviewId);
+        if (review == null) return NotFound();
+
+        //db.Comments.Remove(comment);
+        review.ReportedCount += 1;
+        await db.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleLike([FromBody] LikeRequest request)
     {
         if (request.ReviewId <= 0)

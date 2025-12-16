@@ -91,18 +91,24 @@
                 </div>
             </div>
 
+            <!-- Deletion -->
+            <input type="hidden" id="deletedMediaInput" name="DeletedMediaJson" />
+
             <div class="flex-column-left" style="margin: 10px 0">
                 <div class="flex-row gap">
-                    <label>New Preview Images (multiple files)</label>
-                    <input type="file" name="NewPreviewImages" accept="image/*" multiple />
+                    <label>New Preview Images (maximum 8)</label>
+                    <input type="file" name="NewPreviewImages" accept="image/*" data-target-container="#gd-thumbs-previews" multiple data-max-files="8" />
                     <span asp-validation-for="NewPreviewImages"></span>
                 </div>
                 <div class="flex-row">
-                    <div class="gd-thumbs" id="gd-thumbs" role="list" bis_skin_checked="1" style="width: 1000px">
+                    <div class="gd-thumbs" id="gd-thumbs-previews" role="list" bis_skin_checked="1" style="width: 1000px">
                         @foreach (var imgUrl in Model.PreviewImageUrls)
                         {
-                            <div class="gd-thumb" role="listitem">
+                            <div class="gd-thumb" role="listitem" data-media-url="@imgUrl">
                                 <img src="@imgUrl" alt="Preview Image" />
+                                <button type="button" class="media-delete-btn" title="Remove">
+                                    <i class="fa fa-trash"></i>
+                                </button>
                             </div>
                         }
                     </div>
@@ -111,16 +117,19 @@
 
             <div class="flex-column-left" style="margin: 10px 0">
                 <div class="flex-row gap" style="margin: 10px 0">
-                    <label>New Trailer Videos (multiple files)</label>
-                    <input type="file" name="NewTrailers" accept="video/*" multiple />
+                    <label>New Trailer Videos (maximum 2)</label>
+                    <input type="file" name="NewTrailers" accept="video/*" data-target-container="#gd-thumbs-trailers" multiple data-max-files="2" />
                     <span asp-validation-for="NewTrailers"></span>
                 </div>
                 <div class="flex-row">
-                    <div class="gd-thumbs" id="gd-thumbs" role="list" bis_skin_checked="1" style="width: 1000px">
+                    <div class="gd-thumbs" id="gd-thumbs-trailers" role="list" bis_skin_checked="1" style="width: 1000px">
                         @foreach (var videoUrl in Model.TrailersUrls)
                         {
-                            <div class="gd-thumb" role="listitem" style="height: auto">
-                                <video src="@videoUrl" alt="Trailers" style="height: 150px; aspect-ratio:16/9;" controls/>
+                            <div class="gd-thumb" role="listitem" data-media-url="@videoUrl" style="height: auto">
+                                <video src="@videoUrl" alt="Trailers" style="height: 150px; aspect-ratio:16/9;" controls></video>
+                                <button type="button" class="media-delete-btn" title="Remove">
+                                    <i class="fa fa-trash"></i>
+                                </button>
                             </div>
                         }
                     </div>

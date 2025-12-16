@@ -605,10 +605,14 @@ public class ProfileController : Controller
             ModelState.AddModelError("ConfirmPayment", "Please confirm your payment to proceed.");
             // Preserve userId again for re-displaying the form
             TempData.Keep("Reg_UserId");
-            return RedirectToAction("DeveloperPayment", model);
+
+            TempData["FlashMessage"] = "Please confirm your payment to proceed.";
+            TempData["FlashMessageType"] = "error";
+
+            return RedirectToAction("DeveloperProcessPayment", model);
         }
 
-        //if(model.SelectedPaymentMethod == null)
+        //if (model.SelectedPaymentMethod == null)
         //{
         //    ModelState.AddModelError("SelectedPaymentMethod", "Please select a payment method.");
         //    TempData.Keep("Reg_UserId");
@@ -627,6 +631,8 @@ public class ProfileController : Controller
             CreatedAt = DateTime.UtcNow
         };
 
+        //db.SaveChanges();
+
         // =================================================================
         // SIMULATE PAYMENT PROCESSING HERE
         // In a real app, you would integrate with a payment gateway (e.g., Stripe, PayPal).
@@ -643,6 +649,7 @@ public class ProfileController : Controller
                 // You might also want to store other registration details from the first form here.
                 // For example, update FullName, Email, or create a new 'DeveloperProfile' entity.
                 user.UpdatedAt = DateTime.UtcNow;
+                db.Add(payment);
                 db.SaveChanges();
 
                 TempData["FlashMessage"] = "Payment successful! You are now a registered developer.";

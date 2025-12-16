@@ -526,6 +526,7 @@ public class AdminController : Controller
                 AvatarUrl = string.IsNullOrEmpty(p.User.AvatarUrl) == false ? p.User.AvatarUrl : "/images/avatar_default.png",
                 UserName = p.User.Username,
                 CommentStatus = p.Status.ToString(),
+                ReportedCount = p.ReportedCount,
             })
             .OrderByDescending(p => p.CommentDate)
             .ToPagedList(pageNumber, pageSize);
@@ -597,6 +598,7 @@ public class AdminController : Controller
                 UserId = r.UserId,
                 AvatarUrl = string.IsNullOrEmpty(r.User.AvatarUrl) == false ? r.User.AvatarUrl : "/images/avatar_default.png",
                 UserName = r.User.Username,
+                ReportedCount = r.ReportedCount,
             })
             .OrderByDescending(p => p.ReviewDate)
             .ToPagedList(pageNumber, pageSize);

@@ -62,6 +62,14 @@
                     }
                 </div>
             </div>
+
+            @* 点赞 *@
+            <div class="like-section">
+                <p>If you like this post, please give it a like!</p>
+                <button class="primary-btn button" id="likeGameBtn" data-game-id="@Model.Id">
+                    <i class="fa fa-heart"></i> Like
+                </button>
+            </div>
         </div>
 
         <aside class="gd-right" aria-labelledby="game-title">
@@ -153,8 +161,10 @@
 
 @section Scripts {
     <script src="~/js/components/game_detail.js" asp-append-version="true"></script>
+    <script src="~/js/components/likes.js" asp-append-version="true"></script>
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/game-detail.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/pages/post-detail.css" asp-append-version="true" />
 }

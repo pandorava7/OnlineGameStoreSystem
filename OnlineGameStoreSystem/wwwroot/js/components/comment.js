@@ -159,9 +159,28 @@
             const reportBtn = options.querySelector('.report-btn');
             reportBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                alert(`举报评论 ${reportBtn.dataset.commentid}`);
-                card.style.display = 'none';
-                openOptionsCard = null;
+
+                const commentId = reportBtn.dataset.commentid;
+                //const divToRemove = div; // 闭包保存当前评论元素
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                confirmDeleteReview(async () => {
+                    try {
+                        const res = await fetch(`/Comment/Report?commentId=${commentId}`, {
+                            method: 'POST',
+                            headers: { 'RequestVerificationToken': token }
+                        });
+
+                        if (res.ok) {
+                            showTemporaryMessage('Success to report of this comment', 'success')
+                        } else {
+                            showTemporaryMessage('Failed to report', 'error')
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        showTemporaryMessage('Error when delete', 'error')
+                    }
+                });
             });
         });
     }

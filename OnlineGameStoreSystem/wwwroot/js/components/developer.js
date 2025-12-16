@@ -1,4 +1,73 @@
-﻿// 删除游戏确认弹窗
+﻿// 删除媒体
+(() => {
+    const deletedMedia = new Set();
+    const hiddenInput = document.getElementById('deletedMediaInput');
+
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('.media-delete-btn');
+        if (!btn) return;
+
+        const thumb = btn.closest('.gd-thumb');
+        const url = thumb?.dataset.mediaUrl;
+        if (!url) return;
+
+        confirmMessage(() => {
+            deletedMedia.add(url);
+            thumb.remove();
+
+            hiddenInput.value = JSON.stringify([...deletedMedia]);
+        }, 'Remove this media?');
+
+        
+    });
+})();
+
+// 图片和视频上传上限检查
+(() => {
+    const fileInputs = document.querySelectorAll('input[type="file"][data-max-files]');
+    if (!fileInputs) return;
+
+    fileInputs.forEach(fileInput => {
+        fileInput.addEventListener('change', () => {
+            const containerSelector = fileInput.dataset.targetContainer;
+            const container = document.querySelector(containerSelector);
+            console.log("containerSelector " + containerSelector + "\ncontainer " + container);
+            if (!container) return;
+
+            const existingCount = container.querySelectorAll('.gd-thumb').length;
+            const selectedCount = fileInput.files.length;
+            const maxFiles = parseInt(fileInput.dataset.maxFiles, 10);
+            console.log(`Existing: ${existingCount}, Selected: ${selectedCount}, Max: ${maxFiles}`);
+
+            if (existingCount + selectedCount > maxFiles) {
+                showTemporaryMessage(
+                    `You can upload at most ${maxFiles} items. Currently ${existingCount} already exist.`,
+                    'error'
+                );
+                fileInput.value = '';
+            }
+        });
+    });
+})();
+
+
+
+// 媒体文件上限检查
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[type="file"][data-max-files]')
+        .forEach(input => {
+            input.addEventListener('change', () => {
+                const max = parseInt(input.dataset.maxFiles, 10);
+                if (input.files.length > max) {
+                    //alert(`最多只能上传 ${max} 个文件`);
+                    showTemporaryMessage(`You can only upload up to ${max} files.`, "error");
+                    input.value = ''; // 清空选择
+                }
+            });
+        });
+});
+
+// 删除游戏确认弹窗
 document.addEventListener('DOMContentLoaded', () => {
     const removeGameBtns = document.querySelectorAll(".remove-game-btn");
     

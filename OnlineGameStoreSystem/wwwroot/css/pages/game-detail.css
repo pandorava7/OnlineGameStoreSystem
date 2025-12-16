@@ -142,7 +142,28 @@
     justify-content: center;
     cursor: pointer;
     aspect-ratio: 16/9;
+    position: relative;
 }
+
+.media-delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    aspect-ratio: 1 / 1;
+    border: none;
+    background-color: transparent;
+    color: red;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    transition: all ease-in-out .2s;
+}
+
+    .media-delete-btn:hover {
+        color: darkred;
+        transform: scale();
+    }
 
     .gd-thumb img {
         width: 100%;

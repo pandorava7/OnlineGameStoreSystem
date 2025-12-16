@@ -299,9 +299,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const reportBtn = options.querySelector('.report-btn');
             reportBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                alert(`举报评论 ${reportBtn.dataset.reviewid}`);
-                card.style.display = 'none';
-                openOptionsCard = null;
+
+                const reviewId = reportBtn.dataset.reviewid;
+                //const divToRemove = div; // 闭包保存当前评论元素
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                confirmDeleteReview(async () => {
+                    try {
+                        const res = await fetch(`/Review/Report?reviewId=${reviewId}`, {
+                            method: 'POST',
+                            headers: { 'RequestVerificationToken': token }
+                        });
+
+                        if (res.ok) {
+                            showTemporaryMessage('Success to report of this review', 'success')
+                        } else {
+                            showTemporaryMessage('Failed to report', 'error')
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        showTemporaryMessage('Error when report', 'error')
+                    }
+                });
             });
         });
     }
@@ -372,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // 添加到购物车（服务器）
 // =====================
 async function addToCart(gameId) {
+    // 弹出确认对话框
     confirmMessage(async () => {
         const res = await fetch(`/Cart/AddItem?gameId=${gameId}`, {
             method: 'POST'

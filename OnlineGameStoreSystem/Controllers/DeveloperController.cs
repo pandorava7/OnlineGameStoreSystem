@@ -219,7 +219,7 @@ public class DeveloperController : Controller
 
         // Per-game stats and totals
         var sb = new StringBuilder();
-        sb.AppendLine("GameId,Title,Sales,Revenue,Likes,Reviews");
+        sb.AppendLine("GameId,Title,Sales,Revenue,Likes,Reviews,Exposure");
 
         int totalSales = 0;
         decimal totalRevenue = 0;
@@ -752,34 +752,6 @@ public class DeveloperController : Controller
 
             db.GameMedia.Add(media);
         }
-
-        //// 判断用户是否在表单中选择了新的 ZIP 文件
-        //if (GameZip != null && GameZip.Length > 0)
-        //{
-        //    // 这里的逻辑是“作假”：我们不实际保存用户上传的大文件。
-        //    // 无论用户上传了什么，我们都把数据库里的路径指向一个固定的“示例文件”。
-
-        //    // 1. 定义一个固定的示例文件路径。
-        //    // 建议：在您的项目的 wwwroot/uploads/games/ 目录下实际放一个名为 example.zip 的空文件，
-        //    // 这样如果以后有下载功能，不会报 404 错误。
-        //    string fakeGameFilePath = "/uploads/games/example.zip";
-
-        //    // 2. 更新数据库字段：指向假文件路径
-        //    game.GameFilePath = fakeGameFilePath;
-
-        //    // 3. 更新数据库字段：将文件所需存储空间设置为 0 MB
-        //    // (根据您之前的迁移记录，您的 Game 表里应该有 StorageRequireMB 这个 int 字段)
-        //    if (typeof(Game).GetProperty("StorageRequireMB") != null)
-        //    {
-        //        // 使用反射或者直接赋值 (如果您确定Game.cs里有这个属性)
-        //        // game.StorageRequireMB = 0;
-        //        // 为了安全起见，如果暂时没有Game.cs定义，我先注释掉直接赋值的方式，用动态方式演示意图：
-        //        db.Entry(game).Property("StorageRequireMB").CurrentValue = 0;
-        //    }
-
-        //    // 选项：通常更新了游戏文件后，需要把状态改回“待审核”
-        //    // game.Status = GameStatus.PendingReview;
-        //}
 
         // 6. 保存所有更改到数据库
         game.Status = GameStatus.Pending; // 每次编辑后都设为待审核

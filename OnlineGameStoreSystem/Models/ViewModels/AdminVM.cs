@@ -110,6 +110,7 @@ public class CommentManagementVM
     public int UserId { get; set; }
     public string AvatarUrl { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
+    public int ReportedCount { get; set; }
 }
 
 public class GameReviewManagementVM
@@ -125,4 +126,5 @@ public class GameReviewManagementVM
     public int UserId { get; set; }
     public string AvatarUrl { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
+    public int ReportedCount { get; set; }
 }

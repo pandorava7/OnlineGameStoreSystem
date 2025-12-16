@@ -79,14 +79,14 @@
             </div>
 
             <div class="flex-row gap" style="margin: 10px 0">
-                <label>Preview Images (multiple files)</label>
-                <input type="file" name="PreviewImages" accept="image/*" multiple />
+                <label>Preview Images (maximum 8)</label>
+                <input type="file" name="PreviewImages" accept="image/*" multiple data-max-files="8" />
                 <span asp-validation-for="PreviewImages"></span>
             </div>
 
             <div class="flex-row gap" style="margin: 10px 0">
-                <label>Trailer Videos (multiple files)</label>
-                <input type="file" name="Trailers" accept="video/*" multiple />
+                <label>Trailer Videos (maximum 2)</label>
+                <input type="file" name="Trailers" accept="video/*" multiple data-max-files="2" />
                 <span asp-validation-for="Trailers"></span>
             </div>
 

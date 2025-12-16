@@ -101,6 +101,19 @@ public class CommentController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Report(int commentId)
+    {
+        var comment = await db.Comments.FindAsync(commentId);
+        if (comment == null) return NotFound();
+
+        //db.Comments.Remove(comment);
+        comment.ReportedCount += 1;
+        await db.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleLike([FromBody] LikeRequest request)
     {
         if (request.CommentId <= 0)
